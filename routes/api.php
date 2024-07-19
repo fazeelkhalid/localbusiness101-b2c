@@ -10,6 +10,9 @@ Route::middleware([LogApiRequestsMiddleware::class, AcquirerApiKeyMiddleware::cl
     Route::post('/signup', [AuthController::class, 'signUp']);
 });
 
+Route::post('/hey', function(){
+    return "Hey";
+});
 
 Route::fallback(function () {
     return ErrorResponseEnum::$RNE404;
