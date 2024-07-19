@@ -19,7 +19,6 @@ class AuthRequestService
         }
 
         $response = Http::withHeaders($headers)->send($method, $url, ['json' => $data]);
-
-        return $response->json();
+        return $response;
     }
 }
