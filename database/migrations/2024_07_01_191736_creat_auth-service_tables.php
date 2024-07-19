@@ -18,14 +18,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('applications', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('host_ip');
-            $table->integer('host_port');
-            $table->timestamps();
-        });
-
         Schema::create('apis', function (Blueprint $table) {
             $table->id();
             $table->string('api_code')->unique();
@@ -35,7 +27,6 @@ return new class extends Migration {
 
         Schema::create('acquirers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('application_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('key');
             $table->timestamps();
@@ -53,8 +44,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
-            $table->foreignId('application_id')->constrained()->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
