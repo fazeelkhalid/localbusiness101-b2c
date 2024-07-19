@@ -10,18 +10,9 @@ class Acquirer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'application_id',
         'name',
         'key',
     ];
-
-    /**
-     * Relationship with Application model.
-     */
-    public function application()
-    {
-        return $this->belongsTo(Application::class, 'application_id');
-    }
 
     /**
      * Relationship with API model through AcquirerAllowedAPI pivot model.

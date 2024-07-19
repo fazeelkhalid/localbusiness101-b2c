@@ -21,7 +21,6 @@ class User extends Authenticatable
         'email',
         'password',
         'email_verified_at',
-        'application_id',
     ];
 
     protected $hidden = [
@@ -33,11 +32,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * Relationship with Application model.
-     */
-    public function application()
-    {
-        return $this->belongsTo(Application::class, 'application_id');
-    }
 }
