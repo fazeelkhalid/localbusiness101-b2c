@@ -6,6 +6,7 @@ use App\Http\Middleware\AcquirerApiKeyMiddleware;
 use App\Http\Middleware\JsonResponseMiddleware;
 use App\Http\Middleware\LogApiRequestsMiddleware;
 use App\Http\Middleware\ValidateJwtTokenMiddleware;
+use App\Http\Services\UserCredService;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([LogApiRequestsMiddleware::class, AcquirerApiKeyMiddleware::class])->group(function () {
@@ -13,9 +14,7 @@ Route::middleware([LogApiRequestsMiddleware::class, AcquirerApiKeyMiddleware::cl
 });
 
 Route::middleware([JsonResponseMiddleware::class, ValidateJwtTokenMiddleware::class])->group(function () {
-    Route::post('/hey', function (){
-
-    });
+    Route::post('/hey', [AuthController::class, 'hey']);
 });
 
 Route::fallback(function () {
