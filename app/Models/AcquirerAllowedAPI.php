@@ -25,6 +25,6 @@ class AcquirerAllowedAPI extends Pivot
 
     public function api()
     {
-        return $this->belongsTo(API::class, 'api_id');
+        return $this->belongsTo(Api::class, 'api_id');
     }
 }

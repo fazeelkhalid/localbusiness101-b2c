@@ -19,7 +19,7 @@ class Acquirer extends Model
      */
     public function allowedAPIs()
     {
-        return $this->belongsToMany(API::class, 'acquirer_allowed_api', 'acquirer_id', 'api_id')
+        return $this->belongsToMany(Api::class, 'acquirer_allowed_api', 'acquirer_id', 'api_id')
             ->using(AcquirerAllowedAPI::class)
             ->withPivot('is_active')
             ->withTimestamps();
