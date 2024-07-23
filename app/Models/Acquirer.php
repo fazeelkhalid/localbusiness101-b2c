@@ -29,4 +29,9 @@ class Acquirer extends Model
     {
         return $this->hasMany(Configuration::class, 'acquirer_id');
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'acquirer_id');
+    }
 }

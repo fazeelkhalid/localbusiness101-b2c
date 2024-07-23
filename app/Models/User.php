@@ -31,4 +31,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function acquirer()
+    {
+        return $this->belongsTo(Acquirer::class, 'acquirer_id');
+    }
+
+    public function businessProfiles()
+    {
+        return $this->hasMany(BusinessProfile::class, 'user_id');
+    }
 }
