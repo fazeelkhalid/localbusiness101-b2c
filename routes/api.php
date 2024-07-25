@@ -2,6 +2,7 @@
 
 use App\Enums\ErrorResponseEnum;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserBusinessProfileController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
 use App\Http\Middleware\JsonResponseMiddleware;
 use App\Http\Middleware\LogApiRequestsMiddleware;
@@ -13,8 +14,9 @@ Route::middleware([LogApiRequestsMiddleware::class, AcquirerApiKeyMiddleware::cl
     Route::post('/signup', [AuthController::class, 'signUp']);
 });
 
-Route::middleware([JsonResponseMiddleware::class, ValidateJwtTokenMiddleware::class])->group(function () {
-    Route::post('/hey', [AuthController::class, 'hey']);
+Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfileController']);
+Route::middleware([JsonResponseMiddleware::class])->group(function () {
+//    Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfileController']);
 });
 
 Route::fallback(function () {

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Exceptions\ErrorException;
+use App\Services\AuthRequestService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'email_verified_at',
+        'acquirer_id'
     ];
 
     protected $hidden = [
@@ -30,6 +33,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function createUser($userData, $acquirer){
+        return User::create([
+            'name' => $userData['name'],
+            'email' => $userData['email'],
+            'acquirer_id'=>$acquirer->id
+        ]);
+    }
 
     public function acquirer()
     {

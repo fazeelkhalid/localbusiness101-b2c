@@ -19,13 +19,10 @@ return new class extends Migration
             $table->text('description');
             $table->text('short_intro');
             $table->text('keywords');
-            $table->string('og_image');
-            $table->string('og_type');
             $table->string('tab_title');
             $table->string('font_style');
             $table->string('heading_color');
             $table->string('heading_size');
-            $table->string('fav_icon');
             $table->timestamps();
         });
 

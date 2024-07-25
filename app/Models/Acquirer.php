@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Acquirer extends Model
 {
@@ -13,6 +14,15 @@ class Acquirer extends Model
         'name',
         'key',
     ];
+
+    public static function createAcquirer($name)
+    {
+        $randomKey = Str::random(32);
+        return self::create([
+            'name' => $name,
+            'key' => $randomKey,
+        ]);
+    }
 
     /**
      * Relationship with API model through AcquirerAllowedAPI pivot model.

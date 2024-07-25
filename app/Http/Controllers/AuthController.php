@@ -8,7 +8,6 @@ use App\Http\Responses\SignUp\SignUpResponse;
 use App\Http\Services\AcquirerService;
 use App\Http\Services\AuthService;
 use App\Http\Services\UserCredService;
-use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -23,7 +22,7 @@ class AuthController extends Controller
         $this->userCredService = $userCredService;
     }
 
-    public function signUp(SignUpRequest $request): SignUpResponse | ErrorResponse
+    public function signUp(SignUpRequest $request): SignUpResponse|ErrorResponse
     {
         $this->acquirerService->hasAuthorityOrThrowException("createUser");
         return $this->authService->signUp($request);
