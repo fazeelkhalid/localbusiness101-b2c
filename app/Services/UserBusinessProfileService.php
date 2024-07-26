@@ -6,11 +6,13 @@ use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
 use App\Http\DBFilters\UserBusinessProfileFilter;
 use App\Http\Mapper\UserBusinessProfileMapper;
+use App\Http\Pagination\UserBusinessProfilePagination;
 use App\Http\Requests\UserBusinessProfile\BusinessProfileFilterRequest;
 use App\Http\Requests\UserBusinessProfile\CreateUserBusinessProfileRequest;
 use App\Http\Requests\UserBusinessProfile\UpdateUserBusinessProfileRequest;
 use App\Http\Responses\UserBusinessProfile\CreateUserBusinessProfileResponses;
 use App\Http\Responses\UserBusinessProfile\GetUserBusinessProfileResponses;
+use App\Http\Responses\UserBusinessProfile\GetUserBusinessProfilesResponses;
 use App\Http\Responses\UserBusinessProfile\UpdateUserBusinessProfileResponses;
 use App\Models\Acquirer;
 use App\Models\BusinessProfile;
@@ -102,16 +104,14 @@ class UserBusinessProfileService
     public function getUserBusinessProfileListController(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
         $query = BusinessProfile::with(['user.acquirer', 'contactDetails']);
-
         UserBusinessProfileFilter::applyBusinessProfileFilters($query, $businessProfileFilterRequest->validated());
 
-        $businessProfiles = $query->get();
+        $businessProfiles = UserBusinessProfilePagination::getUserBusinessProfilePagination($businessProfileFilterRequest, $query);
 
         $mappedBusinessProfiles = $businessProfiles->map(function ($businessProfile) {
             return UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
         });
 
-        return new GetUserBusinessProfileResponses($mappedBusinessProfiles, 200);
+        return new GetUserBusinessProfilesResponses($mappedBusinessProfiles, ['current_page' => $businessProfiles->currentPage(), 'last_page' => $businessProfiles->lastPage(), 'per_page' => $businessProfiles->perPage(), 'total' => $businessProfiles->total(), 'next_page_url' => $businessProfiles->nextPageUrl(), 'prev_page_url' => $businessProfiles->previousPageUrl()],200);
     }
-
 }

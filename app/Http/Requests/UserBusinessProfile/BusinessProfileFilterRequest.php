@@ -18,7 +18,8 @@ class BusinessProfileFilterRequest extends FormRequest
             'user_email' => 'nullable|email',
             'title' => 'nullable|string',
             'keywords' => 'nullable|string',
-            'business_profiles_key' => 'nullable|string', // Add validation for business_profiles_key
+            'business_profiles_key' => 'nullable|string',
+            'per_page' => 'integer|min:1|max:100',
         ];
     }
 }
