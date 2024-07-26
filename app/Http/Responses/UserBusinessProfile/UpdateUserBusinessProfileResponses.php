@@ -4,7 +4,7 @@ namespace App\Http\Responses\UserBusinessProfile;
 use App\Models\User;
 use Illuminate\Contracts\Support\Responsable;
 
-class UserBusinessProfileResponses implements Responsable
+class UpdateUserBusinessProfileResponses implements Responsable
 {
     protected string $message;
     protected $UserBusinessProfileResponses;
@@ -21,7 +21,7 @@ class UserBusinessProfileResponses implements Responsable
     {
         return response()->json([
             'message' => $this->message,
-            'User_business_profile' => $this->UserBusinessProfileResponses
+            'business_profile' => $this->UserBusinessProfileResponses
         ], $this->status);
     }
 }

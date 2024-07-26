@@ -2,10 +2,16 @@
 
 namespace App\Services;
 
+use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
+use App\Http\DBFilters\UserBusinessProfileFilter;
 use App\Http\Mapper\UserBusinessProfileMapper;
-use App\Http\Requests\UserBusinessProfile\UserBusinessProfileRequest;
-use App\Http\Responses\UserBusinessProfile\UserBusinessProfileResponses;
+use App\Http\Requests\UserBusinessProfile\BusinessProfileFilterRequest;
+use App\Http\Requests\UserBusinessProfile\CreateUserBusinessProfileRequest;
+use App\Http\Requests\UserBusinessProfile\UpdateUserBusinessProfileRequest;
+use App\Http\Responses\UserBusinessProfile\CreateUserBusinessProfileResponses;
+use App\Http\Responses\UserBusinessProfile\GetUserBusinessProfileResponses;
+use App\Http\Responses\UserBusinessProfile\UpdateUserBusinessProfileResponses;
 use App\Models\Acquirer;
 use App\Models\BusinessProfile;
 use App\Models\User;
@@ -13,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserBusinessProfileService
 {
-    public function createUserBusinessProfile(UserBusinessProfileRequest $userBusinessProfileRequest)
+    public function createUserBusinessProfile(CreateUserBusinessProfileRequest $userBusinessProfileRequest)
     {
         DB::beginTransaction();
 
@@ -35,11 +41,77 @@ class UserBusinessProfileService
             } else {
                 $userBusinessProfileResponseMessage = "User and business profile created successfully";
             }
-            return new UserBusinessProfileResponses($userBusinessProfileResponseMessage, $userBusinessProfileResponse, 201);
+            return new CreateUserBusinessProfileResponses($userBusinessProfileResponseMessage, $userBusinessProfileResponse, 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
         }
     }
+
+    public function updateUserBusinessProfileController(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_key)
+    {
+        $validatedData = $userBusinessProfileRequest->validated();
+
+        $businessProfile = BusinessProfile::with([
+            'user.acquirer',
+            'contactDetails'
+        ])->where('business_profiles_key', $business_profiles_key)->first();
+
+
+        if(!$businessProfile){
+            return ErrorResponseEnum::$BPNF404;
+        }
+
+        $businessProfile->update([
+            'title' => $validatedData['business_profile']['title'] ?? $businessProfile->description,
+            'description' => $validatedData['business_profile']['description'] ?? $businessProfile->description,
+            'short_intro' => $validatedData['business_profile']['short_intro'] ?? $businessProfile->short_intro,
+            'keywords' => $validatedData['business_profile']['keywords'] ?? $businessProfile->keywords,
+            'tab_title' => $validatedData['business_profile']['tab_title'] ?? $businessProfile->tab_title,
+            'font_style' => $validatedData['business_profile']['font_style'] ?? $businessProfile->font_style,
+            'heading_color' => $validatedData['business_profile']['heading_color'] ?? $businessProfile->heading_color,
+            'heading_size' => $validatedData['business_profile']['heading_size'] ?? $businessProfile->heading_size,
+        ]);
+
+
+        $businessProfile->user->acquirer->update([
+            "key" => $validatedData['business_profile']['acquirer']['key'] ?? $businessProfile->user->acquirer->key,
+            "name" => $validatedData['business_profile']['acquirer']['name'] ?? $businessProfile->user->acquirer->name,
+        ]);
+        $updateBusinessProfileResponse = UserBusinessProfileMapper::mapUserBusinessProfileToUpdateUserBusinessProfileResponse($businessProfile);
+
+        return new UpdateUserBusinessProfileResponses("Business Profile updated successfully", $updateBusinessProfileResponse, 200);
+    }
+
+    public function getUserBusinessProfileController($business_profiles_key)
+    {
+        $businessProfile = BusinessProfile::with([
+            'user.acquirer',
+            'contactDetails'
+        ])->where('business_profiles_key', $business_profiles_key)->first();
+
+        if(!$businessProfile){
+            return ErrorResponseEnum::$BPNF404;
+        }
+        $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
+
+        return new GetUserBusinessProfileResponses($businessProfile, 200);
+    }
+
+    public function getUserBusinessProfileListController(BusinessProfileFilterRequest $businessProfileFilterRequest)
+    {
+        $query = BusinessProfile::with(['user.acquirer', 'contactDetails']);
+
+        UserBusinessProfileFilter::applyBusinessProfileFilters($query, $businessProfileFilterRequest->validated());
+
+        $businessProfiles = $query->get();
+
+        $mappedBusinessProfiles = $businessProfiles->map(function ($businessProfile) {
+            return UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
+        });
+
+        return new GetUserBusinessProfileResponses($mappedBusinessProfiles, 200);
+    }
+
 }

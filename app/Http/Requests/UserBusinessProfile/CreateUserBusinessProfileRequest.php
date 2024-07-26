@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserBusinessProfileRequest extends FormRequest
+class CreateUserBusinessProfileRequest extends FormRequest
 {
     public function authorize(): bool
     {

@@ -17,6 +17,8 @@ class ErrorResponseEnum
 
     public static ErrorResponse $IAK401;
 
+    public static ErrorResponse $BPNF404;
+
 
 
     public static function initialize(): void
@@ -26,6 +28,7 @@ class ErrorResponseEnum
         self::$UAA401 = new ErrorResponse(['error' => 'Unauthorized access.'], 401);
         self::$AKM401 = new ErrorResponse(['error' => 'API key missing'], 401);
         self::$IAK401 = new ErrorResponse(['error' => 'Invalid API key'], 401);
+        self::$BPNF404 = new ErrorResponse('Business Profile not found', 404);
     }
 }
 

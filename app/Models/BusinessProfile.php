@@ -45,7 +45,7 @@ class BusinessProfile extends Model
 
     public function contactDetails()
     {
-        return $this->hasOne(BusinessContactDetail::class, 'business_profile_id');
+        return $this->hasMany(BusinessContactDetail::class, 'business_profile_id');
     }
 
     public function clientLogs()
