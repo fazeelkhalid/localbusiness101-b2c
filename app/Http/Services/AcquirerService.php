@@ -25,7 +25,7 @@ class AcquirerService
 
     public function fetchAcquirerDataByKey($key): Model | null
     {
-        return Acquirer::with(['allowedAPIs', 'configurations'])
+        return Acquirer::with(['allowedAPIs', 'configurations', 'user'])
             ->where('key', $key)
             ->first();
     }

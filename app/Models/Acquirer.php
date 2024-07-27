@@ -40,8 +40,8 @@ class Acquirer extends Model
         return $this->hasMany(Configuration::class, 'acquirer_id');
     }
 
-    public function users()
+    public function user()
     {
-        return $this->hasMany(User::class, 'acquirer_id');
+        return $this->hasOne(User::class, 'acquirer_id');
     }
 }

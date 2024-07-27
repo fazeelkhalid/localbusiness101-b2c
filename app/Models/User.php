@@ -45,8 +45,8 @@ class User extends Authenticatable
         return $this->belongsTo(Acquirer::class, 'acquirer_id');
     }
 
-    public function businessProfiles()
+    public function businessProfile()
     {
-        return $this->hasMany(BusinessProfile::class, 'user_id');
+        return $this->hasOne(BusinessProfile::class, 'user_id');
     }
 }

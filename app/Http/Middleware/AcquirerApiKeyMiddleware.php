@@ -25,6 +25,10 @@ class AcquirerApiKeyMiddleware
         $apiKey = $request->header('api-key');
         $acquirer = $this->acquirerService->fetchAcquirerDataByKey($apiKey);
 
+        if(!$acquirer || !$acquirer->user){
+            return ErrorResponseEnum::$ANF404;
+        }
+
         $this->acquirerService->set('acquirer', $acquirer);
         return $next($request);
 

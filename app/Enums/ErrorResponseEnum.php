@@ -19,6 +19,7 @@ class ErrorResponseEnum
 
     public static ErrorResponse $BPNF404;
 
+    public static ErrorResponse $ANF404;
 
 
     public static function initialize(): void
@@ -29,6 +30,7 @@ class ErrorResponseEnum
         self::$AKM401 = new ErrorResponse(['error' => 'API key missing'], 401);
         self::$IAK401 = new ErrorResponse(['error' => 'Invalid API key'], 401);
         self::$BPNF404 = new ErrorResponse('Business Profile not found', 404);
+        self::$ANF404 = new ErrorResponse('Acquirer not found, Or not assign to any user', 404);
     }
 }
 
