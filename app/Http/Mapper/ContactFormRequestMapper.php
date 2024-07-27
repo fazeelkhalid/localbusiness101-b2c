@@ -12,6 +12,6 @@ class ContactFormRequestMapper
             "subject" => $validatedData["subject"],
             "message" => $validatedData["message"]
         ];
-
     }
+
 }

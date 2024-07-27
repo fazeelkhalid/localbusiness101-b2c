@@ -4,9 +4,9 @@ namespace App\Http\Services;
 
 use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
-use App\Http\DBFilters\UserBusinessProfileFilter;
+use App\Http\Filters\UserBusinessProfileFilter;
 use App\Http\Mapper\UserBusinessProfileMapper;
-use App\Http\Pagination\UserBusinessProfilePagination;
+use App\Http\Pagination\Pagination;
 use App\Http\Requests\UserBusinessProfile\BusinessProfileFilterRequest;
 use App\Http\Requests\UserBusinessProfile\CreateUserBusinessProfileRequest;
 use App\Http\Requests\UserBusinessProfile\UpdateUserBusinessProfileRequest;
@@ -104,9 +104,9 @@ class UserBusinessProfileService
     public function getUserBusinessProfileListController(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
         $query = BusinessProfile::with(['user.acquirer', 'contactDetails']);
-        UserBusinessProfileFilter::applyBusinessProfileFilters($query, $businessProfileFilterRequest->validated());
+        UserBusinessProfileFilter::applyFilters($query, $businessProfileFilterRequest->validated());
 
-        $businessProfiles = UserBusinessProfilePagination::getUserBusinessProfilePagination($businessProfileFilterRequest, $query);
+        $businessProfiles = Pagination::set($businessProfileFilterRequest, $query);
 
         $mappedBusinessProfiles = $businessProfiles->map(function ($businessProfile) {
             return UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);

@@ -17,7 +17,6 @@ class AcquirerApiKeyMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-
         if (!$request->header('api-key')) {
             return ErrorResponseEnum::$AKM401;
         }

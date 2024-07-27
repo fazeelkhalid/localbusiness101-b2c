@@ -1,9 +1,9 @@
 <?php
-namespace App\Http\DBFilters;
+namespace App\Http\Filters;
 
 class UserBusinessProfileFilter{
 
-    public static function applyBusinessProfileFilters($query, $filters)
+    public static function applyFilters($query, $filters)
     {
         // Extract filters
         $userName = $filters['user_name'] ?? null;
