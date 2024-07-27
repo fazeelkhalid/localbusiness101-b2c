@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Services\AuthRequestService;
 use App\Http\Services\UserCredService;
-use App\Services\AuthRequestService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

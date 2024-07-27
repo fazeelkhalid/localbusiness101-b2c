@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserBusinessProfile\BusinessProfileFilterRequest;
 use App\Http\Requests\UserBusinessProfile\CreateUserBusinessProfileRequest;
 use App\Http\Requests\UserBusinessProfile\UpdateUserBusinessProfileRequest;
-use App\Services\UserBusinessProfileService;
+use App\Http\Services\UserBusinessProfileService;
 
 class UserBusinessProfileController extends Controller
 {

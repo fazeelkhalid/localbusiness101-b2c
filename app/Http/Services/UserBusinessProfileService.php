@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Http\Services;
 
 use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
