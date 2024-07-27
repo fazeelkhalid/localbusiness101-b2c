@@ -13,6 +13,8 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
     Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);
     Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
+    Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
+
 });
 
 Route::middleware([JsonResponseMiddleware::class])->group(function () {

@@ -31,4 +31,9 @@ class ContactRequestFormController extends Controller
         return $this->contactRequestFormService->getContactFormRequestList($getContactFormListRequest);
     }
 
+    public function deleteContactFormRequest($contactId)
+    {
+        return $this->contactRequestFormService->deleteContactFormRequest($contactId);
+    }
+
 }

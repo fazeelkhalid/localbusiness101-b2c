@@ -4,7 +4,7 @@ namespace App\Http\Responses\ContactForm;
 
 use Illuminate\Contracts\Support\Responsable;
 
-class getContactFormRequestResponse implements Responsable
+class getContactFormResponse implements Responsable
 {
     protected $Pagination;
     protected $contactRequest;

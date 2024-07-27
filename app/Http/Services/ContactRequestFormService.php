@@ -9,7 +9,8 @@ use App\Http\Pagination\Pagination;
 use App\Http\Requests\ContactForm\CreeateContactFormRequest;
 use App\Http\Requests\ContactForm\GetContactFormListRequest;
 use App\Http\Responses\ContactForm\CreateContactFormResponse;
-use App\Http\Responses\ContactForm\getContactFormRequestResponse;
+use App\Http\Responses\ContactForm\DeleteContactFormResponse;
+use App\Http\Responses\ContactForm\getContactFormResponse;
 use App\Models\ContactRequest;
 
 class ContactRequestFormService
@@ -43,7 +44,7 @@ class ContactRequestFormService
 
         $contactRequest = ContactFormRequestMapper::mapContactFormRequestToResponse($contactRequest->toArray());
 
-        return new getContactFormRequestResponse($contactRequest, 200);
+        return new getContactFormResponse($contactRequest, 200);
     }
 
     public function getContactFormRequestList(GetContactFormListRequest $getContactFormListRequest)
@@ -59,9 +60,24 @@ class ContactRequestFormService
             return ContactFormRequestMapper::mapContactFormRequestToResponse($contactRequest->toArray());
         });
 
-        return new getContactFormRequestResponse($contactRequestList, ['current_page' => $contactRequests->currentPage(), 'last_page' => $contactRequests->lastPage(), 'per_page' => $contactRequests->perPage(), 'total' => $contactRequests->total(), 'next_page_url' => $contactRequests->nextPageUrl(), 'prev_page_url' => $contactRequests->previousPageUrl()], 200);
+        return new getContactFormResponse($contactRequestList, ['current_page' => $contactRequests->currentPage(), 'last_page' => $contactRequests->lastPage(), 'per_page' => $contactRequests->perPage(), 'total' => $contactRequests->total(), 'next_page_url' => $contactRequests->nextPageUrl(), 'prev_page_url' => $contactRequests->previousPageUrl()], 200);
+    }
 
+    public function deleteContactFormRequest($contactId)
+    {
+        $businessProfileId = $this->acquirerService->get("businessProfile")->id;
 
+        $contactRequest = ContactRequest::where('id', $contactId)
+            ->where('business_profile_id', $businessProfileId)
+            ->first();
+
+        if (!$contactRequest ) {
+            return ErrorResponseEnum::$BPNF404;
+        }
+
+        $contactRequest->delete();
+
+        return new DeleteContactFormResponse('Contact request deleted successfully', 200);
     }
 
 }
