@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Services;
 
 use App\Enums\ErrorResponseEnum;
 use App\Http\Filters\ContactRequestFilter;
@@ -10,12 +10,10 @@ use App\Http\Requests\ContactForm\CreeateContactFormRequest;
 use App\Http\Requests\ContactForm\GetContactFormListRequest;
 use App\Http\Responses\ContactForm\CreateContactFormResponse;
 use App\Http\Responses\ContactForm\getContactFormRequestResponse;
-use App\Http\Services\AcquirerService;
 use App\Models\ContactRequest;
 
-class ContactRequestController extends Controller
+class ContactRequestFormService
 {
-
     protected AcquirerService $acquirerService;
 
     public function __construct(AcquirerService $acquirerService)
