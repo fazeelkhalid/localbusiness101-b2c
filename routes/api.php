@@ -17,10 +17,10 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
 Route::middleware([JsonResponseMiddleware::class])->group(function () {
 
-    Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfileController']);
-    Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfileController']);
-    Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfileController']);
-    Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileListController']);
+    Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
+    Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
+    Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
+    Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
 });
 Route::fallback(function () {
     return ErrorResponseEnum::$RNE404;

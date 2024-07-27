@@ -16,25 +16,25 @@ class UserBusinessProfileController extends Controller
         $this->businessProfileService = $businessProfileService;
     }
 
-    public function createUserBusinessProfileController(CreateUserBusinessProfileRequest $userBusinessProfileRequest)
+    public function createUserBusinessProfile(CreateUserBusinessProfileRequest $userBusinessProfileRequest)
     {
         return $this->businessProfileService->createUserBusinessProfile($userBusinessProfileRequest);
     }
 
 
-    public function updateUserBusinessProfileController(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_key)
+    public function updateUserBusinessProfile(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_key)
     {
-        return $this->businessProfileService->updateUserBusinessProfileController($userBusinessProfileRequest, $business_profiles_key);
+        return $this->businessProfileService->updateUserBusinessProfile($userBusinessProfileRequest, $business_profiles_key);
     }
 
-    public function getUserBusinessProfileController($business_profiles_key)
+    public function getUserBusinessProfile($business_profiles_key)
     {
-        return $this->businessProfileService->getUserBusinessProfileController($business_profiles_key);
+        return $this->businessProfileService->getUserBusinessProfile($business_profiles_key);
     }
 
-    public function getUserBusinessProfileListController(BusinessProfileFilterRequest $businessProfileFilterRequest)
+    public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
-        return $this->businessProfileService->getUserBusinessProfileListController($businessProfileFilterRequest);
+        return $this->businessProfileService->getUserBusinessProfileList($businessProfileFilterRequest);
     }
 
 }

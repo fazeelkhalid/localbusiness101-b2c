@@ -51,7 +51,7 @@ class UserBusinessProfileService
         }
     }
 
-    public function updateUserBusinessProfileController(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_key)
+    public function updateUserBusinessProfile(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_key)
     {
         $validatedData = $userBusinessProfileRequest->validated();
 
@@ -86,7 +86,7 @@ class UserBusinessProfileService
         return new UpdateUserBusinessProfileResponses("Business Profile updated successfully", $updateBusinessProfileResponse, 200);
     }
 
-    public function getUserBusinessProfileController($business_profiles_key)
+    public function getUserBusinessProfile($business_profiles_key)
     {
         $businessProfile = BusinessProfile::with([
             'user.acquirer',
@@ -101,7 +101,7 @@ class UserBusinessProfileService
         return new GetUserBusinessProfileResponses($businessProfile, 200);
     }
 
-    public function getUserBusinessProfileListController(BusinessProfileFilterRequest $businessProfileFilterRequest)
+    public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
         $query = BusinessProfile::with(['user.acquirer', 'contactDetails']);
         UserBusinessProfileFilter::applyFilters($query, $businessProfileFilterRequest->validated());
