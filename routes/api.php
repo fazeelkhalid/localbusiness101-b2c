@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class, AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
 
     Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
-    Route::get('/business_profile_state', [ClientLogsController::class, 'fetchBusinessProfileState']);
+    Route::get('/business_profile_stats', [ClientLogsController::class, 'fetchBusinessProfileStats']);
 
     Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
     Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);

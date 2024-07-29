@@ -4,7 +4,7 @@ namespace App\Http\Responses\UserBusinessProfile;
 use App\Models\User;
 use Illuminate\Contracts\Support\Responsable;
 
-class GetBusinessProfileStateResponses implements Responsable
+class GetBusinessProfileStatsResponses implements Responsable
 {
     protected $UserBusinessProfileResponses;
     protected $status;
@@ -18,7 +18,7 @@ class GetBusinessProfileStateResponses implements Responsable
     public function toResponse($request)
     {
         return response()->json([
-            'business_profile_state' => $this->UserBusinessProfileResponses
+            'business_profile_stats' => $this->UserBusinessProfileResponses
         ], $this->status);
     }
 }

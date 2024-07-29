@@ -3,7 +3,7 @@ namespace App\Http\Services;
 
 use App\Http\Mapper\UserBusinessProfileMapper;
 use App\Http\Responses\ClientLogs\CreateClientLogsResponse;
-use App\Http\Responses\UserBusinessProfile\GetBusinessProfileStateResponses;
+use App\Http\Responses\UserBusinessProfile\GetBusinessProfileStatsResponses;
 use App\Http\Utils\CustomUtils;
 use App\Models\ClientLog;
 use Illuminate\Http\Request;
@@ -33,7 +33,7 @@ class ClientLogsService
         return new CreateClientLogsResponse("Client log successfully created.", 200);
     }
 
-    public function fetchBusinessProfileState()
+    public function fetchBusinessProfileStats()
     {
         $businessProfileId = $this->acquirerService->get('businessProfile')->id;
         $clientLogs = ClientLog::where('business_profile_id', $businessProfileId)->get();
@@ -81,6 +81,6 @@ class ClientLogsService
         $perDayUserCount['total'] = $totalUserCount;
 
         $businessProfileStats = UserBusinessProfileMapper::mapDBStatetoReponse($countryCount, $browserCount, $deviceTypeCount, $perDayUserCount);
-        return new GetBusinessProfileStateResponses($businessProfileStats, 200);
+        return new GetBusinessProfileStatsResponses($businessProfileStats, 200);
     }
 }

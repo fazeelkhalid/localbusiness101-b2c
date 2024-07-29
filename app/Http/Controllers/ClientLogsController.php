@@ -19,8 +19,8 @@ class ClientLogsController extends Controller
         return $this->clientLogsService->clientLogs($request);
     }
 
-    public function fetchBusinessProfileState()
+    public function fetchBusinessProfileStats()
     {
-        return $this->clientLogsService->fetchBusinessProfileState();
+        return $this->clientLogsService->fetchBusinessProfileStats();
     }
 }
