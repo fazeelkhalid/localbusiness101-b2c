@@ -9,8 +9,8 @@ class JsonResponseMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $response = $next($request);
 
+        $response = $next($request);
         $contentType = $response->headers->get('Content-Type');
         if (strpos($contentType, 'text/html') !== false) {
             $response->header('Content-Type', 'application/json');

@@ -19,7 +19,7 @@ class FetchAcquirerBusinessProfileMiddleware
         $this->acquirerService = $acquirerService;
     }
 
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         $acquirer = $this->acquirerService->get("acquirer");
         $userId = $acquirer->user->id;

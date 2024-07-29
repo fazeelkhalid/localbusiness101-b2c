@@ -29,6 +29,7 @@ class AcquirerApiKeyMiddleware
         }
 
         $this->acquirerService->set('acquirer', $acquirer);
+
         return $next($request);
 
     }

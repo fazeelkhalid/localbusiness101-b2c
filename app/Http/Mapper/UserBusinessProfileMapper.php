@@ -97,4 +97,15 @@ class UserBusinessProfileMapper
         ];
     }
 
+    public static function mapDBStatetoReponse($country, $browser, $devices, $perDayUserCount)
+    {
+        return [
+            'country' => $country,
+            'browser' => $browser,
+            'device_type' => $devices,
+            'per_day_user_count' => $perDayUserCount
+        ];
+
+    }
+
 }

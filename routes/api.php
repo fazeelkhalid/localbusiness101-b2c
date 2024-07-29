@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ErrorResponseEnum;
+use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\UserBusinessProfileController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
@@ -10,11 +11,14 @@ use App\Http\Middleware\LogApiRequestsMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class, AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
+
+    Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
+    Route::get('/business_profile_state', [ClientLogsController::class, 'fetchBusinessProfileState']);
+
     Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
     Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);
     Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
     Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
-
 });
 
 Route::middleware([JsonResponseMiddleware::class])->group(function () {
