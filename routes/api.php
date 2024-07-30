@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ErrorResponseEnum;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\UserBusinessProfileController;
@@ -21,6 +22,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
 });
 
+Route::post("/login",[AuthController::class, 'login']);
 Route::middleware([JsonResponseMiddleware::class])->group(function () {
 
     Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);

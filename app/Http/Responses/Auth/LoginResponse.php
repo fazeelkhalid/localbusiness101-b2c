@@ -1,19 +1,18 @@
 <?php
-namespace App\Http\Responses\SignUp;
+namespace App\Http\Responses\Auth;
 
-use App\Models\User;
 use Illuminate\Contracts\Support\Responsable;
 
-class SignUpResponse implements Responsable
+class LoginResponse implements Responsable
 {
     protected string $message;
-    protected User $user;
+    protected $login;
     protected $status;
 
-    public function __construct(string $message, $user, int $status = 200)
+    public function __construct(string $message, $login, int $status = 200)
     {
         $this->message = $message;
-        $this->user = $user;
+        $this->login = $login;
         $this->status = $status;
     }
 
@@ -21,7 +20,7 @@ class SignUpResponse implements Responsable
     {
         return response()->json([
             'message' => $this->message,
-            'user' => $this->user
+            'login' => $this->login
         ], $this->status);
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Http\Services;
 
 use App\Enums\ErrorResponseEnum;
-use App\Http\Requests\SignUp\SignUpRequest;
+use App\Http\Requests\Auth\SignUpRequest;
 use App\Http\Responses\Error\ErrorResponse;
-use App\Http\Responses\SignUp\SignUpResponse;
+use App\Http\Responses\Auth\SignUpResponse;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 

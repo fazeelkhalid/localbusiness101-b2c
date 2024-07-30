@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SignUp\SignUpRequest;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\SignUpRequest;
 use App\Http\Responses\Error\ErrorResponse;
-use App\Http\Responses\SignUp\SignUpResponse;
+use App\Http\Responses\Auth\SignUpResponse;
 use App\Http\Services\AcquirerService;
 use App\Http\Services\AuthService;
 use App\Http\Services\UserCredService;
+use http\Env\Request;
 
 class AuthController extends Controller
 {
@@ -28,10 +30,8 @@ class AuthController extends Controller
         return $this->authService->signUp($request);
     }
 
-    public function hey()
+    public function login(LoginRequest $loginRequest)
     {
-        $email = $this->userCredService->get("token");
-        print($email);
-        die();
+        return $this->authService->login($loginRequest);
     }
 }

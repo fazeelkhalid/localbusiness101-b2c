@@ -3,9 +3,13 @@
 namespace App\Http\Services;
 
 use App\Enums\ErrorResponseEnum;
-use App\Http\Requests\SignUp\SignUpRequest;
+use App\Exceptions\ErrorException;
+use App\Http\Mapper\AuthMapper;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\SignUpRequest;
+use App\Http\Responses\Auth\LoginResponse;
 use App\Http\Responses\Error\ErrorResponse;
-use App\Http\Responses\SignUp\SignUpResponse;
+use App\Http\Responses\Auth\SignUpResponse;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -40,5 +44,17 @@ class AuthService
 
         return new SignUpResponse('User created successfully', $user, 201);
 
+    }
+
+    public function login(LoginRequest $loginRequest)
+    {
+        $cred = $loginRequest->validated();
+        $authServiceResponse = AuthRequestService::request('/api/login', 'POST', $cred);
+        if (!$authServiceResponse->successful()) {
+            $responseData = json_encode($authServiceResponse->json());
+            throw new ErrorException($responseData, $authServiceResponse->status());
+        }
+        $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse);
+        return new LoginResponse('Login Successfully', $loginResponse, 200);
     }
 }
