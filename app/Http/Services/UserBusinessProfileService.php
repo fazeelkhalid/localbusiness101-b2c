@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
 use App\Http\Filters\UserBusinessProfileFilter;
+use App\Http\Mapper\AuthMapper;
 use App\Http\Mapper\UserBusinessProfileMapper;
 use App\Http\Pagination\Pagination;
 use App\Http\Requests\UserBusinessProfile\BusinessProfileFilterRequest;
@@ -32,8 +33,8 @@ class UserBusinessProfileService
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user);
             $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userBusinessProfileRequest['user']);
             if (!$authServiceResponse->successful()) {
-                $responseData = json_encode($authServiceResponse->json());
-                throw new ErrorException($responseData, $authServiceResponse->status());
+                $authServiceErrorExceptionResponse= AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
+                throw new ErrorException("Invalid email or password.", $authServiceErrorExceptionResponse, $authServiceResponse->status());
             }
             DB::commit();
             $userBusinessProfileResponse = UserBusinessProfileMapper::mapUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile);

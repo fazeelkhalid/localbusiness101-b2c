@@ -51,8 +51,8 @@ class AuthService
         $cred = $loginRequest->validated();
         $authServiceResponse = AuthRequestService::request('/api/login', 'POST', $cred);
         if (!$authServiceResponse->successful()) {
-            $responseData = json_encode($authServiceResponse->json());
-            throw new ErrorException($responseData, $authServiceResponse->status());
+            $authServiceErrorExceptionResponse= AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
+            throw new ErrorException("Invalid email or password.", $authServiceErrorExceptionResponse, $authServiceResponse->status());
         }
         $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse);
         return new LoginResponse('Login Successfully', $loginResponse, 200);
