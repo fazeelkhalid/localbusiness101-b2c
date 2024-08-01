@@ -104,7 +104,7 @@ class UserBusinessProfileService
 
     public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
-        $query = BusinessProfile::with(['user.acquirer', 'contactDetails']);
+        $query = BusinessProfile::with(['user.acquirer', 'contactDetails', 'ratings']);
         UserBusinessProfileFilter::applyFilters($query, $businessProfileFilterRequest->validated());
 
         $businessProfiles = Pagination::set($businessProfileFilterRequest, $query);
@@ -112,6 +112,7 @@ class UserBusinessProfileService
         $mappedBusinessProfiles = $businessProfiles->map(function ($businessProfile) {
             return UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
         });
+
 
         return new GetUserBusinessProfilesResponses($mappedBusinessProfiles, ['current_page' => $businessProfiles->currentPage(), 'last_page' => $businessProfiles->lastPage(), 'per_page' => $businessProfiles->perPage(), 'total' => $businessProfiles->total(), 'next_page_url' => $businessProfiles->nextPageUrl(), 'prev_page_url' => $businessProfiles->previousPageUrl()],200);
     }

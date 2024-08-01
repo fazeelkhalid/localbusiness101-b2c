@@ -94,6 +94,15 @@ class UserBusinessProfileMapper
                     'address' => $contact['business_address'],
                 ];
             }, $userBusinessProfileRequest->contactDetails->toArray()),
+            'reviews' => array_map(function ($review) {
+                return [
+                    "id"=>$review["id"],
+                    "email"=>$review["email"],
+                    "review"=>$review["review"]??"",
+                    "rating"=>$review["rating"]??0
+                ];
+            },$userBusinessProfileRequest->ratings->toArray()),
+            'avg_rating' => $userBusinessProfileRequest->ratings->avg("rating")??0,
         ];
     }
 

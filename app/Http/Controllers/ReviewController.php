@@ -2,57 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ErrorResponseEnum;
-use App\Http\Mapper\BusinessProfileReviewMapper;
-use App\Http\Mapper\UserBusinessProfileMapper;
-use App\Http\Pagination\Pagination;
 use App\Http\Requests\Review\StoreReviewRequest;
-use App\Http\Responses\Review\CreateReviewResponse;
-use App\Http\Responses\Review\getReviewsListResponse;
-use App\Http\Services\AcquirerService;
-use App\Models\BusinessProfile;
-use App\Models\Rating;
+use App\Http\Services\BusinessProfileReviewService;
 
 class ReviewController extends Controller
 {
-    protected AcquirerService $acquirerService;
+    protected BusinessProfileReviewService $businessProfileReviewService;
 
-    public function __construct(AcquirerService $acquirerService)
+    public function __construct(BusinessProfileReviewService $businessProfileReviewService)
     {
-        $this->acquirerService = $acquirerService;
+        $this->businessProfileReviewService = $businessProfileReviewService;
     }
 
     public function createReview(StoreReviewRequest $request)
     {
-
-        $businessProfile = $this->acquirerService->get("businessProfile");
-
-        $rating = new Rating([
-            'business_profile_id' => $businessProfile->id,
-            'email' => $request->email,
-            'rating' => $request->rating,
-            'review' => $request->review,
-        ]);
-        $rating->save();
-
-        return new CreateReviewResponse("Review submitted successfully", 201);
+        return $this->businessProfileReviewService->createReview($request);
     }
 
     public function getProfileReviewAndRatingList()
     {
-
-        $businessProfile = $this->acquirerService->get("businessProfile");
-
-        $query = Rating::where('business_profile_id', $businessProfile->id);
-        $averageRating =$query->get()->avg('rating');
-
-        $businessProfilesReviews = Pagination::setDefault($query);
-
-        $mappedBusinessProfilesReviews = $businessProfilesReviews->map(function ($businessProfileReview) {
-            return BusinessProfileReviewMapper::MapReviewDBTOReview($businessProfileReview);
-        });
-
-        return new getReviewsListResponse($mappedBusinessProfilesReviews, $averageRating, $businessProfilesReviews, 200);
+        return $this->businessProfileReviewService->getProfileReviewAndRatingList();
     }
 
 }
