@@ -10,4 +10,10 @@ class Pagination
         $businessProfiles = $query->paginate($perPage);
         return $businessProfiles;
     }
+
+    public static function setDefault($query)
+    {
+        $businessProfiles = $query->paginate(10);
+        return $businessProfiles;
+    }
 }

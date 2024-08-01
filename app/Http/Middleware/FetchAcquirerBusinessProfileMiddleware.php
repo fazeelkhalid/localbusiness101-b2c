@@ -7,7 +7,6 @@ use App\Http\Services\AcquirerService;
 use App\Models\BusinessProfile;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class FetchAcquirerBusinessProfileMiddleware
 {

@@ -4,6 +4,7 @@ use App\Enums\ErrorResponseEnum;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserBusinessProfileController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
 use App\Http\Middleware\FetchAcquirerBusinessProfileMiddleware;
@@ -21,6 +22,10 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
 
     Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
+        Route::post('/review', [ReviewController::class, 'createReview']);
+        Route::get('/reviews', [ReviewController::class, 'getProfileReviewAndRatingList']);
+
+
         Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
 
