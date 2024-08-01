@@ -101,7 +101,7 @@ class UserBusinessProfileMapper
                     "review"=>$review["review"]??"",
                     "rating"=>$review["rating"]??0
                 ];
-            },$userBusinessProfileRequest->ratings->toArray()),
+            },array_slice($userBusinessProfileRequest->ratings->toArray(), 0, 10)),
             'avg_rating' => $userBusinessProfileRequest->ratings->avg("rating")??0,
         ];
     }
