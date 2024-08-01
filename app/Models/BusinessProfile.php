@@ -57,4 +57,8 @@ class BusinessProfile extends Model
     {
         return $this->hasMany(ContactRequest::class, 'business_profile_id');
     }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'business_profile_id');
+    }
 }
