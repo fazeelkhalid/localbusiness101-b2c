@@ -79,6 +79,7 @@ class UserBusinessProfileMapper
                 'name' => $userBusinessProfileRequest->user->acquirer->name,
                 'key' => $userBusinessProfileRequest->user->acquirer->key
             ],
+            'category'=>$userBusinessProfileRequest->category->category_name,
             'business_profiles_key' => $userBusinessProfileRequest->business_profiles_key,
             'title' => $userBusinessProfileRequest->title,
             'description' => $userBusinessProfileRequest->description,

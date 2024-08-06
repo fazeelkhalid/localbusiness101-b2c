@@ -17,6 +17,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
     Route::post("/login", [AuthController::class, 'login']);
 
+    Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
     Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
     Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
     Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
@@ -28,7 +29,6 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
         Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
-        Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
 
         Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
             Route::get('/business_profile_stats', [ClientLogsController::class, 'fetchBusinessProfileStats']);

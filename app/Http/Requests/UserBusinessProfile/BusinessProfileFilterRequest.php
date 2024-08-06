@@ -10,12 +10,15 @@ class BusinessProfileFilterRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; // Allow all users to access this request (modify as needed)
+        return true;
     }
 
     public function rules()
     {
         return [
+            'category' =>'nullable|string',
+            'country' =>'nullable|string',
+            'city_or_state' =>'nullable|string',
             'user_name' => 'nullable|string',
             'user_email' => 'nullable|email',
             'title' => 'nullable|string',

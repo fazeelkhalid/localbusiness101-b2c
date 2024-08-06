@@ -67,4 +67,9 @@ class BusinessProfile extends Model
     {
         return $this->belongsTo(BusinessCategory::class, 'business_category_id');
     }
+
+    public static function getBusinessProfileFullDetails()
+    {
+        return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category']);
+    }
 }

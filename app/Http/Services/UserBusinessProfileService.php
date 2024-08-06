@@ -92,10 +92,7 @@ class UserBusinessProfileService
 
     public function getUserBusinessProfile($business_profiles_key)
     {
-        $businessProfile = BusinessProfile::with([
-            'user.acquirer',
-            'contactDetails'
-        ])->where('business_profiles_key', $business_profiles_key)->first();
+        $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('business_profiles_key', $business_profiles_key)->first();
 
         if(!$businessProfile){
             return ErrorResponseEnum::$BPNF404;
@@ -107,7 +104,7 @@ class UserBusinessProfileService
 
     public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
-        $query = BusinessProfile::with(['user.acquirer', 'contactDetails', 'ratings']);
+        $query = BusinessProfile::getBusinessProfileFullDetails();
         UserBusinessProfileFilter::applyFilters($query, $businessProfileFilterRequest->validated());
 
         $businessProfiles = Pagination::set($businessProfileFilterRequest, $query);
