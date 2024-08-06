@@ -61,4 +61,9 @@ class BusinessProfile extends Model
     {
         return $this->hasMany(Rating::class, 'business_profile_id');
     }
+
+    public function category()
+    {
+        return $this->belongsTo(BusinessCategory::class, 'business_category_id');
+    }
 }
