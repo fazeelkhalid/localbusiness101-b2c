@@ -8,7 +8,7 @@ use App\Http\Requests\UserBusinessProfile\CreateUserBusinessProfileRequest;
 class UserBusinessProfileMapper
 {
 
-    public static function mapUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile)
+    public static function mapUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category)
     {
         return [
             'user' => [
@@ -20,6 +20,7 @@ class UserBusinessProfileMapper
                 'name' => $acquirer->name,
                 'key' => $acquirer->key
             ],
+            'category' => $category->category_name,
             'business_profiles_key' => $businessProfile->business_profiles_key,
             'title' => $userBusinessProfileRequest["business_profile"]['title'],
             'description' => $userBusinessProfileRequest["business_profile"]['description'],
@@ -70,9 +71,9 @@ class UserBusinessProfileMapper
     public static function mapUserBusinessProfileToGetUserBusinessProfileResponse($userBusinessProfileRequest)
     {
         return [
-            'user' =>[
-                "name"=>$userBusinessProfileRequest->user->name,
-                "email"=>$userBusinessProfileRequest->user->email,
+            'user' => [
+                "name" => $userBusinessProfileRequest->user->name,
+                "email" => $userBusinessProfileRequest->user->email,
             ],
             'acquirer' => [
                 'name' => $userBusinessProfileRequest->user->acquirer->name,
@@ -96,13 +97,13 @@ class UserBusinessProfileMapper
             }, $userBusinessProfileRequest->contactDetails->toArray()),
             'reviews' => array_map(function ($review) {
                 return [
-                    "id"=>$review["id"],
-                    "email"=>$review["email"],
-                    "review"=>$review["review"]??"",
-                    "rating"=>$review["rating"]??0
+                    "id" => $review["id"],
+                    "email" => $review["email"],
+                    "review" => $review["review"] ?? "",
+                    "rating" => $review["rating"] ?? 0
                 ];
-            },array_slice($userBusinessProfileRequest->ratings->toArray(), 0, 10)),
-            'avg_rating' => $userBusinessProfileRequest->ratings->avg("rating")??0,
+            }, array_slice($userBusinessProfileRequest->ratings->toArray(), 0, 10)),
+            'avg_rating' => $userBusinessProfileRequest->ratings->avg("rating") ?? 0,
         ];
     }
 

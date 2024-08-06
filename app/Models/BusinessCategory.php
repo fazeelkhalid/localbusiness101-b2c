@@ -27,4 +27,9 @@ class BusinessCategory extends Model
     {
         return $this->hasMany(BusinessProfile::class, 'business_category_id');
     }
+    public static function findCategoryByName($categoryName)
+    {
+        return self::where('category_name', $categoryName)->first();
+    }
+
 }

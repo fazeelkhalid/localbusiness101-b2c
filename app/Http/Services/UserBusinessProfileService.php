@@ -16,6 +16,7 @@ use App\Http\Responses\UserBusinessProfile\GetUserBusinessProfileResponses;
 use App\Http\Responses\UserBusinessProfile\GetUserBusinessProfilesResponses;
 use App\Http\Responses\UserBusinessProfile\UpdateUserBusinessProfileResponses;
 use App\Models\Acquirer;
+use App\Models\BusinessCategory;
 use App\Models\BusinessProfile;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -30,14 +31,16 @@ class UserBusinessProfileService
             $userBusinessProfileRequest = $userBusinessProfileRequest->validated();
             $acquirer = Acquirer::createAcquirer($userBusinessProfileRequest['acquirer_name']);
             $user = User::createUser($userBusinessProfileRequest['user'], $acquirer);
-            $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user);
+            $category = BusinessCategory::findCategoryByName($userBusinessProfileRequest['business_profile']['category']);
+            $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
             $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userBusinessProfileRequest['user']);
             if (!$authServiceResponse->successful()) {
                 $authServiceErrorExceptionResponse= AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
                 throw new ErrorException("Invalid email or password.", $authServiceErrorExceptionResponse, $authServiceResponse->status());
             }
             DB::commit();
-            $userBusinessProfileResponse = UserBusinessProfileMapper::mapUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile);
+
+            $userBusinessProfileResponse = UserBusinessProfileMapper::mapUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category);
             $userBusinessProfileResponseMessage = "";
             if (isset($authServiceResponse['user']) && isset($authServiceResponse['user']['email_confirmation_message'])) {
                 $userBusinessProfileResponseMessage = $authServiceResponse['user']['email_confirmation_message'];
