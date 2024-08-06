@@ -2,6 +2,7 @@
 
 use App\Enums\ErrorResponseEnum;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\ReviewController;
@@ -18,6 +19,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::post("/login", [AuthController::class, 'login']);
 
     Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
+    Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
     Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
     Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
     Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);

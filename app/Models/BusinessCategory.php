@@ -32,4 +32,7 @@ class BusinessCategory extends Model
         return self::where('category_name', $categoryName)->first();
     }
 
+    public static function findAllCategoryAlongWithChild(){
+        return BusinessCategory::with('childCategories')->whereNull('parent_category_id')->get();
+    }
 }
