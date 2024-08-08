@@ -13,7 +13,7 @@ class BusinessProfile extends Model
     protected $fillable = [
         'user_id', 'business_profiles_key', 'title', 'description', 'short_intro',
         'keywords', 'og_image', 'og_type', 'tab_title', 'font_style', 'heading_color',
-        'heading_size', 'fav_icon', 'business_category_id'
+        'heading_size', 'fav_icon', 'business_category_id', 'card_image_url', 'slug'
     ];
 
     public static function createBusinessProfile($business_profile, $user, $category)
@@ -32,6 +32,8 @@ class BusinessProfile extends Model
             'heading_color' => $businessProfileData['heading_color'],
             'heading_size' => $businessProfileData['heading_size'],
             'business_category_id' => $category->id,
+            'card_image_url' => $businessProfileData['card_image'],
+            'slug' =>$businessProfileData['slug']
         ]);
         $businessProfile->save();
         BusinessContactDetail::createBusinessContactDetails($businessProfileData['business_contact_details'], $businessProfile);

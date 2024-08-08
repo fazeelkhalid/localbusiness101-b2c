@@ -3,6 +3,8 @@
 namespace App\Http\Utils;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CustomUtils
 {
@@ -45,6 +47,12 @@ class CustomUtils
     {
         if ([] === $arr) return false;
         return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
+    public static function uploadProfileImage($image, $filename)
+    {
+        $imagePath = $image->storeAs('images/business_profiles', $filename, 'public');
+        return Storage::url($imagePath);
     }
 
 }

@@ -21,6 +21,8 @@ class UserBusinessProfileMapper
                 'key' => $acquirer->key
             ],
             'category' => $category->category_name,
+            'slug'=>$userBusinessProfileRequest["business_profile"]['slug'],
+            'card_image_url'=>$userBusinessProfileRequest["business_profile"]['card_image'],
             'business_profiles_key' => $businessProfile->business_profiles_key,
             'title' => $userBusinessProfileRequest["business_profile"]['title'],
             'description' => $userBusinessProfileRequest["business_profile"]['description'],
@@ -80,6 +82,8 @@ class UserBusinessProfileMapper
                 'key' => $userBusinessProfileRequest->user->acquirer->key
             ],
             'category'=>$userBusinessProfileRequest->category->category_name,
+            'slug'=>$userBusinessProfileRequest->slug,
+            'card_image_url'=>$userBusinessProfileRequest->card_image_url,
             'business_profiles_key' => $userBusinessProfileRequest->business_profiles_key,
             'title' => $userBusinessProfileRequest->title,
             'description' => $userBusinessProfileRequest->description,
