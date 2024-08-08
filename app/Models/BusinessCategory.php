@@ -35,4 +35,9 @@ class BusinessCategory extends Model
     public static function findAllCategoryAlongWithChild(){
         return BusinessCategory::with('childCategories')->whereNull('parent_category_id')->get();
     }
+
+    public static function getAllCategoryNames()
+    {
+        return self::all();
+    }
 }

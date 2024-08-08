@@ -14,4 +14,9 @@ class BusinessCategoryMapper
             ];
         });
     }
+
+    public static function mapDBCategoriesNameListIntoResponse($categories)
+    {
+        return $categories->pluck('category_name');
+    }
 }

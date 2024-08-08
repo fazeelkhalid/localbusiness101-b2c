@@ -16,4 +16,11 @@ class BusinessCategoryController extends Controller
 
         return new getCategoriesListResponse($businessCategoryResponse, 200);
     }
+
+    public function getBusinessCategoriesNameList(){
+
+        $businessCategories = BusinessCategory::getAllCategoryNames();
+        $businessCategoryResponse = BusinessCategoryMapper::mapDBCategoriesNameListIntoResponse($businessCategories);
+        return new getCategoriesListResponse($businessCategoryResponse, 200);
+    }
 }
