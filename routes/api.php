@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
+use App\Http\Controllers\InitController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserBusinessProfileController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
@@ -20,6 +21,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
     Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
     Route::get('/categories_name_list', [BusinessCategoryController::class, 'getBusinessCategoriesNameList']);
+    Route::get('/init', [InitController::class, 'init']);
 
     Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
     Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);

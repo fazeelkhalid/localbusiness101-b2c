@@ -114,6 +114,14 @@ class UserBusinessProfileService
 
     public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
+        list($businessProfiles, $mappedBusinessProfiles) = $this->filterAndMapBusinessProfiles($businessProfileFilterRequest);
+
+
+        return new GetUserBusinessProfilesResponses($mappedBusinessProfiles, ['current_page' => $businessProfiles->currentPage(), 'last_page' => $businessProfiles->lastPage(), 'per_page' => $businessProfiles->perPage(), 'total' => $businessProfiles->total(), 'next_page_url' => $businessProfiles->nextPageUrl(), 'prev_page_url' => $businessProfiles->previousPageUrl()],200);
+    }
+
+    public static function filterAndMapBusinessProfiles(BusinessProfileFilterRequest $businessProfileFilterRequest): array
+    {
         $query = BusinessProfile::getBusinessProfileFullDetails();
         UserBusinessProfileFilter::applyFilters($query, $businessProfileFilterRequest->validated());
 
@@ -122,8 +130,6 @@ class UserBusinessProfileService
         $mappedBusinessProfiles = $businessProfiles->map(function ($businessProfile) {
             return UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
         });
-
-
-        return new GetUserBusinessProfilesResponses($mappedBusinessProfiles, ['current_page' => $businessProfiles->currentPage(), 'last_page' => $businessProfiles->lastPage(), 'per_page' => $businessProfiles->perPage(), 'total' => $businessProfiles->total(), 'next_page_url' => $businessProfiles->nextPageUrl(), 'prev_page_url' => $businessProfiles->previousPageUrl()],200);
+        return array($businessProfiles, $mappedBusinessProfiles);
     }
 }
