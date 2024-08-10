@@ -33,7 +33,7 @@ class BusinessProfile extends Model
             'heading_size' => $businessProfileData['heading_size'],
             'business_category_id' => $category->id,
             'card_image_url' => $businessProfileData['card_image'],
-            'slug' =>$businessProfileData['slug']
+            'slug' => $businessProfileData['slug']
         ]);
         $businessProfile->save();
         BusinessContactDetail::createBusinessContactDetails($businessProfileData['business_contact_details'], $businessProfile);
@@ -60,6 +60,7 @@ class BusinessProfile extends Model
     {
         return $this->hasMany(ContactRequest::class, 'business_profile_id');
     }
+
     public function ratings()
     {
         return $this->hasMany(Rating::class, 'business_profile_id');
@@ -73,5 +74,11 @@ class BusinessProfile extends Model
     public static function getBusinessProfileFullDetails()
     {
         return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category']);
+    }
+
+    public static function getBusinessProfileFullDetailsRandomly($filter)
+    {
+        $random = $filter['random'] ?? 0;
+        return $random ? self::getBusinessProfileFullDetails()->inRandomOrder() : self::getBusinessProfileFullDetails();
     }
 }
