@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class BusinessProfile extends Model
@@ -81,4 +82,15 @@ class BusinessProfile extends Model
         $random = $filter['random'] ?? 0;
         return $random ? self::getBusinessProfileFullDetails()->inRandomOrder() : self::getBusinessProfileFullDetails();
     }
+
+    public static function getAllBusinessProfilesURLs()
+    {
+        $slugs = BusinessProfile::pluck('slug');
+        $urls = [];
+        foreach ($slugs as $slug) {
+            $urls[] = URL::to('/') . '/' . $slug;
+        }
+        return $urls;
+    }
+
 }

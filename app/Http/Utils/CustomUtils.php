@@ -2,6 +2,7 @@
 
 namespace App\Http\Utils;
 
+use App\Models\BusinessProfile;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -53,6 +54,19 @@ class CustomUtils
     {
         $imagePath = $image->storeAs('images/business_profiles', $filename, 'public');
         return Storage::url($imagePath);
+    }
+
+
+    public static function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title);
+        $slugCount = BusinessProfile::where('slug', $slug)->count();
+
+        if($slugCount){
+            $profileCount= BusinessProfile::count();
+            return $slug . '-' . ($profileCount);
+        }
+        return $slug;
     }
 
 }

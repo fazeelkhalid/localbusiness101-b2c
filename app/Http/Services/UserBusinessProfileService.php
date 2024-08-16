@@ -39,7 +39,7 @@ class UserBusinessProfileService
             $user = User::createUser($userBusinessProfileRequest['user'], $acquirer);
             $category = BusinessCategory::findCategoryByName($userBusinessProfileRequest['business_profile']['category']);
 
-            $userBusinessProfileRequest['business_profile']['slug'] = Str::slug($userBusinessProfileRequest['business_profile']['title']);
+            $userBusinessProfileRequest['business_profile']['slug'] = CustomUtils::generateUniqueSlug($userBusinessProfileRequest['business_profile']['title']);
             $userBusinessProfileRequest['business_profile']['card_image'] = url('/').CustomUtils::uploadProfileImage($image,$filename );
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
 
@@ -126,9 +126,12 @@ class UserBusinessProfileService
 
         $businessProfiles = Pagination::set($businessProfileFilterRequest, $query);
 
+
         $mappedBusinessProfiles = $businessProfiles->map(function ($businessProfile) {
             return UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
         });
         return array($businessProfiles, $mappedBusinessProfiles);
     }
+
+
 }

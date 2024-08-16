@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\InitController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserBusinessProfileController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
 use App\Http\Middleware\FetchAcquirerBusinessProfileMiddleware;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
+    Route::get('/sitemap.xml', [SitemapController::class, 'index']);
     Route::post("/login", [AuthController::class, 'login']);
 
     Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
