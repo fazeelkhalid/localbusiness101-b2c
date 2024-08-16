@@ -6,6 +6,7 @@ use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\InitController;
+use App\Http\Controllers\MigrateController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserBusinessProfileController;
@@ -15,6 +16,10 @@ use App\Http\Middleware\JsonResponseMiddleware;
 use App\Http\Middleware\LogApiRequestsMiddleware;
 use App\Http\Middleware\ValidateJwtTokenMiddleware;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/migrate', [MigrateController::class, 'migrate']);
+Route::get('/migrate-rollback', [MigrateController::class, 'rollback']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
