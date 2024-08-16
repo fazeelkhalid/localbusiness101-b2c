@@ -46,4 +46,13 @@ class AuthMapper
         return $mappedResponse;
     }
 
+
+    public static function mapServerErrorResponseToAPIResponse(array $data): array
+    {
+        return[
+            "message" => "Please contact support with message trace ID '" . $data['message_trace_uuid'] . "'",
+            "message_trace_uuid"=> $data['message_trace_uuid']
+        ];
+    }
+
 }

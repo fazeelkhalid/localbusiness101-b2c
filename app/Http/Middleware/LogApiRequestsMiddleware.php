@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Utils\CustomUtils;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,8 @@ class LogApiRequestsMiddleware
         ];
 
         ApiReqRespLog::create($data);
-
+        CustomUtils::setMessageTraceUUID($response, $data['message_trace_uuid']);
+        CustomUtils::setMessageIfServerErrorOccur($response);
         return $response;
     }
 }

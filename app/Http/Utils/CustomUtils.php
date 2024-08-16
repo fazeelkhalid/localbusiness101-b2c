@@ -2,6 +2,7 @@
 
 namespace App\Http\Utils;
 
+use App\Http\Mapper\AuthMapper;
 use App\Models\BusinessProfile;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
@@ -67,6 +68,22 @@ class CustomUtils
             return $slug . '-' . ($profileCount);
         }
         return $slug;
+    }
+
+    public static function setMessageTraceUUID($response, $message_trace_uuid): void
+    {
+        $responseData = json_decode($response->getContent(), true);
+        $responseData['message_trace_uuid'] = $message_trace_uuid;
+        $response->setContent(json_encode($responseData));
+    }
+
+    public static function setMessageIfServerErrorOccur($response): void
+    {
+        if ($response->getStatusCode() >= 500 && !env('APP_DEBUG')) {
+            $responseData = json_decode($response->getContent(), true);
+            $responseData = AuthMapper::mapServerErrorResponseToAPIResponse($responseData);
+            $response->setContent(json_encode($responseData));
+        }
     }
 
 }
