@@ -1,13 +1,55 @@
 <?php
 
 use App\Enums\ErrorResponseEnum;
-use App\Http\Middleware\AcquirerApiKeyMiddleware;
-use App\Http\Middleware\ApplicationIpAndPortMiddleware;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\ClientLogsController;
+use App\Http\Controllers\ContactRequestFormController;
+use App\Http\Controllers\InitController;
+use App\Http\Controllers\MigrateController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\UserBusinessProfileController;
+use App\Http\Middleware\AcquirerApiKeyMiddleware;
+use App\Http\Middleware\FetchAcquirerBusinessProfileMiddleware;
+use App\Http\Middleware\JsonResponseMiddleware;
+use App\Http\Middleware\LogApiRequestsMiddleware;
+use App\Http\Middleware\ValidateJwtTokenMiddleware;
+use Illuminate\Support\Facades\Route;
 
-Route::middleware([AcquirerApiKeyMiddleware::class, ApplicationIpAndPortMiddleware::class])->group(function () {
-    Route::get('/signup', [AuthController::class, 'signUp']);
+
+Route::get('/migrate', [MigrateController::class, 'migrate']);
+Route::get('/migrate-rollback', [MigrateController::class, 'rollback']);
+
+Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
+
+    Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+    Route::post("/login", [AuthController::class, 'login']);
+
+    Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
+    Route::get('/categories_name_list', [BusinessCategoryController::class, 'getBusinessCategoriesNameList']);
+    Route::get('/init', [InitController::class, 'init']);
+
+    Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
+    Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
+    Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
+    Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
+
+    Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
+        Route::post('/review', [ReviewController::class, 'createReview']);
+        Route::get('/reviews', [ReviewController::class, 'getProfileReviewAndRatingList']);
+
+
+        Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
+        Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
+
+        Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
+            Route::get('/business_profile_stats', [ClientLogsController::class, 'fetchBusinessProfileStats']);
+            Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);
+            Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
+            Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
+        });
+    });
 });
 
 
