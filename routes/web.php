@@ -18,10 +18,10 @@ use App\Http\Middleware\ValidateJwtTokenMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/migrate', [MigrateController::class, 'migrate']);
-Route::get('/migrate-rollback', [MigrateController::class, 'rollback']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
+//    Route::get('/migrate', [MigrateController::class, 'migrate']);
+//    Route::get('/migrate-rollback', [MigrateController::class, 'rollback']);
 
     Route::get('/sitemap.xml', [SitemapController::class, 'index']);
     Route::post("/login", [AuthController::class, 'login']);
