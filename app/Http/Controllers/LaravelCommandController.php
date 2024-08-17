@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
-class MigrateController extends Controller
+class LaravelCommandController extends Controller
 {
 
     public function migrate()
@@ -26,5 +26,11 @@ class MigrateController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function createStorageLink()
+    {
+        Artisan::call('storage:link');
+        return response()->json(['message' => 'Storage link created successfully!']);
     }
 }

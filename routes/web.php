@@ -6,7 +6,7 @@ use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\InitController;
-use App\Http\Controllers\MigrateController;
+use App\Http\Controllers\LaravelCommandController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserBusinessProfileController;
@@ -18,8 +18,6 @@ use App\Http\Middleware\ValidateJwtTokenMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/migrate', [MigrateController::class, 'migrate']);
-Route::get('/migrate-rollback', [MigrateController::class, 'rollback']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
@@ -36,6 +34,11 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
 
     Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
+
+        Route::get('/migrate', [LaravelCommandController::class, 'migrate']);
+        Route::get('/storage-link', [LaravelCommandController::class, 'createStorageLink']);
+        Route::get('/migrate-rollback', [LaravelCommandController::class, 'rollback']);
+
         Route::post('/review', [ReviewController::class, 'createReview']);
         Route::get('/reviews', [ReviewController::class, 'getProfileReviewAndRatingList']);
 
