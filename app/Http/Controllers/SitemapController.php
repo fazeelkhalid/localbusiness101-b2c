@@ -11,12 +11,12 @@ class SitemapController extends Controller
     {
 
         $urls = BusinessProfile::getAllBusinessProfilesURLs();
-        $urls[] = URL::to('/');
-        $urls[] = URL::to('/about');
-        $urls[] = URL::to('/contact');
-        $urls[] = URL::to('/Testimonials');
-        $urls[] = URL::to('/business-profile-search');
-        $urls[] = URL::to('/business-profiles');
+        $urls[] =  env('FRONTEND_URL');
+        $urls[] = env('FRONTEND_URL').'/about';
+        $urls[] = env('FRONTEND_URL').'/contact';
+        $urls[] = env('FRONTEND_URL').'/Testimonials';
+//        $urls[] = env('FRONTEND_URL').'/business-profile-search';
+        $urls[] = env('FRONTEND_URL').'/business-profiles';
 
         $xmlContent = '<?xml version="1.0" encoding="UTF-8"?>';
         $xmlContent .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
