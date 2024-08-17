@@ -18,37 +18,38 @@ use App\Http\Middleware\ValidateJwtTokenMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
-
-Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
-
+Route::middleware([LogApiRequestsMiddleware::class])->group(function () {
     Route::get('/sitemap.xml', [SitemapController::class, 'index']);
-    Route::post("/login", [AuthController::class, 'login']);
 
-    Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
-    Route::get('/categories_name_list', [BusinessCategoryController::class, 'getBusinessCategoriesNameList']);
-    Route::get('/init', [InitController::class, 'init']);
+    Route::middleware([JsonResponseMiddleware::class])->group(function () {
+        Route::post("/login", [AuthController::class, 'login']);
 
-    Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
-    Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
-    Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
-    Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
+        Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
+        Route::get('/categories_name_list', [BusinessCategoryController::class, 'getBusinessCategoriesNameList']);
+        Route::get('/init', [InitController::class, 'init']);
 
-    Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
-        Route::post('/review', [ReviewController::class, 'createReview']);
-        Route::get('/reviews', [ReviewController::class, 'getProfileReviewAndRatingList']);
-        
-        Route::get('/migrate', [LaravelCommandController::class, 'migrate']);
-        Route::get('/storage-link', [LaravelCommandController::class, 'createStorageLink']);
-        Route::get('/migrate-rollback', [LaravelCommandController::class, 'rollback']);
+        Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
+        Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
+        Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
+        Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
 
-        Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
-        Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
+        Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
+            Route::post('/review', [ReviewController::class, 'createReview']);
+            Route::get('/reviews', [ReviewController::class, 'getProfileReviewAndRatingList']);
 
-        Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
-            Route::get('/business_profile_stats', [ClientLogsController::class, 'fetchBusinessProfileStats']);
-            Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);
-            Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
-            Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
+            Route::get('/migrate', [LaravelCommandController::class, 'migrate']);
+            Route::get('/storage-link', [LaravelCommandController::class, 'createStorageLink']);
+            Route::get('/migrate-rollback', [LaravelCommandController::class, 'rollback']);
+
+            Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
+            Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
+
+            Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
+                Route::get('/business_profile_stats', [ClientLogsController::class, 'fetchBusinessProfileStats']);
+                Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);
+                Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
+                Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
+            });
         });
     });
 });
