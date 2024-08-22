@@ -112,6 +112,18 @@ class UserBusinessProfileService
         return new GetUserBusinessProfileResponses($businessProfile, 200);
     }
 
+     public function getUserBusinessProfileBySlugs($business_profiles_slugs)
+    {
+         $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('slug', $business_profiles_slugs)->first();
+
+        if(!$businessProfile){
+            return ErrorResponseEnum::$BPNF404;
+        }
+        $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
+
+        return new GetUserBusinessProfileResponses($businessProfile, 200);
+    }
+    
     public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
         list($businessProfiles, $mappedBusinessProfiles) = $this->filterAndMapBusinessProfiles($businessProfileFilterRequest);
