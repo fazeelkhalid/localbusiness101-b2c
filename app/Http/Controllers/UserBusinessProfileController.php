@@ -32,6 +32,11 @@ class UserBusinessProfileController extends Controller
         return $this->businessProfileService->getUserBusinessProfile($business_profiles_key);
     }
 
+     public function getUserBusinessProfileBySlugs($business_profiles_slugs)
+    {
+        return $this->businessProfileService-> getUserBusinessProfileBySlugs($business_profiles_slugs);
+    }
+
     public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
         return $this->businessProfileService->getUserBusinessProfileList($businessProfileFilterRequest);
