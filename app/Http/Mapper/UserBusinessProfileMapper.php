@@ -112,7 +112,7 @@ class UserBusinessProfileMapper
                     "rating" => $review["rating"] ?? 0
                 ];
             }, array_slice($userBusinessProfileRequest->ratings->toArray(), 0, 10)),
-            'avg_rating' => $userBusinessProfileRequest->ratings->avg("rating") ?? 0,
+            'avg_rating' => number_format($userBusinessProfileRequest->ratings->avg("rating") ?? 0, 1),
         ];
     }
 
