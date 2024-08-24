@@ -22,7 +22,8 @@ class BusinessProfileReviewService
     {
 
         $businessProfile = $this->acquirerService->get("businessProfile");
-
+print_r($businessProfile);
+        die();
         $rating = new Rating([
             'business_profile_id' => $businessProfile->id,
             'email' => $request->email,
