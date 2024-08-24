@@ -75,6 +75,8 @@ class UserBusinessProfileMapper
 
     public static function mapUserBusinessProfileToGetUserBusinessProfileResponse($userBusinessProfileRequest)
     {
+        $avgRating = $userBusinessProfileRequest->ratings->avg("rating");
+        $avgRating = $avgRating ? number_format($userBusinessProfileRequest->ratings->avg("rating"), 1) : 10
         return [
             'user' => [
                 "name" => $userBusinessProfileRequest->user->name,
@@ -112,7 +114,7 @@ class UserBusinessProfileMapper
                     "rating" => $review["rating"] ?? 0
                 ];
             }, array_slice($userBusinessProfileRequest->ratings->toArray(), 0, 10)),
-            'avg_rating' => number_format($userBusinessProfileRequest->ratings->avg("rating"), 1) ?? 0,
+            'avg_rating' => $avgRating,
         ];
     }
 
