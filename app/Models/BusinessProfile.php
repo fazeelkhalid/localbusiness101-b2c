@@ -88,7 +88,7 @@ class BusinessProfile extends Model
         $slugs = BusinessProfile::pluck('slug');
         $urls = [];
         foreach ($slugs as $slug) {
-            $urls[] = env('FRONTEND_URL') . '/business-profile' . $slug;
+            $urls[] = env('FRONTEND_URL') . '/business-profile/' . $slug;
         }
         return $urls;
     }
