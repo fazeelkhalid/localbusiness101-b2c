@@ -25,6 +25,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::post("/login", [AuthController::class, 'login']);
 
     Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
+    Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
     Route::get('/categories_name_list', [BusinessCategoryController::class, 'getBusinessCategoriesNameList']);
     Route::get('/init', [InitController::class, 'init']);
 
