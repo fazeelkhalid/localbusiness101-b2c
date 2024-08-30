@@ -74,7 +74,7 @@ class BusinessProfile extends Model
 
     public static function getBusinessProfileFullDetails()
     {
-        return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category']);
+        return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category', 'slideImages']);
     }
 
     public static function getBusinessProfileFullDetailsRandomly($filter)

@@ -78,10 +78,6 @@ class UserBusinessProfileMapper
         $avgRating = $userBusinessProfileRequest->ratings->avg("rating") ?? 0;
         $avgRating = $avgRating != 0 ? number_format($avgRating, 1) : $avgRating;
         return [
-//            'user' => [
-//                "name" => $userBusinessProfileRequest->user->name,
-//                "email" => $userBusinessProfileRequest->user->email,
-//            ],
             'acquirer' => [
                 'name' => $userBusinessProfileRequest->user->acquirer->name,
                 'key' => $userBusinessProfileRequest->user->acquirer->key
@@ -106,6 +102,9 @@ class UserBusinessProfileMapper
                     'address' => $contact['business_address'],
                 ];
             }, $userBusinessProfileRequest->contactDetails->toArray()),
+            'slide_images' => array_map(function ($slideImage) {
+                return $slideImage['image_url'];
+            }, $userBusinessProfileRequest->slideImages->toArray()),
             'reviews' => array_map(function ($review) {
                 return [
                     "id" => $review["id"],
@@ -144,6 +143,9 @@ class UserBusinessProfileMapper
                     'address' => $contact['business_address'],
                 ];
             }, $userBusinessProfileRequest->contactDetails->toArray()),
+            'slide_images' => array_map(function ($slideImage) {
+                return $slideImage['image_url'];
+            }, $userBusinessProfileRequest->slideImages->toArray()),
             'reviews' => array_map(function ($review) {
                 return [
                     "id" => $review["id"],
