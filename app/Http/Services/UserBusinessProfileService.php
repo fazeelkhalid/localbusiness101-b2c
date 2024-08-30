@@ -19,6 +19,7 @@ use App\Http\Utils\CustomUtils;
 use App\Models\Acquirer;
 use App\Models\BusinessCategory;
 use App\Models\BusinessProfile;
+use App\Models\BusinessProfileSlideImage;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -40,8 +41,10 @@ class UserBusinessProfileService
             $category = BusinessCategory::findCategoryByName($userBusinessProfileRequest['business_profile']['category']);
 
             $userBusinessProfileRequest['business_profile']['slug'] = CustomUtils::generateUniqueSlug($userBusinessProfileRequest['business_profile']['title']);
-            $userBusinessProfileRequest['business_profile']['card_image'] = url('/').CustomUtils::uploadProfileImage($image,$filename );
+            $userBusinessProfileRequest['business_profile']['card_image'] = url('/').CustomUtils::uploadProfileImage('', $image,$filename );
+
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
+            BusinessProfileSlideImage::saveSlidesimages($userBusinessProfileRequest['business_profile']['slug'], $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
 
             $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userBusinessProfileRequest['user']);
             if (!$authServiceResponse->successful()) {
@@ -123,7 +126,7 @@ class UserBusinessProfileService
 
         return new GetUserBusinessProfileResponses($businessProfile, 200);
     }
-    
+
     public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
         list($businessProfiles, $mappedBusinessProfiles) = $this->filterAndMapBusinessProfiles($businessProfileFilterRequest);

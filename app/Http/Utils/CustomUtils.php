@@ -51,9 +51,9 @@ class CustomUtils
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-    public static function uploadProfileImage($image, $filename)
+    public static function uploadProfileImage($folder='', $image, $filename)
     {
-        $imagePath = $image->storeAs('images/business_profiles', $filename, 'public');
+        $imagePath = $image->storeAs('images/business_profiles'.$folder, $filename, 'public');
         return Storage::url($imagePath);
     }
 

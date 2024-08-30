@@ -93,4 +93,9 @@ class BusinessProfile extends Model
         return $urls;
     }
 
+    public function slideImages()
+    {
+        return $this->hasMany(BusinessProfileSlideImage::class, 'business_profile_id');
+    }
+
 }

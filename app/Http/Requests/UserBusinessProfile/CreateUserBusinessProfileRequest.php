@@ -35,6 +35,7 @@ class CreateUserBusinessProfileRequest extends FormRequest
             'business_profile.business_contact_details.*.email' => 'required|email',
             'business_profile.business_contact_details.*.phone' => 'required|string|max:15',
             'business_profile.business_contact_details.*.address' => 'required|string',
+            'business_profile.slide_images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 
@@ -65,6 +66,9 @@ class CreateUserBusinessProfileRequest extends FormRequest
             'business_profile.business_contact_details.*.email.required' => 'The business contact email is required.',
             'business_profile.business_contact_details.*.phone.required' => 'The business contact phone is required.',
             'business_profile.business_contact_details.*.address.required' => 'The business contact address is required.',
+            'business_profile.slide_images.image' => 'Each slide image must be an image file.',
+            'business_profile.slide_images.mimes' => 'Each slide image must be a file of type: jpg, jpeg, png.',
+            'business_profile.slide_images.max' => 'Each slide image may not be greater than 2MB.',
         ];
     }
 
