@@ -8,7 +8,7 @@ use App\Http\Requests\UserBusinessProfile\CreateUserBusinessProfileRequest;
 class UserBusinessProfileMapper
 {
 
-    public static function mapUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category)
+    public static function mapCreateUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category)
     {
         return [
             'user' => [
@@ -78,10 +78,10 @@ class UserBusinessProfileMapper
         $avgRating = $userBusinessProfileRequest->ratings->avg("rating") ?? 0;
         $avgRating = $avgRating != 0 ? number_format($avgRating, 1) : $avgRating;
         return [
-            'user' => [
-                "name" => $userBusinessProfileRequest->user->name,
-                "email" => $userBusinessProfileRequest->user->email,
-            ],
+//            'user' => [
+//                "name" => $userBusinessProfileRequest->user->name,
+//                "email" => $userBusinessProfileRequest->user->email,
+//            ],
             'acquirer' => [
                 'name' => $userBusinessProfileRequest->user->acquirer->name,
                 'key' => $userBusinessProfileRequest->user->acquirer->key
@@ -117,6 +117,45 @@ class UserBusinessProfileMapper
             'avg_rating' => $avgRating
         ];
     }
+
+
+    public static function mapUserBusinessProfileListToGetUserBusinessProfileListResponse($userBusinessProfileRequest)
+    {
+        $avgRating = $userBusinessProfileRequest->ratings->avg("rating") ?? 0;
+        $avgRating = $avgRating != 0 ? number_format($avgRating, 1) : $avgRating;
+        return [
+            'category'=>$userBusinessProfileRequest->category->category_name,
+            'slug'=>$userBusinessProfileRequest->slug,
+            'business_profile_url'=>env('FRONTEND_URL').'/business-profile/'.$userBusinessProfileRequest->slug,
+            'card_image_url'=>$userBusinessProfileRequest->card_image_url,
+            'business_profiles_key' => $userBusinessProfileRequest->business_profiles_key,
+            'title' => $userBusinessProfileRequest->title,
+            'description' => $userBusinessProfileRequest->description,
+            'short_intro' => $userBusinessProfileRequest->short_intro,
+            'keywords' => $userBusinessProfileRequest->keywords,
+            'tab_title' => $userBusinessProfileRequest->tab_title,
+            'font_style' => $userBusinessProfileRequest->font_style,
+            'heading_color' => $userBusinessProfileRequest->heading_color,
+            'heading_size' => $userBusinessProfileRequest->heading_size,
+            'business_contact_details' => array_map(function ($contact) {
+                return [
+                    'email' => $contact['business_email'],
+                    'phone' => $contact['business_phone'],
+                    'address' => $contact['business_address'],
+                ];
+            }, $userBusinessProfileRequest->contactDetails->toArray()),
+            'reviews' => array_map(function ($review) {
+                return [
+                    "id" => $review["id"],
+                    "email" => $review["email"],
+                    "review" => $review["review"] ?? "",
+                    "rating" => $review["rating"] ?? 0
+                ];
+            }, array_slice($userBusinessProfileRequest->ratings->toArray(), 0, 10)),
+            'avg_rating' => $avgRating
+        ];
+    }
+
 
     public static function mapDBStatetoReponse($country, $browser, $devices, $perDayUserCount)
     {

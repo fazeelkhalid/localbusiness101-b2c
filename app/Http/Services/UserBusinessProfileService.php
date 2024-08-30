@@ -53,7 +53,7 @@ class UserBusinessProfileService
             }
             DB::commit();
 
-            $userBusinessProfileResponse = UserBusinessProfileMapper::mapUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category);
+            $userBusinessProfileResponse = UserBusinessProfileMapper::mapCreateUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category);
             $userBusinessProfileResponseMessage = "";
             if (isset($authServiceResponse['user']) && isset($authServiceResponse['user']['email_confirmation_message'])) {
                 $userBusinessProfileResponseMessage = $authServiceResponse['user']['email_confirmation_message'];
@@ -143,7 +143,7 @@ class UserBusinessProfileService
 
 
         $mappedBusinessProfiles = $businessProfiles->map(function ($businessProfile) {
-            return UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
+            return UserBusinessProfileMapper::mapUserBusinessProfileListToGetUserBusinessProfileListResponse($businessProfile);
         });
         return array($businessProfiles, $mappedBusinessProfiles);
     }
