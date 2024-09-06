@@ -6,10 +6,18 @@ use App\Http\Mapper\BusinessCategoryMapper;
 use App\Http\Requests\BusinessProfileCategory\BusinessProfileCategoryRequest;
 use App\Http\Responses\Categories\CreateCategoryResponse;
 use App\Http\Responses\Categories\getCategoriesListResponse;
+use App\Http\Services\AcquirerService;
 use App\Models\BusinessCategory;
 
 class BusinessCategoryController extends Controller
 {
+    protected AcquirerService $acquirerService;
+
+    public function __construct(AcquirerService $acquirerService)
+    {
+        $this->acquirerService = $acquirerService;
+    }
+
     public function getBusinessCategoriesList()
     {
 
@@ -29,6 +37,7 @@ class BusinessCategoryController extends Controller
 
     public function CreateCategory(BusinessProfileCategoryRequest $businessProfileCategoryRequest)
     {
+        $this->acquirerService->hasAuthorityOrThrowException("CreateCategory");
         $validatedData = $businessProfileCategoryRequest->validated();
         $parentCategoryId = null;
 
@@ -42,7 +51,7 @@ class BusinessCategoryController extends Controller
         $category->parent_category_id = $parentCategoryId;
         $category->save();
 
-        return new CreateCategoryResponse("Category created successfully.",$category->category_name, 200 );
+        return new CreateCategoryResponse("Category created successfully.", $category->category_name, 200);
     }
 
 }

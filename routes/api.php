@@ -25,17 +25,18 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::post("/login", [AuthController::class, 'login']);
 
     Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
-    Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
     Route::get('/categories_name_list', [BusinessCategoryController::class, 'getBusinessCategoriesNameList']);
     Route::get('/init', [InitController::class, 'init']);
 
-    Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
     Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
     Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
     Route::get('/business_profile/slug/{business_profiles_slugs}', [UserBusinessProfileController::class, 'getUserBusinessProfileBySlugs']);
     Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
 
     Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
+        Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
+        Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
+
 
         Route::get('/migrate', [LaravelCommandController::class, 'migrate']);
         Route::get('/storage-link', [LaravelCommandController::class, 'createStorageLink']);

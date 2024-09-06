@@ -23,6 +23,8 @@ return new class extends Migration
             ['api_code' => 'getContactFormRequest', 'name' => 'Get Contact Form Request', 'created_at' => now(), 'updated_at' => now()],
             ['api_code' => 'getContactFormRequestList', 'name' => 'Get Contact Form Request List', 'created_at' => now(), 'updated_at' => now()],
             ['api_code' => 'deleteContactFormRequest', 'name' => 'Delete Contact Form Request', 'created_at' => now(), 'updated_at' => now()],
+            ['api_code' => 'createUserBusinessProfile', 'name' => 'Create User Business profile', 'created_at' => now(), 'updated_at' => now()],
+            ['api_code' => 'createCategory', 'name' => 'Create Category', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 
@@ -34,7 +36,7 @@ return new class extends Migration
         DB::table('apis')->whereIn('api_code', [
             'migrate', 'createStorageLink', 'rollback', 'createReview', 'getProfileReviewAndRatingList',
             'clientLogs', 'createContactFormRequest', 'fetchBusinessProfileStats', 'getContactFormRequest',
-            'getContactFormRequestList', 'deleteContactFormRequest'
+            'getContactFormRequestList', 'deleteContactFormRequest', 'createUserBusinessProfile', 'createCategory',
         ])->delete();
     }
 };
