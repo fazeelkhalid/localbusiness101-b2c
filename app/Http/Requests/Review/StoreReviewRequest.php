@@ -38,6 +38,7 @@ class StoreReviewRequest extends FormRequest
                 },
                 ],
             'rating' => 'required|integer|min:1|max:5',
+            'name' => 'required|string',
             'review' => 'nullable|string',
         ];
     }

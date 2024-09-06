@@ -10,7 +10,7 @@ class Rating extends Model
     use HasFactory;
 
     protected $fillable = [
-        'business_profile_id', 'email', 'rating', 'review',
+        'business_profile_id', 'email', 'rating', 'review', 'name'
     ];
 
     public function businessProfile()

@@ -25,6 +25,7 @@ class BusinessProfileReviewService
         $rating = new Rating([
             'business_profile_id' => $businessProfile->id,
             'email' => $request->email,
+            'name' => $request->name,
             'rating' => $request->rating,
             'review' => $request->review,
         ]);

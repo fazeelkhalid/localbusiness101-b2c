@@ -9,6 +9,7 @@ class BusinessProfileReviewMapper
     {
         return [
             'id' => $review->id,
+            'name' => $review->name ?? "Anonymous User",
             'email' => $review->email,
             'review' => $review->review ?? "",
             'rating' => $review->rating,
