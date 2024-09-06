@@ -18,7 +18,7 @@ class LaravelCommandController extends Controller
 
     public function migrate()
     {
-//        $this->acquirerService->hasAuthorityOrThrowException("migrate");
+        $this->acquirerService->hasAuthorityOrThrowException("migrate");
         return $this->commandService->migrate();
     }
 
