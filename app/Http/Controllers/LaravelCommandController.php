@@ -2,35 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
+use App\Http\Services\AcquirerService;
+use App\Http\Services\LaravelCommandService;
 
 class LaravelCommandController extends Controller
 {
+    protected LaravelCommandService $commandService;
+    protected AcquirerService $acquirerService;
+
+    public function __construct(LaravelCommandService $commandService, AcquirerService $acquirerService)
+    {
+        $this->commandService = $commandService;
+        $this->acquirerService = $acquirerService;
+    }
 
     public function migrate()
     {
-        try {
-            Artisan::call('migrate');
-            return response()->json(['message' => 'Migrations ran successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+//        $this->acquirerService->hasAuthorityOrThrowException("migrate");
+        return $this->commandService->migrate();
     }
 
     public function rollback()
     {
-        try {
-            Artisan::call('migrate:rollback');
-            return response()->json(['message' => 'Migrations rolled back successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        $this->acquirerService->hasAuthorityOrThrowException("rollback");
+        return $this->commandService->rollback();
     }
 
     public function createStorageLink()
     {
-        Artisan::call('storage:link');
-        return response()->json(['message' => 'Storage link created successfully!']);
+        $this->acquirerService->hasAuthorityOrThrowException("createStorageLink");
+        return $this->commandService->createStorageLink();
     }
 }
