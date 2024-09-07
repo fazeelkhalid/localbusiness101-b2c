@@ -26,7 +26,6 @@ class ContactRequestFormService
     {
         $validatedData = $contactFormRequest->validated();
         $validatedData['business_profile_id'] = $this->acquirerService->get("businessProfile")->id;
-
         ContactRequest::create($validatedData);
 
         $contactRequest = ContactFormRequestMapper::mapContactFormRequestToResponse($validatedData);
