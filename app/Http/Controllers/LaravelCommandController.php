@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\AcquirerService;
 use App\Http\Services\LaravelCommandService;
+use App\Http\Utils\CustomUtils;
+use Illuminate\Http\Request;
 
 class LaravelCommandController extends Controller
 {
@@ -32,5 +34,23 @@ class LaravelCommandController extends Controller
     {
         $this->acquirerService->hasAuthorityOrThrowException("createStorageLink");
         return $this->commandService->createStorageLink();
+    }
+
+    public function imageHost(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        $image = $request->file('image');
+        if ($image) {
+            $filename = 'img.' . $image->getClientOriginalExtension();
+            $fullImagePath = url('/') . CustomUtils::uploadProfileImage('/orlando', $image, $filename);
+            return response()->json([
+                'message' => 'Image uploaded successfully!',
+                'image_url' => $fullImagePath,
+            ], 200);
+        }
+
+        return response()->json(['message' => 'No image uploaded'], 400);
     }
 }

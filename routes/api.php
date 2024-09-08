@@ -22,6 +22,8 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
+    Route::post("/image-host", [LaravelCommandController::class, 'imageHost']);
+
     Route::post("/login", [AuthController::class, 'login']);
 
     Route::get('/categories', [BusinessCategoryController::class, 'getBusinessCategoriesList']);
