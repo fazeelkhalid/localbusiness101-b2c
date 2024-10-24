@@ -20,9 +20,9 @@ use App\Models\Acquirer;
 use App\Models\BusinessCategory;
 use App\Models\BusinessProfile;
 use App\Models\BusinessProfileSlideImage;
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class UserBusinessProfileService
 {
@@ -33,18 +33,23 @@ class UserBusinessProfileService
         try {
             $userBusinessProfileRequest = $userBusinessProfileRequest->validated();
 
-            $image = $userBusinessProfileRequest['business_profile']['card_image'];
-            $filename = Str::slug($userBusinessProfileRequest['business_profile']['title']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $cardImage = $userBusinessProfileRequest['business_profile']['card_image'];
+            $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
+
+            $cardImageFilename = 'card_image-' . time() . '.' . $cardImage->getClientOriginalExtension();
+            $mainPageImageFileName = 'main_page_image-' . time() . '.' . $mainPageImage->getClientOriginalExtension();
 
             $acquirer = Acquirer::createAcquirer($userBusinessProfileRequest['acquirer_name']);
             $user = User::createUser($userBusinessProfileRequest['user'], $acquirer);
             $category = BusinessCategory::findCategoryByName($userBusinessProfileRequest['business_profile']['category']);
 
             $userBusinessProfileRequest['business_profile']['slug'] = CustomUtils::generateUniqueSlug($userBusinessProfileRequest['business_profile']['title']);
-            $userBusinessProfileRequest['business_profile']['card_image'] = url('/').CustomUtils::uploadProfileImage('', $image,$filename );
+            $userBusinessProfileRequest['business_profile']['card_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $userBusinessProfileRequest['business_profile']['slug'], $cardImage, $cardImageFilename);
+            $userBusinessProfileRequest['business_profile']['main_page_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $userBusinessProfileRequest['business_profile']['slug'], $mainPageImage, $mainPageImageFileName);
 
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
             BusinessProfileSlideImage::saveSlidesimages($userBusinessProfileRequest['business_profile']['slug'], $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
+            Service::saveServices($userBusinessProfileRequest['business_profile']['services'], $businessProfile->id);
 
             $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userBusinessProfileRequest['user']);
             if (!$authServiceResponse->successful()) {
@@ -78,7 +83,7 @@ class UserBusinessProfileService
         ])->where('business_profiles_key', $business_profiles_key)->first();
 
 
-        if(!$businessProfile){
+        if (!$businessProfile) {
             return ErrorResponseEnum::$BPNF404;
         }
 
@@ -107,7 +112,7 @@ class UserBusinessProfileService
     {
         $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('business_profiles_key', $business_profiles_key)->first();
 
-        if(!$businessProfile){
+        if (!$businessProfile) {
             return ErrorResponseEnum::$BPNF404;
         }
         $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
@@ -115,11 +120,11 @@ class UserBusinessProfileService
         return new GetUserBusinessProfileResponses($businessProfile, 200);
     }
 
-     public function getUserBusinessProfileBySlugs($business_profiles_slugs)
+    public function getUserBusinessProfileBySlugs($business_profiles_slugs)
     {
-         $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('slug', $business_profiles_slugs)->first();
+        $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('slug', $business_profiles_slugs)->first();
 
-        if(!$businessProfile){
+        if (!$businessProfile) {
             return ErrorResponseEnum::$BPNF404;
         }
         $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
@@ -130,7 +135,7 @@ class UserBusinessProfileService
     public function getUserBusinessProfileList(BusinessProfileFilterRequest $businessProfileFilterRequest)
     {
         list($businessProfiles, $mappedBusinessProfiles) = $this->filterAndMapBusinessProfiles($businessProfileFilterRequest);
-        return new GetUserBusinessProfilesResponses($mappedBusinessProfiles, ['current_page' => $businessProfiles->currentPage(), 'last_page' => $businessProfiles->lastPage(), 'per_page' => $businessProfiles->perPage(), 'total' => $businessProfiles->total(), 'next_page_url' => $businessProfiles->nextPageUrl(), 'prev_page_url' => $businessProfiles->previousPageUrl()],200);
+        return new GetUserBusinessProfilesResponses($mappedBusinessProfiles, ['current_page' => $businessProfiles->currentPage(), 'last_page' => $businessProfiles->lastPage(), 'per_page' => $businessProfiles->perPage(), 'total' => $businessProfiles->total(), 'next_page_url' => $businessProfiles->nextPageUrl(), 'prev_page_url' => $businessProfiles->previousPageUrl()], 200);
     }
 
     public static function filterAndMapBusinessProfiles(BusinessProfileFilterRequest $businessProfileFilterRequest): array
