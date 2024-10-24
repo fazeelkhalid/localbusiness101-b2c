@@ -94,6 +94,8 @@ class UserBusinessProfileMapper
             'slug'=>$userBusinessProfileRequest->slug,
             'business_profile_url'=>env('FRONTEND_URL').'/business-profile/'.$userBusinessProfileRequest->slug,
             'card_image_url'=>$userBusinessProfileRequest->card_image_url,
+            'main_page_image_url'=>$userBusinessProfileRequest->main_page_image_url,
+            'website'=>$userBusinessProfileRequest->website,
             'business_profiles_key' => $userBusinessProfileRequest->business_profiles_key,
             'title' => $userBusinessProfileRequest->title,
             'description' => $userBusinessProfileRequest->description,
@@ -121,7 +123,13 @@ class UserBusinessProfileMapper
                     "rating" => $review["rating"] ?? 0
                 ];
             }, array_slice($userBusinessProfileRequest->ratings->toArray(), 0, 10)),
-            'avg_rating' => $avgRating
+            'avg_rating' => $avgRating,
+            'business_services' => array_map(function ($contact) {
+                return [
+                    'title' => $contact['name'],
+                    'description' => $contact['description'],
+                ];
+            }, $userBusinessProfileRequest->services->toArray()),
         ];
     }
 
@@ -135,6 +143,8 @@ class UserBusinessProfileMapper
             'slug'=>$userBusinessProfileRequest->slug,
             'business_profile_url'=>env('FRONTEND_URL').'/business-profile/'.$userBusinessProfileRequest->slug,
             'card_image_url'=>$userBusinessProfileRequest->card_image_url,
+            'main_page_image_url'=>$userBusinessProfileRequest->main_page_image_url,
+            'website'=>$userBusinessProfileRequest->website,
             'business_profiles_key' => $userBusinessProfileRequest->business_profiles_key,
             'title' => $userBusinessProfileRequest->title,
             'description' => $userBusinessProfileRequest->description,
@@ -151,6 +161,13 @@ class UserBusinessProfileMapper
                     'address' => $contact['business_address'],
                 ];
             }, $userBusinessProfileRequest->contactDetails->toArray()),
+            'business_services' => array_map(function ($contact) {
+                return [
+                    'title' => $contact['name'],
+                    'description' => $contact['description'],
+                ];
+            }, $userBusinessProfileRequest->services->toArray()),
+
             'slide_images' => array_map(function ($slideImage) {
                 return $slideImage['image_url'];
             }, $userBusinessProfileRequest->slideImages->toArray()),
