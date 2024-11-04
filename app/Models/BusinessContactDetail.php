@@ -19,8 +19,12 @@ class BusinessContactDetail extends Model
                 'business_email' => $contactDetail['email'],
                 'business_phone' => $contactDetail['phone'],
                 'business_address' => $contactDetail['address'],
-                'map_location_url' => $contactDetail['map_location_url'],
             ]);
+
+            if ($businessProfile->theme === 'advance') {
+                $businessContactDetail->map_location_url = $contactDetail['map_location_url'];
+            }
+
             $businessContactDetail->save();
         }
     }

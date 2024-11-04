@@ -26,7 +26,6 @@ class Service extends Model
 
     public static function saveServices($servicesList, $businessProfileId)
     {
-
         foreach ($servicesList as $service) {
             self::create([
                 'business_profile_id' => $businessProfileId,

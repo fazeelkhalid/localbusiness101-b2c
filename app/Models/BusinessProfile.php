@@ -15,7 +15,7 @@ class BusinessProfile extends Model
         'user_id', 'business_profiles_key', 'title', 'description', 'short_intro',
         'keywords', 'og_image', 'og_type', 'tab_title', 'font_style', 'heading_color',
         'heading_size', 'fav_icon', 'business_category_id', 'card_image_url', 'slug','website','main_page_image_url',
-        'logo_image_url','about_image_url'
+        'logo_image_url','about_image_url', 'theme'
     ];
 
     public static function createBusinessProfile($business_profile, $user, $category)
@@ -36,12 +36,15 @@ class BusinessProfile extends Model
             'business_category_id' => $category->id,
             'card_image_url' => $businessProfileData['card_image'],
             'slug' => $businessProfileData['slug'],
-            'website' => $businessProfileData['website'],
-            'main_page_image_url'=> $businessProfileData['main_page_image'],
-            'logo_image_url'=> $businessProfileData['logo_image'],
-            'about_image_url'=> $businessProfileData['about_image']
-
         ]);
+
+        if ($businessProfileData['theme'] === 'advance') {
+            $businessProfile->website = $businessProfileData['website'];
+            $businessProfile->main_page_image_url = $businessProfileData['main_page_image'];
+            $businessProfile->logo_image_url = $businessProfileData['logo_image'];
+            $businessProfile->about_image_url = $businessProfileData['about_image'];
+        }
+
         $businessProfile->save();
         BusinessContactDetail::createBusinessContactDetails($businessProfileData['business_contact_details'], $businessProfile);
         return $businessProfile;
