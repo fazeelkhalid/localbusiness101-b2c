@@ -62,7 +62,7 @@ class UserBusinessProfileService
             BusinessProfileSlideImage::saveSlidesimages($slug, $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
 
             if ($businessProfile['theme'] === 'advance') {
-                Service::saveServices($userBusinessProfileRequest['business_profile']['services'], $businessProfile);
+                Service::saveServices($userBusinessProfileRequest['business_profile']['services'], $businessProfile->id);
             }
 
             $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userBusinessProfileRequest['user']);
