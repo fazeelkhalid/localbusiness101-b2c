@@ -25,6 +25,8 @@ class UserBusinessProfileMapper
             'business_profile_url'=>env('FRONTEND_URL').'/business-profile/'.$userBusinessProfileRequest["business_profile"]['slug'],
             'card_image_url'=>$userBusinessProfileRequest["business_profile"]['card_image'],
             'main_page_image_url'=>$userBusinessProfileRequest["business_profile"]['main_page_image'],
+            'logo_image_url'=>$userBusinessProfileRequest["business_profile"]['logo_image'],
+            'about_image_url'=>$userBusinessProfileRequest["business_profile"]['about_image'],
             'website'=>$userBusinessProfileRequest["business_profile"]['website'],
             'business_profiles_key' => $businessProfile->business_profiles_key,
             'title' => $userBusinessProfileRequest["business_profile"]['title'],
@@ -40,6 +42,7 @@ class UserBusinessProfileMapper
                     'email' => $contact['email'],
                     'phone' => $contact['phone'],
                     'address' => $contact['address'],
+                    'map_location' => $contact['map_location_url'],
                 ];
             }, $userBusinessProfileRequest["business_profile"]['business_contact_details']),
             'business_services' => array_map(function ($service) {

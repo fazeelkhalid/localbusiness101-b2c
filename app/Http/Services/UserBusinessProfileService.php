@@ -35,20 +35,27 @@ class UserBusinessProfileService
 
             $cardImage = $userBusinessProfileRequest['business_profile']['card_image'];
             $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
+            $logoImage = $userBusinessProfileRequest['business_profile']['logo_image'];
+            $aboutImage = $userBusinessProfileRequest['business_profile']['about_image'];
 
             $cardImageFilename = 'card_image-' . time() . '.' . $cardImage->getClientOriginalExtension();
             $mainPageImageFileName = 'main_page_image-' . time() . '.' . $mainPageImage->getClientOriginalExtension();
+            $logoImageFileName = 'logo_image-' . time() . '.' . $logoImage->getClientOriginalExtension();
+            $aboutImageFileName = 'about_image-' . time() . '.' . $aboutImage->getClientOriginalExtension();
 
             $acquirer = Acquirer::createAcquirer($userBusinessProfileRequest['acquirer_name']);
             $user = User::createUser($userBusinessProfileRequest['user'], $acquirer);
             $category = BusinessCategory::findCategoryByName($userBusinessProfileRequest['business_profile']['category']);
 
             $userBusinessProfileRequest['business_profile']['slug'] = CustomUtils::generateUniqueSlug($userBusinessProfileRequest['business_profile']['title']);
-            $userBusinessProfileRequest['business_profile']['card_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $userBusinessProfileRequest['business_profile']['slug'], $cardImage, $cardImageFilename);
-            $userBusinessProfileRequest['business_profile']['main_page_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $userBusinessProfileRequest['business_profile']['slug'], $mainPageImage, $mainPageImageFileName);
+            $slug = $userBusinessProfileRequest['business_profile']['slug'];
+            $userBusinessProfileRequest['business_profile']['card_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $cardImage, $cardImageFilename);
+            $userBusinessProfileRequest['business_profile']['main_page_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $mainPageImage, $mainPageImageFileName);
+            $userBusinessProfileRequest['business_profile']['logo_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $logoImage, $logoImageFileName);
+            $userBusinessProfileRequest['business_profile']['about_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $aboutImage, $aboutImageFileName);
 
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
-            BusinessProfileSlideImage::saveSlidesimages($userBusinessProfileRequest['business_profile']['slug'], $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
+            BusinessProfileSlideImage::saveSlidesimages($slug, $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
             Service::saveServices($userBusinessProfileRequest['business_profile']['services'], $businessProfile->id);
 
             $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userBusinessProfileRequest['user']);
