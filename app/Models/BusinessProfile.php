@@ -36,6 +36,7 @@ class BusinessProfile extends Model
             'business_category_id' => $category->id,
             'card_image_url' => $businessProfileData['card_image'],
             'slug' => $businessProfileData['slug'],
+            'theme' => $businessProfileData['theme'],
         ]);
 
         if ($businessProfileData['theme'] === 'advance') {
