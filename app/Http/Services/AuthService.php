@@ -54,7 +54,8 @@ class AuthService
             $authServiceErrorExceptionResponse= AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
             throw new ErrorException("Invalid email or password.", $authServiceErrorExceptionResponse, $authServiceResponse->status());
         }
-        $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse);
+        $userAcquirerKey = User::with('acquirer')->where('email', $cred['email'])->first()->acquirer->key;
+        $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse, $userAcquirerKey);
         return new LoginResponse('Login Successfully', $loginResponse, 200);
     }
 }

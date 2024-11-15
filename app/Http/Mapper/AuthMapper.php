@@ -7,7 +7,7 @@ use App\Http\Utils\CustomUtils;
 
 class AuthMapper
 {
-    public static function mapLoginResponse($requestResponse)
+    public static function mapLoginResponse($requestResponse, $userAcquirerKey)
     {
         $data = json_decode($requestResponse, true);
 
@@ -17,6 +17,7 @@ class AuthMapper
                 'type' => $data['login']['authorisation']['type'],
             ],
             'user' => [
+                'key' => $userAcquirerKey,
                 'name' => $data['login']['user']['name'],
                 'email' => $data['login']['user']['email'],
             ],
