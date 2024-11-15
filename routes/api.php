@@ -36,10 +36,6 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
 
     Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfileMiddleware::class])->group(function () {
-        Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
-        Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
-
-
         Route::get('/migrate', [LaravelCommandController::class, 'migrate']);
         Route::get('/storage-link', [LaravelCommandController::class, 'createStorageLink']);
         Route::get('/migrate-rollback', [LaravelCommandController::class, 'rollback']);
@@ -52,6 +48,8 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
 
         Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
+            Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
+            Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
             Route::get('/business_profile_stats', [ClientLogsController::class, 'fetchBusinessProfileStats']);
             Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);
             Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
