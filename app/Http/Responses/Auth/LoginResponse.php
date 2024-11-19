@@ -18,9 +18,16 @@ class LoginResponse implements Responsable
 
     public function toResponse($request)
     {
-        return response()->json([
-            'message' => $this->message,
-            'login' => $this->login
-        ], $this->status);
+        if($this->login){
+            return response()->json([
+                'message' => $this->message,
+                'login' => $this->login
+            ], $this->status);
+        }
+        else{
+            return response()->json([
+                'message' => $this->message,
+            ], $this->status);
+        }
     }
 }

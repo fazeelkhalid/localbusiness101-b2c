@@ -34,4 +34,10 @@ class AuthController extends Controller
     {
         return $this->authService->login($loginRequest);
     }
+    public function verifyJwt()
+    {
+        return $this->authService->verifyJwt();
+    }
+
+
 }

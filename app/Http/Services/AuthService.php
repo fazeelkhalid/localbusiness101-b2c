@@ -12,6 +12,7 @@ use App\Http\Responses\Error\ErrorResponse;
 use App\Http\Responses\Auth\SignUpResponse;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class AuthService
 {
@@ -58,4 +59,8 @@ class AuthService
         $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse, $userAcquirerKey);
         return new LoginResponse('Login Successfully', $loginResponse, 200);
     }
+    public function verifyJwt() {
+        return new LoginResponse('User has been verified', NULL, 200);
+    }
+
 }

@@ -48,6 +48,8 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
 
         Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
+
+            Route::get('/verify', [AuthController::class, 'verifyJwt']);
             Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
             Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
             Route::get('/business_profile_stats', [ClientLogsController::class, 'fetchBusinessProfileStats']);

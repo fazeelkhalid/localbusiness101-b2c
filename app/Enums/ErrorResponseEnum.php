@@ -28,7 +28,7 @@ class ErrorResponseEnum
     {
         self::$UENE422 = new ErrorResponse(['email' => 'The email has already been taken.'], 422);
         self::$RNE404 = new ErrorResponse(['error' => 'Route not found or incorrect method.'], 404);
-        self::$UAA401 = new ErrorResponse(['error' => 'Unauthorized access.'], 401);
+        self::$UAA401 = new ErrorResponse("Unauthorized access.", 401);
         self::$AKM401 = new ErrorResponse(['error' => 'API key missing'], 401);
         self::$IAK401 = new ErrorResponse(['error' => 'Invalid API key'], 401);
         self::$BPNF404 = new ErrorResponse('Business Profile not found', 404);
