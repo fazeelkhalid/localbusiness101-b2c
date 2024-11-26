@@ -31,9 +31,9 @@ class CreateUserBusinessProfileRequest extends FormRequest
             'business_profile.font_style' => 'required|string|max:255',
             'business_profile.heading_color' => 'required|string|max:255',
             'business_profile.heading_size' => 'required|string|max:255',
-            'business_profile.business_contact_details.*.email' => 'required|email',
+            'business_profile.business_contact_details.*.email' => 'required|email|max:255',
             'business_profile.business_contact_details.*.phone' => 'required|string|max:15',
-            'business_profile.business_contact_details.*.address' => 'required|string',
+            'business_profile.business_contact_details.*.address' => 'required|string|max:255',
 //            'business_profile.business_contact_details.*.map_location_url' => 'required|string',
             'business_profile.slide_images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
 //            'business_profile.main_page_image' => 'required|image|mimes:jpg,jpeg,png|max:2048|dimensions:min_width=1500,min_height=900',
@@ -47,7 +47,7 @@ class CreateUserBusinessProfileRequest extends FormRequest
         if ($this->input('business_profile.theme') === 'advance') {
             $rules = array_merge($rules, [
                 'business_profile.website' => 'required|string|url',
-                'business_profile.business_contact_details.*.map_location_url' => 'required|string',
+                'business_profile.business_contact_details.*.map_location_url' => 'required|string|max:400',
                 'business_profile.main_page_image' => 'required|image|mimes:jpg,jpeg,png|max:2048|dimensions:min_width=1500,min_height=900',
                 'business_profile.logo_image' => 'required|image|mimes:jpg,jpeg,png|max:1024',
                 'business_profile.about_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',

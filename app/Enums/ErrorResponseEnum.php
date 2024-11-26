@@ -23,6 +23,9 @@ class ErrorResponseEnum
 
     public static ErrorResponse $ANF404;
 
+    public static ErrorResponse $INVALID_JWT_TOKEN;
+
+    public static ErrorResponse $AUTHORIZATION_HEADER_MISSING;
 
     public static function initialize(): void
     {
@@ -34,6 +37,9 @@ class ErrorResponseEnum
         self::$BPNF404 = new ErrorResponse('Business Profile not found', 404);
         self::$CFRF404 = new ErrorResponse('Contact request not found', 404);
         self::$ANF404 = new ErrorResponse('Acquirer not found, Or not assign to any user', 404);
+        self::$INVALID_JWT_TOKEN = new ErrorResponse('Invalid JWT Token', 401);
+        self::$AUTHORIZATION_HEADER_MISSING = new ErrorResponse('Authorization header missing', 401);
+
     }
 }
 

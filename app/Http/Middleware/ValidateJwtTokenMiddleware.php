@@ -28,14 +28,14 @@ class ValidateJwtTokenMiddleware
         $authorizationHeader = $request->header('Authorization');
 
         if (!$authorizationHeader) {
-            return response()->json(['error' => 'Authorization header not found'], 401);
+            return ErrorResponseEnum::$AUTHORIZATION_HEADER_MISSING;
         }
 
         $jwtToken = str_replace('Bearer ', '', $authorizationHeader);
         $response = AuthRequestService::request('/api/validate-jwt-token', 'POST', [], $jwtToken);
 
         if (!$response->successful()) {
-            return response()->json(["Authorization" => $response->json()], 401);
+            return ErrorResponseEnum::$INVALID_JWT_TOKEN;
         }
 
         $jsonResponse = $response->json();
