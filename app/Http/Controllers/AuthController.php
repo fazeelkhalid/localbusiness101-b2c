@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ErrorResponseEnum;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SignUpRequest;
 use App\Http\Responses\Error\ErrorResponse;
@@ -10,7 +9,7 @@ use App\Http\Responses\Auth\SignUpResponse;
 use App\Http\Services\AcquirerService;
 use App\Http\Services\AuthService;
 use App\Http\Services\UserCredService;
-use Illuminate\Http\Request;
+use http\Env\Request;
 
 class AuthController extends Controller
 {
@@ -35,9 +34,9 @@ class AuthController extends Controller
     {
         return $this->authService->login($loginRequest);
     }
-    public function verifyJwt(Request $request)
+    public function verifyJwt()
     {
-        return $this->authService->verifyJwt($request);
+        return $this->authService->verifyJwt();
     }
 
 

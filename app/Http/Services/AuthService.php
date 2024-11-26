@@ -8,11 +8,9 @@ use App\Http\Mapper\AuthMapper;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SignUpRequest;
 use App\Http\Responses\Auth\LoginResponse;
-use App\Http\Responses\Auth\verifyResponse;
 use App\Http\Responses\Error\ErrorResponse;
 use App\Http\Responses\Auth\SignUpResponse;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
@@ -61,19 +59,8 @@ class AuthService
         $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse, $userAcquirerKey);
         return new LoginResponse('Login Successfully', $loginResponse, 200);
     }
-    public function verifyJwt(Request $request) {
-
-        $authorizationHeader = $request->header('Authorization');
-        $jwtToken = str_replace('Bearer ', '', $authorizationHeader);
-
-        $response = AuthRequestService::request('/api/refresh-jwt-token', 'POST', [], $jwtToken);
-
-        if (!$response->successful()) {
-            return ErrorResponseEnum::$INVALID_JWT_TOKEN;
-        }
-        $jsonResponse = $response->json();
-
-        return new verifyResponse('User has been verified', $jsonResponse, 200);
+    public function verifyJwt() {
+        return new LoginResponse('User has been verified', NULL, 200);
     }
 
 }
