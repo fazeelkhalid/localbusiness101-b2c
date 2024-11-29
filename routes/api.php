@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\InitController;
 use App\Http\Controllers\LaravelCommandController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserBusinessProfileController;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
+
+    Route::post('/payment', [PaymentController::class, 'createPayment']);
 
     Route::post("/image-host", [LaravelCommandController::class, 'imageHost']);
 
