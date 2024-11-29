@@ -25,6 +25,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
     Route::post('/payment', [PaymentController::class, 'createPayment']);
     Route::get('/payment/{payment_id}', [PaymentController::class, 'getPayment']);
+    Route::put('/payment/{payment_id}', [PaymentController::class, 'updatePaymentStatus']);
 
     Route::post("/image-host", [LaravelCommandController::class, 'imageHost']);
 
