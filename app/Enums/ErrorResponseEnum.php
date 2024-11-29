@@ -27,6 +27,9 @@ class ErrorResponseEnum
 
     public static ErrorResponse $AUTHORIZATION_HEADER_MISSING;
 
+    public static ErrorResponse $PAYMENT_NOT_FOUND;
+
+
     public static function initialize(): void
     {
         self::$UENE422 = new ErrorResponse(['email' => 'The email has already been taken.'], 422);
@@ -39,6 +42,7 @@ class ErrorResponseEnum
         self::$ANF404 = new ErrorResponse('Acquirer not found, Or not assign to any user', 404);
         self::$INVALID_JWT_TOKEN = new ErrorResponse('Invalid JWT Token', 401);
         self::$AUTHORIZATION_HEADER_MISSING = new ErrorResponse('Authorization header missing', 401);
+        self::$PAYMENT_NOT_FOUND = new ErrorResponse('Payment not found', 401);
 
     }
 }

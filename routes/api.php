@@ -24,6 +24,7 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
     Route::post('/payment', [PaymentController::class, 'createPayment']);
+    Route::get('/payment/{payment_id}', [PaymentController::class, 'getPayment']);
 
     Route::post("/image-host", [LaravelCommandController::class, 'imageHost']);
 

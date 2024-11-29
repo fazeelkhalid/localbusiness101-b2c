@@ -15,7 +15,7 @@ class Payment extends Model
     protected $fillable = [
         'amount',
         'description',
-        'is_seen',
+        'seen_count',
         'is_paid',
         'response',
         'payment_id',
@@ -42,5 +42,13 @@ class Payment extends Model
         } while (self::where('payment_id', $paymentId)->exists());
 
         return $paymentId;
+    }
+
+    public static function getAndSetPaymentIsSeen($payment_id)
+    {
+        $payment = Payment::where('payment_id', $payment_id)->where('is_paid', false)->firstOrFail();
+        $payment->increment('seen_count');
+        $payment->save();
+        return $payment;
     }
 }

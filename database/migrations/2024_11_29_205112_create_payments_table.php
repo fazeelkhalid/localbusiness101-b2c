@@ -14,7 +14,7 @@ class CreatePaymentsTable extends Migration
             $table->string('payment_id', 8)->unique();
             $table->decimal('amount', 10, 2);
             $table->string('description', 1000);
-            $table->boolean('is_seen')->default(false);
+            $table->integer('seen_count')->default(0);
             $table->boolean('is_paid')->default(false);
             $table->json('response')->nullable();
             $table->timestamps();
