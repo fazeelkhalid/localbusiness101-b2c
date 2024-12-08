@@ -53,6 +53,8 @@ class CreateUserBusinessProfileRequest extends FormRequest
                 'business_profile.about_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
                 'business_profile.services.*.title' => 'required|string|max:255',
                 'business_profile.services.*.description' => 'required|string',
+//                'business_profile.gallery_images' => 'required|array|min:5',
+                'business_profile.gallery_images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             ]);
         }
         return $rules;
@@ -91,6 +93,13 @@ class CreateUserBusinessProfileRequest extends FormRequest
             'business_profile.about_image.required' => 'The about image is required for advanced themes.',
             'business_profile.services.*.title.required' => 'The service title is required for advanced themes.',
             'business_profile.services.*.description.required' => 'The service description is required for advanced themes.',
+            'business_profile.gallery_images.required' => 'At least 5 gallery images are required.',
+            'business_profile.gallery_images.array' => 'The gallery images must be provided as an array.',
+            'business_profile.gallery_images.min' => 'You must upload at least 5 gallery images.',
+            'business_profile.gallery_images.*.required' => 'Each gallery image is required.',
+            'business_profile.gallery_images.*.image' => 'Each gallery image must be a valid image file.',
+            'business_profile.gallery_images.*.mimes' => 'Each gallery image must be a file of type: jpg, jpeg, png.',
+            'business_profile.gallery_images.*.max' => 'Each gallery image may not be greater than 2MB.',
         ];
     }
 

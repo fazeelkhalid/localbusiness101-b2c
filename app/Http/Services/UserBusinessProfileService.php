@@ -19,6 +19,7 @@ use App\Http\Utils\CustomUtils;
 use App\Models\Acquirer;
 use App\Models\BusinessCategory;
 use App\Models\BusinessProfile;
+use App\Models\BusinessProfileGallery;
 use App\Models\BusinessProfileSlideImage;
 use App\Models\Service;
 use App\Models\User;
@@ -48,6 +49,7 @@ class UserBusinessProfileService
                 $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
                 $logoImage = $userBusinessProfileRequest['business_profile']['logo_image'];
                 $aboutImage = $userBusinessProfileRequest['business_profile']['about_image'];
+                $galleryImages = $userBusinessProfileRequest['business_profile']['about_image'];
 
                 $mainPageImageFileName = 'main_page_image-' . time() . '.' . $mainPageImage->getClientOriginalExtension();
                 $logoImageFileName = 'logo_image-' . time() . '.' . $logoImage->getClientOriginalExtension();
@@ -59,6 +61,9 @@ class UserBusinessProfileService
             }
 
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
+            if($userBusinessProfileRequest['business_profile']['theme'] === 'advance') {
+                BusinessProfileGallery::saveGalleryImages($slug,$businessProfile->id, $userBusinessProfileRequest['business_profile']['gallery_images']);
+            }
             BusinessProfileSlideImage::saveSlidesimages($slug, $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
 
             if ($businessProfile['theme'] === 'advance') {

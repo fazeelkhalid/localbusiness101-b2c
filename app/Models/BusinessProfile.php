@@ -112,4 +112,10 @@ class BusinessProfile extends Model
         return $this->hasMany(BusinessProfileSlideImage::class, 'business_profile_id');
     }
 
+    public function galleryImages()
+    {
+        return $this->hasMany(BusinessProfileGallery::class, 'business_profile_id');
+    }
+
+
 }
