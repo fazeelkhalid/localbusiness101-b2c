@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessProfileGallery extends Model
 {
     use HasFactory;
-
-    protected $table = 'businessprofile_gallery';
+    
+    protected $table = 'business_profile_gallery';
 
     protected $fillable = [
         'business_profile_id',
