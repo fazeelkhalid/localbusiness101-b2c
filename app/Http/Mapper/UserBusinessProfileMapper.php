@@ -121,6 +121,9 @@ class UserBusinessProfileMapper
             'slide_images' => array_map(function ($slideImage) {
                 return $slideImage['image_url'];
             }, $userBusinessProfileRequest->slideImages->toArray()),
+            'gallery_images' => array_map(function ($galleryImage) {
+                return $galleryImage['image_url'];
+            }, $userBusinessProfileRequest->galleryImages->toArray()),
             'reviews' => array_map(function ($review) {
                 return [
                     "id" => $review["id"],
