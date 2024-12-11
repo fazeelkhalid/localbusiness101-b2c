@@ -61,7 +61,7 @@ class UserBusinessProfileService
             }
 
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
-            if($userBusinessProfileRequest['business_profile']['theme'] === 'advance') {
+            if($userBusinessProfileRequest['business_profile']['theme'] === 'advance' && isset($userBusinessProfileRequest['business_profile']['gallery_images'])) {
                 BusinessProfileGallery::saveGalleryImages($slug,$businessProfile->id, $userBusinessProfileRequest['business_profile']['gallery_images']);
             }
             BusinessProfileSlideImage::saveSlidesimages($slug, $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
