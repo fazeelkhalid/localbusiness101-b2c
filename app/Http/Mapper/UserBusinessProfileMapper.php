@@ -3,6 +3,8 @@
 namespace App\Http\Mapper;
 
 
+use App\Http\Utils\CustomUtils;
+
 class UserBusinessProfileMapper
 {
 
@@ -87,6 +89,9 @@ class UserBusinessProfileMapper
     {
         $avgRating = $userBusinessProfileRequest->ratings->avg("rating") ?? 0;
         $avgRating = $avgRating != 0 ? number_format($avgRating, 1) : $avgRating;
+
+        $maxLinksPerColumn = CustomUtils::calculateMaxLinksPerColumn($userBusinessProfileRequest->usefulLinks->toArray());
+
         return [
             'acquirer' => [
                 'name' => $userBusinessProfileRequest->user->acquirer->name,
@@ -124,6 +129,15 @@ class UserBusinessProfileMapper
             'gallery_images' => array_map(function ($galleryImage) {
                 return $galleryImage['image_url'];
             }, $userBusinessProfileRequest->galleryImages->toArray()),
+            'usefull_link' => [
+                'other_profile' => array_map(function ($galleryImage) {
+                    return [
+                        'link' => $galleryImage['links'],
+                        'title' => $galleryImage['tags_title'],
+                    ];
+                }, $userBusinessProfileRequest->usefulLinks->toArray()),
+                'max_links_per_column' => $maxLinksPerColumn,
+            ],
             'reviews' => array_map(function ($review) {
                 return [
                     "id" => $review["id"],

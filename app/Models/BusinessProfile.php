@@ -88,7 +88,7 @@ class BusinessProfile extends Model
 
     public static function getBusinessProfileFullDetails()
     {
-        return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category', 'slideImages', 'services', 'galleryImages']);
+        return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category', 'slideImages', 'services', 'galleryImages', 'usefulLinks']);
     }
 
     public static function getBusinessProfileFullDetailsRandomly($filter)
@@ -115,6 +115,12 @@ class BusinessProfile extends Model
     public function galleryImages()
     {
         return $this->hasMany(BusinessProfileGallery::class, 'business_profile_id');
+    }
+
+
+    public function usefulLinks()
+    {
+        return $this->hasMany(UsefulLink::class, 'business_profile_id');
     }
 
 

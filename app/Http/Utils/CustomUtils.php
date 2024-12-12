@@ -85,5 +85,13 @@ class CustomUtils
             $response->setContent(json_encode($responseData));
         }
     }
+    static function calculateMaxLinksPerColumn(array $links): int
+    {
+        $totalLinks = count($links);
+        $columns = 3;
+        $linksPerColumn = intdiv($totalLinks, $columns);
+        $remainder = $totalLinks % $columns;
+        return $linksPerColumn + ($remainder > 0 ? 1 : 0);
+    }
 
 }
