@@ -349,7 +349,6 @@ return new class extends Migration {
             <div class="info-box bill-to">
                 <h3>Bill To</h3>
                 <p><strong>Name:</strong> %NAME%</p>
-                <p><strong>Phone:</strong> %NUMBER%</p>
                 <p><strong>Email:</strong> %EMAIL%</p>
             </div>
             <div class="info-box invoice-info">
@@ -370,7 +369,7 @@ return new class extends Migration {
             <tbody>
             <tr>
                 <td>%DESCRIPTION%</td>
-                <td>%PRICE%</td>
+                <td>$%PRICE%</td>
                 <td>$0.00</td>
             </tr>
             </tbody>
@@ -380,7 +379,7 @@ return new class extends Migration {
             <table>
                 <tr class="total-row">
                     <td><strong>Total Amount:</strong></td>
-                    <td><strong>%PRICE%</strong></td>
+                    <td><strong>$%PRICE%</strong></td>
                 </tr>
             </table>
         </div>
@@ -408,7 +407,7 @@ HTML,
             'updated_at' => now()
             ], [
                 'name' => 'invoice_email_subject',
-                'value' => 'Invoice #%INVOICE_NO% from FastDev Labs',
+                'value' => 'Invoice <#%INVOICE_NO%> from FastDev Labs llc',
                 'created_at' => now(),
                 'updated_at' => now()
             ]
@@ -421,7 +420,11 @@ HTML,
     public function down(): void
     {
         DB::table('application_configuration')
-            ->where('name', 'invoice_email')
+            ->where('name', 'invoice_email_subject')
+            ->delete();
+
+        DB::table('application_configuration')
+            ->where('name', 'invoice_email_body')
             ->delete();
     }
 };
