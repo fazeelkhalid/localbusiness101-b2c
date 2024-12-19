@@ -19,6 +19,9 @@ class Payment extends Model
         'is_paid',
         'response',
         'payment_id',
+        'client_email',
+        'client_name',
+        'client_phone_number',
     ];
 
 
@@ -31,9 +34,11 @@ class Payment extends Model
             'amount' => $validatedData['amount'],
             'description' => $validatedData['description'],
             'currency' => $validatedData['currency'],
+            'client_email' => $validatedData['client_email'],
+            'client_name' => $validatedData['client_name'],
+            'client_phone_number' => $validatedData['client_phone_number'] ?? null,
         ]);
     }
-
 
     public static function generateUniquePaymentId()
     {
@@ -51,4 +56,7 @@ class Payment extends Model
         $payment->save();
         return $payment;
     }
+
+
+
 }

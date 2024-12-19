@@ -3,6 +3,7 @@
 namespace App\Http\Utils;
 
 use App\Http\Mapper\AuthMapper;
+use App\Models\ApplicationConfiguration;
 use App\Models\BusinessProfile;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
@@ -92,6 +93,14 @@ class CustomUtils
         $linksPerColumn = intdiv($totalLinks, $columns);
         $remainder = $totalLinks % $columns;
         return $linksPerColumn + ($remainder > 0 ? 1 : 0);
+    }
+
+    public static function getInvoiceEmailBody($payment)
+    {
+        $email_body = ApplicationConfiguration::getApplicationConfiguration("invoice_email_body");
+
+        print_r($email_body);
+        die();
     }
 
 }

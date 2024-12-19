@@ -8,6 +8,7 @@ use App\Http\Mapper\PaymentMapper;
 use App\Http\Requests\Payment\PaymentRequest;
 use App\Http\Requests\Payment\PaymentStatusUpdateRequest;
 use App\Http\Responses\Payment\PaymentResponse;
+use App\Http\Utils\CustomUtils;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -40,6 +41,8 @@ class PaymentController extends Controller
         if (!$payment) {
             return ErrorResponseEnum::$PAYMENT_NOT_FOUND;
         }
+        CustomUtils::getInvoiceEmailBody($payment);
+
         $message='';
         if ($validatedData['status'] === 'success') {
             $payment->is_paid = true;
@@ -50,7 +53,7 @@ class PaymentController extends Controller
             $message = "Payment marked as failed!!! please contact our customer support";
         }
         $payment->stripe_response = $validatedData['stripe_response'];
-        $payment->save();
+//        $payment->save();
         $payment = PaymentMapper::mapStoredpaymentRequestToResponse($payment);
         return new PaymentResponse($message, $payment, 200);
     }

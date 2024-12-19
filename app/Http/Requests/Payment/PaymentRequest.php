@@ -19,6 +19,9 @@ class PaymentRequest extends FormRequest
             'amount' => 'required|numeric|min:0.01',
             'description' => 'required|string|max:1000',
             'currency' => 'required|string|size:3',
+            'client_email' => 'required|email|max:255',
+            'client_name' => 'required|string|max:255',
+            'client_phone_number' => 'nullable|string|max:20',
         ];
     }
 
@@ -32,6 +35,12 @@ class PaymentRequest extends FormRequest
             'description.max' => 'The description cannot exceed 1000 characters.',
             'currency.required' => 'The currency is required.',
             'currency.size' => 'The currency must be a valid 3-character ISO code.',
+            'client_email.required' => 'The client email is required.',
+            'client_email.email' => 'The client email must be a valid email.',
+            'client_email.max' => 'The client email cannot exceed 255 characters.',
+            'client_name.required' => 'The client name is required.',
+            'client_name.max' => 'The client name cannot exceed 255 characters.',
+            'client_phone_number.max' => 'The client phone number cannot exceed 20 characters.',
         ];
     }
 
