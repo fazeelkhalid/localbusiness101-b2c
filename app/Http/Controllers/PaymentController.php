@@ -54,7 +54,7 @@ class PaymentController extends Controller
             $message = "Payment marked as failed!!! please contact our customer support";
         }
         $payment->stripe_response = $validatedData['stripe_response'];
-//        $payment->save();
+        $payment->save();
         $payment = PaymentMapper::mapStoredpaymentRequestToResponse($payment);
         return new PaymentResponse($message, $payment, 200);
     }
