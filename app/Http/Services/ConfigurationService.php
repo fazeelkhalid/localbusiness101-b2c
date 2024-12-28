@@ -22,10 +22,10 @@ class ConfigurationService
     /**
      * @return AcquirerService
      */
-    public function getConfigurationValue($configurationCode)
+    public function getConfigurationValueByKey($configurationCode)
     {
         $acquirer = $this->acquirerService->get("acquirer");
-        $configuration = $acquirer->configurations->where('config_code', 'ip_and_port_restrictions')->first();
+        $configuration = $acquirer->configurations->where('config_code', $configurationCode)->first();
         if($configuration){
             return $configuration->value;
         }

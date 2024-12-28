@@ -8,6 +8,7 @@ use App\Http\Mapper\PaymentMapper;
 use App\Http\Requests\Payment\PaymentRequest;
 use App\Http\Requests\Payment\PaymentStatusUpdateRequest;
 use App\Http\Responses\Payment\PaymentResponse;
+use App\Http\Services\Client\HttpNotificationService;
 use App\Http\Utils\CustomUtils;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -41,13 +42,13 @@ class PaymentController extends Controller
         if (!$payment) {
             return ErrorResponseEnum::$PAYMENT_NOT_FOUND;
         }
-        CustomUtils::getInvoiceEmailBody($payment);
 
         $message='';
         if ($validatedData['status'] === 'success') {
             $payment->is_paid = true;
             $message = "Payment marked as successful!!! You will received a notification shortly";
-
+            HttpNotificationService::sendInvoiceEmail($payment, $payment->client_email);
+            HttpNotificationService::sendInvoiceEmail($payment, 'info@fastdevlabs.com');
         } else {
             $payment->is_paid = false;
             $message = "Payment marked as failed!!! please contact our customer support";

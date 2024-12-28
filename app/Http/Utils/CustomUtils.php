@@ -98,18 +98,13 @@ class CustomUtils
     public static function getInvoiceEmailBody($payment)
     {
         $email_body = ApplicationConfiguration::getApplicationConfiguration("invoice_email_body");
-        $email_subject = ApplicationConfiguration::getApplicationConfiguration("invoice_email_subject");
         $formattedDate = $payment->updated_at->format('F j, Y');
         $email_body = str_replace('%NAME%', $payment->client_name, $email_body);
         $email_body = str_replace('%EMAIL%', $payment->client_email, $email_body);
         $email_body = str_replace('%INVOICE_NO%', $payment->payment_id, $email_body);
         $email_body = str_replace('%CURRENT_DATE%', $formattedDate, $email_body);
         $email_body = str_replace('%PRICE%', $payment->amount, $email_body);
-        $email_body = str_replace('%DESCRIPTION%', $payment->description, $email_body);
-
-        $email_subject = str_replace('%INVOICE_NO%', $payment->payment_id, $email_subject);
-        print_r($email_subject);
-        print_r($email_body);
+        return str_replace('%DESCRIPTION%', $payment->description, $email_body);
     }
 
 }
