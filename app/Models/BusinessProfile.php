@@ -15,7 +15,7 @@ class BusinessProfile extends Model
         'user_id', 'business_profiles_key', 'title', 'description', 'short_intro',
         'keywords', 'og_image', 'og_type', 'tab_title', 'font_style', 'heading_color',
         'heading_size', 'fav_icon', 'business_category_id', 'card_image_url', 'slug','website','main_page_image_url',
-        'logo_image_url','about_image_url', 'theme'
+        'logo_image_url','about_image_url', 'theme', 'analytics_report_id', 'html_report'
     ];
 
     public static function createBusinessProfile($business_profile, $user, $category)
@@ -123,5 +123,9 @@ class BusinessProfile extends Model
         return $this->hasMany(UsefulLink::class, 'business_profile_id');
     }
 
+    public function analyticsReport()
+    {
+        return $this->belongsTo(BusinessProfileAnalyticsReport::class, 'analytics_report_id');
+    }
 
 }

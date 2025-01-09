@@ -3,6 +3,7 @@
 use App\Enums\ErrorResponseEnum;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\BusinessProfileAnalyticsController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\InitController;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
+
+    Route::post('/business-profile/{slug}/generate_analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
 
     Route::post('/payment', [PaymentController::class, 'createPayment']);
     Route::get('/payment/{payment_id}', [PaymentController::class, 'getPayment']);
@@ -52,8 +55,8 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
         Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
 
-        Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
 
+        Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
             Route::get('/verify', [AuthController::class, 'verifyJwt']);
             Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
             Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
@@ -64,7 +67,6 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
         });
     });
 });
-
 
 Route::fallback(function () {
     return ErrorResponseEnum::$RNE404;
