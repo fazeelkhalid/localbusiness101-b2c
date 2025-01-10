@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Enums\ErrorResponseEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Mapper\UserBusinessProfileMapper;
 use App\Http\Requests\UserBusinessProfile\BusinessProfileAnalyticsReportRequest;
+use App\Http\Responses\UserBusinessProfile\BusinessProfileAnalyticsResponses;
 use App\Http\Services\AcquirerService;
 use App\Http\Utils\CustomUtils;
+use App\Models\ApplicationConfiguration;
 use App\Models\BusinessProfile;
 use App\Models\BusinessProfileAnalyticsReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BusinessProfileAnalyticsController extends Controller
 {
@@ -39,12 +43,8 @@ class BusinessProfileAnalyticsController extends Controller
         $analyticsReport = BusinessProfileAnalyticsReport::createAnalysis($userBusinessProfileAnalytics, $businessProfile->id);
         $businessProfile->analytics_report_id = $analyticsReport->id;
         $businessProfile->save();
-
-        return response()->json([
-            'message' => 'Analytics generated successfully',
-            'data' => $analyticsReport
-        ], 201);
-
+        $analyticsReport = UserBusinessProfileMapper::mapAnalyticsReportToCreateAnalyticResponse($analyticsReport);
+        return new BusinessProfileAnalyticsResponses("Analytics generated successfully", $analyticsReport, 201);
     }
 
     /**
@@ -54,7 +54,7 @@ class BusinessProfileAnalyticsController extends Controller
      */
     public function saveGoogleAnalyticsGraphImages( $clickByAreaGraphImage, $slug)
     {
-        $clickByAreaGraphImageFilename = 'card_image-' . time() . '.' . $clickByAreaGraphImage->getClientOriginalExtension();
+        $clickByAreaGraphImageFilename = 'graph-'.Str::random(32) . time() . '.' . $clickByAreaGraphImage->getClientOriginalExtension();
         $url = url('/') . CustomUtils::uploadProfileImage('/' . $slug.'/analytics', $clickByAreaGraphImage, $clickByAreaGraphImageFilename);
         return $url;
     }

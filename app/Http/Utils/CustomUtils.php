@@ -107,4 +107,89 @@ class CustomUtils
         return str_replace('%DESCRIPTION%', $payment->description, $email_body);
     }
 
+    public static function parseURlAndGetLastIndex($url)
+    {
+        $parsedUrl = parse_url($url);
+        $path = $parsedUrl['path'] ?? '';
+        $segments = explode('/', trim($path, '/'));
+        return end($segments); // Return the last part of the URL path
+    }
+
+    private static function getAnalyticsReportURLSection($urls)
+    {
+        if ($urls) {
+            $html = '<div class="url-section">';
+            $html .= '<h3>URLs</h3>';
+            $html .= '<div class="url-list">';
+            foreach ($urls as $url) {
+                $urlTitle = CustomUtils::parseURlAndGetLastIndex($url);
+                $html .= '<a href="' . htmlspecialchars($url) . '" class="url-item">';
+                $html .= htmlspecialchars($urlTitle);
+                $html .= '</a>';
+            }
+
+            $html .= '</div>';
+            $html .= '</div>';
+
+            return $html;
+        }
+        return '';
+    }
+
+    private static function getAnalyticsReportAreaSection($areas)
+    {
+        if ($areas) {
+            $html = ' <div class="areas-section">';
+            $html .= '<h3>Areas</h3>';
+            $html .= '<div class="areas-list">';
+            foreach ($areas as $area) {
+                $html .= '<div class="area-item">' . $area . '</div>';
+            }
+            $html .= '</div>';
+            $html .= '</div>';
+
+            return $html;
+        }
+        return '';
+    }
+
+    private static function getAnalyticsReportKeyWordSection($keywords)
+    {
+        if ($keywords) {
+            $html = ' <div class="keywords-section">';
+            $html .= '<h3>Top Keywords</h3>';
+            $html .= '<div class="keywords-list">';
+            foreach ($keywords as $keyword) {
+                $html .= '<div class="keyword-item">' . $keyword . '</div>';
+            }
+            $html .= '</div>';
+            $html .= '</div>';
+
+            return $html;
+        }
+        return '';
+    }
+    public static function getAnalyticsReport($userBusinessProfileAnalytics)
+    {
+        $report_analytics = ApplicationConfiguration::getApplicationConfiguration("BUSINESS_PROFILE_ANALYTIC_REPORT");
+        $report_analytics = str_replace('%NO_OF_DAYS%',$userBusinessProfileAnalytics['days'], $report_analytics);
+        $report_analytics = str_replace('%TOTAL_CLICKS%', $userBusinessProfileAnalytics['total_click'], $report_analytics);
+        $report_analytics = str_replace('%TOTAL_IMPRESSIONS%', $userBusinessProfileAnalytics['total_impressions'], $report_analytics);
+        $report_analytics = str_replace('%AVERAGE_CTR%', $userBusinessProfileAnalytics['average_ctr'], $report_analytics);
+        $report_analytics = str_replace('%AVERAGE_BOUNCE_RATE%', $userBusinessProfileAnalytics['average_bounce_rate'], $report_analytics);
+        $report_analytics = str_replace('%AVERAGE_TIME_ON_PAGE%', $userBusinessProfileAnalytics['average_time_on_page'], $report_analytics);
+        $report_analytics = str_replace('%TOP_KEYWORD%', $userBusinessProfileAnalytics['top_keyword'], $report_analytics);
+        $report_analytics = str_replace('%TOP_AREA%', $userBusinessProfileAnalytics['top_area'], $report_analytics);
+
+        $report_analytics = str_replace('%URL_SECTION%', CustomUtils::getAnalyticsReportURLSection($userBusinessProfileAnalytics['urls']), $report_analytics);
+        $report_analytics = str_replace('%AREA_SECTION%', CustomUtils::getAnalyticsReportAreaSection($userBusinessProfileAnalytics['areas']), $report_analytics);
+        $report_analytics = str_replace('%KEYWORDS_SECTION%', CustomUtils::getAnalyticsReportKeyWordSection($userBusinessProfileAnalytics['top_keywords']), $report_analytics);
+
+        $report_analytics = str_replace('%AREA_ANALYSIS_GRAPH_URL%', $userBusinessProfileAnalytics['click_by_area_graph_url'], $report_analytics);
+        $report_analytics = str_replace('%KEYWORD_COUNT_ANALYSIS_GRAPH_URL%', $userBusinessProfileAnalytics['search_keyword_counts_graph_url'], $report_analytics);
+        $report_analytics = str_replace('%CTR_GRAPH_URL%', $userBusinessProfileAnalytics['ctr_graph_url'], $report_analytics);
+        $report_analytics = str_replace('%KEYWORD_RANKING_ANALYSIS_GRAPH_URL%', $userBusinessProfileAnalytics['average_google_search_ranking_graph_url'], $report_analytics);
+        return str_replace('%VISITOR_ANALYSIS_GRAPH_URL%', $userBusinessProfileAnalytics['website_visitors_by_url_graph_url'], $report_analytics);
+    }
+
 }

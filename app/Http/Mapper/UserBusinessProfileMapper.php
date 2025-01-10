@@ -222,4 +222,28 @@ class UserBusinessProfileMapper
 
     }
 
+
+    public static function mapAnalyticsReportToCreateAnalyticResponse($analyticsReport)
+    {
+        return [
+            "days" => $analyticsReport["days"],
+            "total_click" => $analyticsReport["total_click"],
+            "total_impressions" => $analyticsReport["total_impressions"],
+            "average_ctr" => $analyticsReport["average_ctr"],
+            "average_bounce_rate" => $analyticsReport["average_bounce_rate"],
+            "average_time_on_page" => $analyticsReport["average_time_on_page"],
+            "top_keyword" => $analyticsReport["top_keyword"],
+            "top_area" => $analyticsReport["top_area"],
+            "urls" => json_decode($analyticsReport["urls"], true),
+            "areas" => json_decode($analyticsReport["areas"], true),
+            "top_keywords" => json_decode($analyticsReport["top_keywords"], true),
+            "click_by_area_graph_url" => $analyticsReport["click_by_area_graph_url"],
+            "search_keyword_counts_graph_url" => $analyticsReport["search_keyword_counts_graph_url"],
+            "ctr_graph_url" => $analyticsReport["ctr_graph_url"],
+            "average_google_search_ranking_graph_url" => $analyticsReport["average_google_search_ranking_graph_url"],
+            "website_visitors_by_url_graph_url" => $analyticsReport["website_visitors_by_url_graph_url"]
+        ];
+    }
+
+
 }
