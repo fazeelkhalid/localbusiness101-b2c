@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ErrorResponseEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
@@ -88,13 +89,28 @@ class BusinessProfile extends Model
 
     public static function getBusinessProfileFullDetails()
     {
-        return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category', 'slideImages', 'services', 'galleryImages', 'usefulLinks']);
+        return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category', 'slideImages', 'services', 'galleryImages', 'usefulLinks','analyticsReport']);
     }
 
     public static function getBusinessProfileFullDetailsRandomly($filter)
     {
         $random = $filter['random'] ?? 0;
         return $random ? self::getBusinessProfileFullDetails()->inRandomOrder() : self::getBusinessProfileFullDetails();
+    }
+
+    public static function getBusinessProfileAnalytics($slug)
+    {
+        $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('slug', $slug)->first();
+
+        if (!$businessProfile) {
+            return ErrorResponseEnum::$BPNF404;
+        }
+
+        if(!$businessProfile->analyticsReport){
+            return ErrorResponseEnum::$BUSINESS_PROFILE_ANALYTICS_NOT_FOUND;
+        }
+
+        return $businessProfile->analyticsReport;
     }
 
     public static function getAllBusinessProfilesURLs()

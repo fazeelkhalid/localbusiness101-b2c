@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ErrorResponseEnum;
-use App\Http\Controllers\Controller;
 use App\Http\Mapper\UserBusinessProfileMapper;
 use App\Http\Requests\UserBusinessProfile\BusinessProfileAnalyticsReportRequest;
 use App\Http\Responses\UserBusinessProfile\BusinessProfileAnalyticsResponses;
 use App\Http\Services\AcquirerService;
+use App\Http\Services\Client\HttpNotificationService;
 use App\Http\Utils\CustomUtils;
 use App\Models\ApplicationConfiguration;
 use App\Models\BusinessProfile;
 use App\Models\BusinessProfileAnalyticsReport;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class BusinessProfileAnalyticsController extends Controller
 {
@@ -41,21 +41,42 @@ class BusinessProfileAnalyticsController extends Controller
         $userBusinessProfileAnalytics['website_visitors_by_url_graph_url'] = $this->saveGoogleAnalyticsGraphImages($userBusinessProfileAnalytics['website_visitors_by_url_graph'], $slug);
 
         $analyticsReport = BusinessProfileAnalyticsReport::createAnalysis($userBusinessProfileAnalytics, $businessProfile->id);
+        $businessProfile->html_report = CustomUtils::makeAnalyticsReport($userBusinessProfileAnalytics);
         $businessProfile->analytics_report_id = $analyticsReport->id;
         $businessProfile->save();
         $analyticsReport = UserBusinessProfileMapper::mapAnalyticsReportToCreateAnalyticResponse($analyticsReport);
         return new BusinessProfileAnalyticsResponses("Analytics generated successfully", $analyticsReport, 201);
     }
 
-    /**
-     * @param mixed $clickByAreaGraphImage
-     * @param $slug
-     * @return void
-     */
-    public function saveGoogleAnalyticsGraphImages( $clickByAreaGraphImage, $slug)
+    public function sendAnalyticsReport($slug)
     {
-        $clickByAreaGraphImageFilename = 'graph-'.Str::random(32) . time() . '.' . $clickByAreaGraphImage->getClientOriginalExtension();
-        $url = url('/') . CustomUtils::uploadProfileImage('/' . $slug.'/analytics', $clickByAreaGraphImage, $clickByAreaGraphImageFilename);
+        $businessProfile = BusinessProfile::where('slug', $slug)->first();
+
+        if (!$businessProfile) {
+            return ErrorResponseEnum::$BPNF404;
+        }
+
+        $htmlReport = $businessProfile->html_report;
+        $emailTitle = ApplicationConfiguration::getApplicationConfiguration("analytics_report_email_subject");
+
+        $requestBody = [
+            'receiver_email' => 'support@fastdevlabs.com',
+            'email_title' => $emailTitle,
+            'email_body' => $htmlReport,
+            'message_trace_uuid' => Uuid::uuid4()->toString(),
+        ];
+        $email = HttpNotificationService::sendEmail($requestBody, ApplicationConfiguration::getApplicationConfiguration("NOTIFICATION_SERVICE_INVOICE_API_KEY"));
+        if ($email->successful()) {
+            return new BusinessProfileAnalyticsResponses("Analytics report sent successfully", $email->status());
+        } else {
+            return new BusinessProfileAnalyticsResponses("Failed to send the analytics report.", $email->status());
+        }
+    }
+
+    public function saveGoogleAnalyticsGraphImages($clickByAreaGraphImage, $slug)
+    {
+        $clickByAreaGraphImageFilename = 'graph-' . Str::random(32) . time() . '.' . $clickByAreaGraphImage->getClientOriginalExtension();
+        $url = url('/') . CustomUtils::uploadProfileImage('/' . $slug . '/analytics', $clickByAreaGraphImage, $clickByAreaGraphImageFilename);
         return $url;
     }
 }

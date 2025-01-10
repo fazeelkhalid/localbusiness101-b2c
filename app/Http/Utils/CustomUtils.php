@@ -118,36 +118,26 @@ class CustomUtils
     private static function getAnalyticsReportURLSection($urls)
     {
         if ($urls) {
-            $html = '<div class="url-section">';
-            $html .= '<h3>URLs</h3>';
-            $html .= '<div class="url-list">';
+            $html = '';
             foreach ($urls as $url) {
                 $urlTitle = CustomUtils::parseURlAndGetLastIndex($url);
-                $html .= '<a href="' . htmlspecialchars($url) . '" class="url-item">';
+                $html .= '<a href="' . htmlspecialchars($url) . '" style="display: inline-block; padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; text-decoration: none; color: #1a73e8; font-size: 14px;">';
                 $html .= htmlspecialchars($urlTitle);
                 $html .= '</a>';
             }
-
-            $html .= '</div>';
-            $html .= '</div>';
-
             return $html;
         }
         return '';
     }
-
     private static function getAnalyticsReportAreaSection($areas)
     {
         if ($areas) {
-            $html = ' <div class="areas-section">';
-            $html .= '<h3>Areas</h3>';
-            $html .= '<div class="areas-list">';
+            $html = '';
             foreach ($areas as $area) {
-                $html .= '<div class="area-item">' . $area . '</div>';
+                $html .= '<div style="display: inline-block; padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; font-size: 14px; color: #333;">';
+                $html .= htmlspecialchars($area);
+                $html .= '</div>';
             }
-            $html .= '</div>';
-            $html .= '</div>';
-
             return $html;
         }
         return '';
@@ -156,20 +146,19 @@ class CustomUtils
     private static function getAnalyticsReportKeyWordSection($keywords)
     {
         if ($keywords) {
-            $html = ' <div class="keywords-section">';
-            $html .= '<h3>Top Keywords</h3>';
-            $html .= '<div class="keywords-list">';
+            $html = '';
             foreach ($keywords as $keyword) {
-                $html .= '<div class="keyword-item">' . $keyword . '</div>';
+                $html .= '<div style="display: inline-block; padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; font-size: 14px; color: #333;">';
+                $html .= htmlspecialchars($keyword);
+                $html .= '</div>';
             }
-            $html .= '</div>';
-            $html .= '</div>';
-
             return $html;
         }
         return '';
     }
-    public static function getAnalyticsReport($userBusinessProfileAnalytics)
+
+
+    public static function makeAnalyticsReport($userBusinessProfileAnalytics)
     {
         $report_analytics = ApplicationConfiguration::getApplicationConfiguration("BUSINESS_PROFILE_ANALYTIC_REPORT");
         $report_analytics = str_replace('%NO_OF_DAYS%',$userBusinessProfileAnalytics['days'], $report_analytics);
@@ -182,7 +171,7 @@ class CustomUtils
         $report_analytics = str_replace('%TOP_AREA%', $userBusinessProfileAnalytics['top_area'], $report_analytics);
 
         $report_analytics = str_replace('%URL_SECTION%', CustomUtils::getAnalyticsReportURLSection($userBusinessProfileAnalytics['urls']), $report_analytics);
-        $report_analytics = str_replace('%AREA_SECTION%', CustomUtils::getAnalyticsReportAreaSection($userBusinessProfileAnalytics['areas']), $report_analytics);
+        $report_analytics = str_replace('%AREAS_SECTION%', CustomUtils::getAnalyticsReportAreaSection($userBusinessProfileAnalytics['areas']), $report_analytics);
         $report_analytics = str_replace('%KEYWORDS_SECTION%', CustomUtils::getAnalyticsReportKeyWordSection($userBusinessProfileAnalytics['top_keywords']), $report_analytics);
 
         $report_analytics = str_replace('%AREA_ANALYSIS_GRAPH_URL%', $userBusinessProfileAnalytics['click_by_area_graph_url'], $report_analytics);

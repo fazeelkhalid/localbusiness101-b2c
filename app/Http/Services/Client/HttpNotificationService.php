@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
 
 class HttpNotificationService
 {
-    private static function sendEmail($requestBody, $apiKey)
+    public static function sendEmail($requestBody, $apiKey)
     {
         return Http::withHeaders([
             'api-key' => $apiKey,

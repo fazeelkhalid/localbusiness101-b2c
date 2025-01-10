@@ -24,7 +24,8 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
-    Route::post('/business-profile/{slug}/generate_analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
+    Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
+    Route::get('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'sendAnalyticsReport']);
 
     Route::post('/payment', [PaymentController::class, 'createPayment']);
     Route::get('/payment/{payment_id}', [PaymentController::class, 'getPayment']);
