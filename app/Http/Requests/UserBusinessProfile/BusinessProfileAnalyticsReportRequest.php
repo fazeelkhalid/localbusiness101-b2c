@@ -14,9 +14,9 @@ class BusinessProfileAnalyticsReportRequest extends FormRequest
             'days' => 'required|integer|min:1',
             'total_click' => 'required|integer|min:0',
             'total_impressions' => 'required|integer|min:0',
-            'average_ctr' => 'required|numeric|min:0|max:100',
+            'average_ctr' => 'required|numeric|min:0',
             'average_time_on_page' => 'required|numeric|min:0',
-            'average_bounce_rate' => 'required|numeric|min:0|max:100',
+            'average_bounce_rate' => 'required|numeric|min:0',
             'top_keyword' => 'required|string|max:255',
             'top_area' => 'required|string|max:255',
             'urls' => 'required|array',
@@ -69,6 +69,14 @@ class BusinessProfileAnalyticsReportRequest extends FormRequest
             'website_visitors_by_url_graph.mimes' => 'The website visitors by URL graph must be an image file (jpeg, png, jpg, gif, svg).',
             'website_visitors_by_url_graph.max' => 'The website visitors by URL graph must not exceed 2MB.',
         ];
+    }
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'average_ctr' => round($this->input('average_ctr'), 1),
+            'average_bounce_rate' => round($this->input('average_bounce_rate'), 1),
+            'average_time_on_page' => round($this->input('average_time_on_page'), 1),
+        ]);
     }
 
     protected function failedValidation(Validator $validator)
