@@ -19,9 +19,9 @@ return new class extends Migration {
             $table->integer('days');
             $table->integer('total_click');
             $table->integer('total_impressions');
-            $table->integer('average_ctr');
-            $table->integer('average_bounce_rate');
-            $table->integer('average_time_on_page');
+            $table->float('average_ctr');
+            $table->float('average_bounce_rate');
+            $table->float('average_time_on_page');
             $table->string('top_keyword');
             $table->string('top_area');
             $table->text('urls');
