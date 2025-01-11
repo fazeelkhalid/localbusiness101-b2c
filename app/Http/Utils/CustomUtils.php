@@ -52,9 +52,9 @@ class CustomUtils
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-    public static function uploadProfileImage($folder='', $image, $filename)
+    public static function uploadProfileImage($folder = '', $image, $filename)
     {
-        $imagePath = $image->storeAs('images/business_profiles'.$folder, $filename, 'public');
+        $imagePath = $image->storeAs('images/business_profiles' . $folder, $filename, 'public');
         return Storage::url($imagePath);
     }
 
@@ -64,8 +64,8 @@ class CustomUtils
         $slug = Str::slug($title);
         $slugCount = BusinessProfile::where('slug', $slug)->count();
 
-        if($slugCount){
-            $profileCount= BusinessProfile::count();
+        if ($slugCount) {
+            $profileCount = BusinessProfile::count();
             return $slug . '-' . ($profileCount);
         }
         return $slug;
@@ -86,6 +86,7 @@ class CustomUtils
             $response->setContent(json_encode($responseData));
         }
     }
+
     static function calculateMaxLinksPerColumn(array $links): int
     {
         $totalLinks = count($links);
@@ -121,22 +122,23 @@ class CustomUtils
             $html = '';
             foreach ($urls as $url) {
                 $urlTitle = CustomUtils::parseURlAndGetLastIndex($url);
-                $html .= '<a href="' . htmlspecialchars($url) . '" style="display: inline-block; padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; text-decoration: none; color: #1a73e8; font-size: 14px;">';
+                $html .= '<div style="padding:15px;"> <a href="' . htmlspecialchars($url) . '"style="text-decoration: none; margin-bottom:10px; min-width: calc(100% - 20px); max-width: calc(100%); background-color: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #dee2e6; box-sizing: border-box;">';
                 $html .= htmlspecialchars($urlTitle);
-                $html .= '</a>';
+                $html .= '</a> </div>';
             }
             return $html;
         }
         return '';
     }
+
     private static function getAnalyticsReportAreaSection($areas)
     {
         if ($areas) {
             $html = '';
             foreach ($areas as $area) {
-                $html .= '<div style="display: inline-block; padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; font-size: 14px; color: #333;">';
-                $html .= htmlspecialchars($area);
-                $html .= '</div>';
+                $html .= '<div style="padding:15px;"> <a style="margin-bottom:10px; min-width: calc(100% - 20px); max-width: calc(100%); background-color: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #dee2e6; box-sizing: border-box;">';
+                $html .=  htmlspecialchars($area);
+                $html .= '</a> </div>';
             }
             return $html;
         }
@@ -148,9 +150,9 @@ class CustomUtils
         if ($keywords) {
             $html = '';
             foreach ($keywords as $keyword) {
-                $html .= '<div style="display: inline-block; padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; font-size: 14px; color: #333;">';
-                $html .= htmlspecialchars($keyword);
-                $html .= '</div>';
+                $html .= '<div style="padding:15px;"> <a style="margin-bottom:10px; min-width: calc(100% - 20px); max-width: calc(100%); background-color: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #dee2e6; box-sizing: border-box;">';
+                $html .=  htmlspecialchars($keyword);
+                $html .= '</a> </div>';
             }
             return $html;
         }
@@ -161,7 +163,7 @@ class CustomUtils
     public static function makeAnalyticsReport($userBusinessProfileAnalytics)
     {
         $report_analytics = ApplicationConfiguration::getApplicationConfiguration("BUSINESS_PROFILE_ANALYTIC_REPORT");
-        $report_analytics = str_replace('%NO_OF_DAYS%',$userBusinessProfileAnalytics['days'], $report_analytics);
+        $report_analytics = str_replace('%NO_OF_DAYS%', $userBusinessProfileAnalytics['days'], $report_analytics);
         $report_analytics = str_replace('%TOTAL_CLICKS%', $userBusinessProfileAnalytics['total_click'], $report_analytics);
         $report_analytics = str_replace('%TOTAL_IMPRESSIONS%', $userBusinessProfileAnalytics['total_impressions'], $report_analytics);
         $report_analytics = str_replace('%AVERAGE_CTR%', $userBusinessProfileAnalytics['average_ctr'], $report_analytics);
