@@ -53,7 +53,7 @@ class CreateUserBusinessProfileRequest extends FormRequest
                 'business_profile.about_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
                 'business_profile.services.*.title' => 'required|string|max:255',
                 'business_profile.services.*.description' => 'required|string',
-//                'business_profile.gallery_images' => 'required|array|min:1',
+                'business_profile.gallery_images' => 'required|array|min:5',
                 'business_profile.gallery_images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             ]);
         }
