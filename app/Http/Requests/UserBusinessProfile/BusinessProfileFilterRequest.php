@@ -16,6 +16,7 @@ class BusinessProfileFilterRequest extends FormRequest
     public function rules()
     {
         return [
+            'search' => 'nullable|string',
             'category' =>'nullable|string',
             'country' =>'nullable|string',
             'city_or_state' =>'nullable|string',

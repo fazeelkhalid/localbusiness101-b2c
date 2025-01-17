@@ -13,9 +13,10 @@ class UserBusinessProfileFilter{
         $category = $filters['category'] ?? null;
         $country = $filters['country'] ?? null;
         $city_or_state = $filters['city_or_state'] ?? null;
+        $search = $filters['search'] ?? null;
 
-        if ($userName || $userEmail || $title || $keywords || $businessProfilesKey|| $category|| $city_or_state || $country) {
-            $query->where(function ($q) use ($userName, $userEmail, $title, $keywords, $businessProfilesKey, $category, $city_or_state, $country) {
+        if ($userName || $userEmail || $title || $keywords || $businessProfilesKey|| $category|| $city_or_state || $country || $search) {
+            $query->where(function ($q) use ($userName, $userEmail, $title, $keywords, $businessProfilesKey, $category, $city_or_state, $country, $search) {
                 if ($userName) {
                     $q->whereHas('user', function ($q) use ($userName) {
                         $q->where('name', 'LIKE', '%' . $userName . '%');
@@ -46,6 +47,19 @@ class UserBusinessProfileFilter{
                 if ($category) {
                     $q->whereHas('category', function ($q) use ($category) {
                         $q->where('category_name', 'LIKE', '%' . $category . '%');
+                    });
+                }
+
+                if ($search) {
+                    $q->where(function ($q) use ($search) {
+                        $q->where('title', 'LIKE', '%' . $search . '%')
+                            ->orWhere('keywords', 'LIKE', '%' . $search . '%')
+                            ->orWhere('short_intro', 'LIKE', '%' . $search . '%')
+                            ->orWhereHas('services', function ($q) use ($search) {
+                                $q->where('name', 'LIKE', '%' . $search . '%')
+                                    ->orWhere('description', 'LIKE', '%' . $search . '%');
+                            })
+                        ;
                     });
                 }
             });
