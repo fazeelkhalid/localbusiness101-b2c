@@ -48,7 +48,7 @@ class CreateUserBusinessProfileRequest extends FormRequest
             $rules = array_merge($rules, [
                 'business_profile.website' => 'required|string|url',
                 'business_profile.business_contact_details.*.map_location_url' => 'required|string|max:400',
-                'business_profile.main_page_image' => 'required|image|mimes:jpg,jpeg,png|max:2048|dimensions:min_width=1500,min_height=900',
+                'business_profile.main_page_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
                 'business_profile.logo_image' => 'required|image|mimes:jpg,jpeg,png|max:1024',
                 'business_profile.about_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
                 'business_profile.services.*.title' => 'required|string|max:255',
