@@ -21,7 +21,7 @@ class ContactRequestFormController extends Controller
 
     public function createContactFormRequest(CreeateContactFormRequest $contactFormRequest)
     {
-        $this->acquirerService->hasAuthorityOrThrowException("createContactFormRequest");
+//        $this->acquirerService->hasAuthorityOrThrowException("createContactFormRequest");
         return $this->contactRequestFormService->createContactFormRequest($contactFormRequest);
     }
 

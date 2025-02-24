@@ -11,6 +11,8 @@ use App\Http\Requests\ContactForm\GetContactFormListRequest;
 use App\Http\Responses\ContactForm\CreateContactFormResponse;
 use App\Http\Responses\ContactForm\DeleteContactFormResponse;
 use App\Http\Responses\ContactForm\getContactFormResponse;
+use App\Http\Services\Client\HttpNotificationService;
+use App\Models\BusinessProfile;
 use App\Models\ContactRequest;
 
 class ContactRequestFormService
@@ -25,9 +27,17 @@ class ContactRequestFormService
     public function createContactFormRequest(CreeateContactFormRequest $contactFormRequest)
     {
         $validatedData = $contactFormRequest->validated();
-        $validatedData['business_profile_id'] = $this->acquirerService->get("businessProfile")->id;
+        $businessProfile = $this->acquirerService->get("businessProfile");
+        $validatedData['business_profile_id'] = $businessProfile->id;
         ContactRequest::create($validatedData);
 
+        $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('id', $businessProfile->id)->first();
+
+        if(!$businessProfile){
+            return ErrorResponseEnum::$BPNF404;
+        }
+        $contactRequest = $businessProfile->contactDetails->first();
+        HttpNotificationService::sendContactUsEmail($validatedData, $contactRequest->business_email);
         $contactRequest = ContactFormRequestMapper::mapContactFormRequestToResponse($validatedData);
         return new CreateContactFormResponse("Request submitted successfully", $contactRequest, 201);
     }

@@ -35,4 +35,19 @@ class HttpNotificationService
         ];
         $email = HttpNotificationService::sendEmail($requestBody, ApplicationConfiguration::getApplicationConfiguration("NOTIFICATION_SERVICE_INVOICE_API_KEY"));
     }
+
+
+    public static function sendContactUsEmail($contactUs, $receiverEmail)
+    {
+        $emailBody = CustomUtils::getContactUsEmailBody($contactUs);
+        $emailTitle = ApplicationConfiguration::getApplicationConfiguration("contact_us_email_subject");
+
+        $requestBody = [
+            'receiver_email' => $receiverEmail,
+            'email_title' => $emailTitle,
+            'email_body' => $emailBody,
+            'message_trace_uuid' => Uuid::uuid4()->toString(),
+        ];
+        $email = HttpNotificationService::sendEmail($requestBody, ApplicationConfiguration::getApplicationConfiguration("NOTIFICATION_SERVICE_INVOICE_API_KEY"));
+    }
 }

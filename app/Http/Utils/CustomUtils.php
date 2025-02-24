@@ -108,6 +108,15 @@ class CustomUtils
         return str_replace('%DESCRIPTION%', $payment->description, $email_body);
     }
 
+    public static function getContactUsEmailBody($contactUs)
+    {
+        $email_body = ApplicationConfiguration::getApplicationConfiguration("contact_us_email_body");
+        $email_body = str_replace('%PHONE_NUMBER%', $contactUs['phone_number'], $email_body);
+        $email_body = str_replace('%EMAIL%', $contactUs['email'], $email_body);
+        $email_body = str_replace('%SUBJECT%', $contactUs['subject'], $email_body);
+        return str_replace('%MESSAGE%', $contactUs['message'], $email_body);
+    }
+
     public static function parseURlAndGetLastIndex($url)
     {
         $parsedUrl = parse_url($url);
