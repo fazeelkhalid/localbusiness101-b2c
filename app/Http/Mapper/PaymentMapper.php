@@ -4,13 +4,19 @@ namespace App\Http\Mapper;
 
 class PaymentMapper
 {
-    public static function mapStoredpaymentRequestToResponse($storedData)
+    public static function mapStoredpaymentRequestToResponse($storedData, $paymentURL = null)
     {
-        return[
+        $response = [
+            "method" => $storedData["method"],
             "payment_id" => $storedData["payment_id"],
             "amount" => $storedData["amount"],
             "description" => $storedData["description"]
         ];
-    }
 
+        if (!empty($paymentURL)) {
+            $response["payment_url"] = $paymentURL;
+        }
+
+        return $response;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use http\Env\Response;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -19,6 +20,10 @@ class Payment extends Model
         'is_paid',
         'response',
         'payment_id',
+        'payment_link',
+        'paypro_id',
+        'payment_method',
+        'paypro_payment_status',
         'client_email',
         'client_name',
         'client_phone_number',
@@ -32,6 +37,7 @@ class Payment extends Model
         return self::create([
             'payment_id' => $paymentId,
             'amount' => $validatedData['amount'],
+            'payment_method' => $validatedData['method'],
             'description' => $validatedData['description'],
             'currency' => $validatedData['currency'],
             'client_email' => $validatedData['client_email'],
@@ -55,6 +61,15 @@ class Payment extends Model
         $payment->increment('seen_count');
         $payment->save();
         return $payment;
+    }
+
+    public static function UpdatePayProPaymentInfo($payProPayment, $payment_link, Payment $payment): void
+    {
+        $payment->paypro_id = $payProPayment;
+        $payment->paypro_payment_status = 'UNPAID';
+        $payment->payment_link = $payment_link;
+
+        $payment->save();
     }
 
 

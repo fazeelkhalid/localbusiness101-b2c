@@ -16,6 +16,7 @@ class PaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'method' => 'required|string|in:paypro,stripe',
             'amount' => 'required|numeric|min:0.01',
             'description' => 'required|string|max:1000',
             'currency' => 'required|string|size:3',
@@ -28,6 +29,8 @@ class PaymentRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'method.required' => 'The payment method is required.',
+            'method.in' => 'The payment method must be either paypro or stripe.',
             'amount.required' => 'The payment amount is required.',
             'amount.numeric' => 'The amount must be a number.',
             'amount.min' => 'The amount must be greater than zero.',
