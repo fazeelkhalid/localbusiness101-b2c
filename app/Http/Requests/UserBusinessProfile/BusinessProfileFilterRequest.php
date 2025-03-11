@@ -26,6 +26,7 @@ class BusinessProfileFilterRequest extends FormRequest
             'keywords' => 'nullable|string',
             'business_profiles_key' => 'nullable|string',
             'per_page' => 'integer|min:1|max:100',
+            'theme' => 'nullable|string',
             'random' => 'nullable|boolean',
         ];
     }

@@ -14,9 +14,16 @@ class UserBusinessProfileFilter{
         $country = $filters['country'] ?? null;
         $city_or_state = $filters['city_or_state'] ?? null;
         $search = $filters['search'] ?? null;
+        $theme = $filters['theme'] ?? null;
 
-        if ($userName || $userEmail || $title || $keywords || $businessProfilesKey|| $category|| $city_or_state || $country || $search) {
-            $query->where(function ($q) use ($userName, $userEmail, $title, $keywords, $businessProfilesKey, $category, $city_or_state, $country, $search) {
+        if ($userName || $userEmail || $title || $keywords || $businessProfilesKey|| $category|| $city_or_state || $country || $search || $theme) {
+            $query->where(function ($q) use ($userName, $userEmail, $title, $keywords, $businessProfilesKey, $category, $city_or_state, $country, $search, $theme) {
+                if ($theme) {
+                    $q->where(function ($q) use ($theme) {
+                        $q->where('theme', '=', $theme);
+                    });
+                }
+
                 if ($userName) {
                     $q->whereHas('user', function ($q) use ($userName) {
                         $q->where('name', 'LIKE', '%' . $userName . '%');
