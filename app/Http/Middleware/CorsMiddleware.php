@@ -13,28 +13,31 @@ class CorsMiddleware
             'https://admin.probusiness101.com',
         ];
 
-        $origin = $request->headers->get('Origin');
+        $origin = $request->header('Origin');
 
-        $headers = [
-            'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers' => 'Origin, Content-Type, Accept, Authorization',
-        ];
-
+        // Check if origin is in allowed list
         if (in_array($origin, $allowedOrigins)) {
-            $headers['Access-Control-Allow-Origin'] = $origin;
+            // For preflight requests
+            if ($request->isMethod('OPTIONS')) {
+                $response = response('', 200);
+                $response->headers->set('Access-Control-Allow-Origin', $origin);
+                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+                $response->headers->set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With');
+                $response->headers->set('Access-Control-Allow-Credentials', 'true');
+                $response->headers->set('Access-Control-Max-Age', '86400');
+                return $response;
+            }
+
+            // For actual requests
+            $response = $next($request);
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With');
+            $response->headers->set('Access-Control-Allow-Credentials', 'true');
+
+            return $response;
         }
 
-        // Handle Preflight Request
-        if ($request->isMethod('OPTIONS')) {
-            return response()->json('OK', 200, $headers);
-        }
-
-        $response = $next($request);
-
-        foreach ($headers as $key => $value) {
-            $response->headers->set($key, $value);
-        }
-
-        return $response;
+        return $next($request);
     }
 }
