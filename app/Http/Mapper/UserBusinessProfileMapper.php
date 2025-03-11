@@ -115,6 +115,7 @@ class UserBusinessProfileMapper
             'font_style' => $userBusinessProfileRequest->font_style,
             'heading_color' => $userBusinessProfileRequest->heading_color,
             'heading_size' => $userBusinessProfileRequest->heading_size,
+            'about_cta_button_text'=>$userBusinessProfileRequest->about_cta_button_text,
             'business_contact_details' => array_map(function ($contact) {
                 return [
                     'email' => $contact['business_email'],
