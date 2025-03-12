@@ -79,7 +79,6 @@ class PayProRequestService
             }
 
         } catch (Exception $e) {
-            // Log all other exceptions
             if (!($e instanceof ErrorException)) {
                 Log::error('PayPro Service Error', [
                     'exception' => $e->getMessage(),

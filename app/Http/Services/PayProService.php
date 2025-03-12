@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Exceptions\ErrorException;
 use Illuminate\Support\Facades\Http;
 
 class PayProService
@@ -59,7 +60,18 @@ class PayProService
         if (isset($responseData[0]['Status']) && $responseData[0]['Status'] === '00') {
             $iframeUrl = $responseData[1]['IframeClick2Pay'] ?? null;
             $PayProId = $responseData[1]['PayProId'] ?? null;
+        } else {
+            throw new ErrorException('Payment processor Response is not okay', $responseData, 500);
         }
-        return [$iframeUrl,$PayProId];
+
+        if(!$iframeUrl){
+            throw new ErrorException('iframe not present in the payment processor response.', $responseData, 500);
+        }
+
+        if(!$PayProId){
+            throw new ErrorException('paymentID not present in the payment processor response.', $responseData, 500);
+        }
+
+        return [$iframeUrl, $PayProId];
     }
 }
