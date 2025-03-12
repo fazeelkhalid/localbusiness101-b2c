@@ -116,6 +116,7 @@ class UserBusinessProfileMapper
             'heading_color' => $userBusinessProfileRequest->heading_color,
             'heading_size' => $userBusinessProfileRequest->heading_size,
             'about_cta_button_text'=>$userBusinessProfileRequest->about_cta_button_text,
+            'google_ads_tracking_code'=>$userBusinessProfileRequest->google_ads_tracking_code,
             'business_contact_details' => array_map(function ($contact) {
                 return [
                     'email' => $contact['business_email'],

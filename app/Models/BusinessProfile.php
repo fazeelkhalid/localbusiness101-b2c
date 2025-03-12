@@ -16,7 +16,8 @@ class BusinessProfile extends Model
         'user_id', 'business_profiles_key', 'title', 'description', 'short_intro',
         'keywords', 'og_image', 'og_type', 'tab_title', 'font_style', 'heading_color',
         'heading_size', 'fav_icon', 'business_category_id', 'card_image_url', 'slug', 'website', 'main_page_image_url',
-        'logo_image_url', 'about_image_url', 'theme', 'analytics_report_id', 'html_report', 'about_cta_button_text'
+        'logo_image_url', 'about_image_url', 'theme', 'analytics_report_id', 'html_report', 'about_cta_button_text',
+        'google_ads_tracking_code'
     ];
 
     public static function createBusinessProfile($business_profile, $user, $category)
