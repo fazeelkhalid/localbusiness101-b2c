@@ -33,17 +33,18 @@ class PayProService
             ],
             [
                 'OrderNumber' => $orderNumber,
-                'CurrencyAmount' => (string)$amount,
-                'OrderAmount' => (string)$amount,
                 'OrderDueDate' => $dueDate,
                 'OrderType' => 'Service',
                 'IssueDate' => $issueDate,
                 'OrderExpireAfterSeconds' => '0',
                 'CustomerName' => $customerName,
                 'CustomerMobile' => '',
-                'CustomerEmail' => $customerEmail,
+                'CustomerEmail' => '',
                 'CustomerAddress' => '',
-                'Currency' => 'USD'
+                'Description' => 'test',
+                'CurrencyAmount' => (string)$amount,
+                'Currency' => 'USD',
+                'IsConverted' => 'true'
             ]
         ];
 
