@@ -33,7 +33,7 @@ class PaymentController extends Controller
     {
         try {
             $payment = Payment::getAndSetPaymentIsSeen($payment_id);
-            $payment = PaymentMapper::mapStoredpaymentRequestToResponse($payment);
+            $payment = PaymentMapper::mapStoredpaymentRequestToResponse($payment, $payment->payment_link);
             return new PaymentResponse("Payment found successfully", $payment, 200);
         } catch (ModelNotFoundException $e) {
             return ErrorResponseEnum::$PAYMENT_NOT_FOUND;
