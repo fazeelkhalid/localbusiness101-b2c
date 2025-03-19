@@ -16,7 +16,7 @@ class PaymentMethod extends Model
         'method_name',
         'description',
         'payment_identifier',
-        'qr_code_image',
+        'qr_code_image_url',
     ];
 
     public function digitalCard(): BelongsTo
