@@ -202,4 +202,17 @@ class CustomUtils
         return str_replace('%VISITOR_ANALYSIS_GRAPH_URL%', $userBusinessProfileAnalytics['website_visitors_by_url_graph_url'], $report_analytics);
     }
 
+    public static function formatTimeToHHMM($timeString) {
+        if (empty($timeString)) {
+            return null;
+        }
+
+        $timestamp = strtotime($timeString);
+        if ($timestamp === false) {
+            return null;
+        }
+
+        return date('H:i', $timestamp);
+    }
+
 }

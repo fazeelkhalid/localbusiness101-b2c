@@ -94,8 +94,8 @@ class DigitalCardMapper
             foreach ($digitalCard->officeHours as $hour) {
                 $mappedData['officeHours'][$hour->day_of_week] = [
                     'isOff' => (bool) $hour->is_off,
-                    'openTime' => $hour->is_off ? null : $hour->open_time,
-                    'closeTime' => $hour->is_off ? null : $hour->close_time,
+                    'openTime' => $hour->is_off ? null : CustomUtils::formatTimeToHHMM($hour->open_time),
+                    'closeTime' => $hour->is_off ? null : CustomUtils::formatTimeToHHMM($hour->close_time),
                 ];
             }
         }
