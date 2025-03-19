@@ -76,7 +76,7 @@ class BusinessProfileAnalyticsController extends Controller
     public function saveGoogleAnalyticsGraphImages($clickByAreaGraphImage, $slug)
     {
         $clickByAreaGraphImageFilename = 'graph-' . Str::random(32) . time() . '.' . $clickByAreaGraphImage->getClientOriginalExtension();
-        $url = url('/') . CustomUtils::uploadProfileImage('/' . $slug . '/analytics', $clickByAreaGraphImage, $clickByAreaGraphImageFilename);
+        $url = CustomUtils::uploadProfileImage('/' . $slug . '/analytics', $clickByAreaGraphImage, $clickByAreaGraphImageFilename);
         return $url;
     }
 }

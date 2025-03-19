@@ -6,6 +6,7 @@ use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\BusinessProfileAnalyticsController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
+use App\Http\Controllers\DigitalCardController;
 use App\Http\Controllers\InitController;
 use App\Http\Controllers\LaravelCommandController;
 use App\Http\Controllers\PaymentController;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
+
+    Route::post('/digital-cards', [DigitalCardController::class, 'createDigitalCard']);
 
     Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
     Route::get('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'sendAnalyticsReport']);

@@ -43,7 +43,7 @@ class UserBusinessProfileService
 
             $userBusinessProfileRequest['business_profile']['slug'] = CustomUtils::generateUniqueSlug($userBusinessProfileRequest['business_profile']['title']);
             $slug = $userBusinessProfileRequest['business_profile']['slug'];
-            $userBusinessProfileRequest['business_profile']['card_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $cardImage, $cardImageFilename);
+            $userBusinessProfileRequest['business_profile']['card_image'] = CustomUtils::uploadProfileImage('/' . $slug, $cardImage, $cardImageFilename);
 
             if($userBusinessProfileRequest['business_profile']['theme'] === 'advance') {
                 $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
@@ -55,9 +55,9 @@ class UserBusinessProfileService
                 $logoImageFileName = 'logo_image-' . time() . '.' . $logoImage->getClientOriginalExtension();
                 $aboutImageFileName = 'about_image-' . time() . '.' . $aboutImage->getClientOriginalExtension();
 
-                $userBusinessProfileRequest['business_profile']['main_page_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $mainPageImage, $mainPageImageFileName);
-                $userBusinessProfileRequest['business_profile']['logo_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $logoImage, $logoImageFileName);
-                $userBusinessProfileRequest['business_profile']['about_image'] = url('/') . CustomUtils::uploadProfileImage('/' . $slug, $aboutImage, $aboutImageFileName);
+                $userBusinessProfileRequest['business_profile']['main_page_image'] = CustomUtils::uploadProfileImage('/' . $slug, $mainPageImage, $mainPageImageFileName);
+                $userBusinessProfileRequest['business_profile']['logo_image'] = CustomUtils::uploadProfileImage('/' . $slug, $logoImage, $logoImageFileName);
+                $userBusinessProfileRequest['business_profile']['about_image'] = CustomUtils::uploadProfileImage('/' . $slug, $aboutImage, $aboutImageFileName);
             }
 
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);

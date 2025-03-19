@@ -5,6 +5,7 @@ namespace App\Http\Utils;
 use App\Http\Mapper\AuthMapper;
 use App\Models\ApplicationConfiguration;
 use App\Models\BusinessProfile;
+use App\Models\DigitalCard;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -52,10 +53,19 @@ class CustomUtils
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
+    private static function uploadImage($folder = '', $image, $filename)
+    {
+        $imagePath = $image->storeAs( $folder, $filename, 'public');
+        return url('/') . Storage::url($imagePath);
+    }
+
     public static function uploadProfileImage($folder = '', $image, $filename)
     {
-        $imagePath = $image->storeAs('images/business_profiles' . $folder, $filename, 'public');
-        return Storage::url($imagePath);
+        return CustomUtils::uploadImage('images/business_profiles' . $folder, $image, $filename);
+    }
+    public static function uploadCardImage($folder = '', $image, $filename)
+    {
+        return CustomUtils::uploadImage('images/card' . $folder, $image, $filename);
     }
 
 
@@ -146,7 +156,7 @@ class CustomUtils
             $html = '';
             foreach ($areas as $area) {
                 $html .= '<div style="padding:15px;"> <a style="margin-bottom:10px; min-width: calc(100% - 20px); max-width: calc(100%); background-color: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #dee2e6; box-sizing: border-box;">';
-                $html .=  htmlspecialchars($area);
+                $html .= htmlspecialchars($area);
                 $html .= '</a> </div>';
             }
             return $html;
@@ -160,7 +170,7 @@ class CustomUtils
             $html = '';
             foreach ($keywords as $keyword) {
                 $html .= '<div style="padding:15px;"> <a style="margin-bottom:10px; min-width: calc(100% - 20px); max-width: calc(100%); background-color: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #dee2e6; box-sizing: border-box;">';
-                $html .=  htmlspecialchars($keyword);
+                $html .= htmlspecialchars($keyword);
                 $html .= '</a> </div>';
             }
             return $html;

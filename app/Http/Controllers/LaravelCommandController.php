@@ -44,7 +44,7 @@ class LaravelCommandController extends Controller
         $image = $request->file('image');
         if ($image) {
             $filename = 'img.' . $image->getClientOriginalExtension();
-            $fullImagePath = url('/') . CustomUtils::uploadProfileImage('/orlando', $image, $filename);
+            $fullImagePath = CustomUtils::uploadProfileImage('/orlando', $image, $filename);
             return response()->json([
                 'message' => 'Image uploaded successfully!',
                 'image_url' => $fullImagePath,

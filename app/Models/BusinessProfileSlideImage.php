@@ -23,7 +23,7 @@ class BusinessProfileSlideImage extends Model
         if (!empty($slideImages)) {
             foreach ($slideImages as $image) {
                 $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-                $imageUrl = url('/') . CustomUtils::uploadProfileImage($folder, $image, $filename);
+                $imageUrl = CustomUtils::uploadProfileImage($folder, $image, $filename);
                 self::create([
                     'business_profile_id' => $businessProfileId,
                     'image_url' => $imageUrl

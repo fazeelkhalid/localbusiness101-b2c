@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessProfileGallery extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'business_profile_gallery';
 
     protected $fillable = [
@@ -30,7 +30,7 @@ class BusinessProfileGallery extends Model
         if (!empty($galleryImages)) {
             foreach ($galleryImages as $image) {
                 $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-                $imageUrl = url('/') . CustomUtils::uploadProfileImage($folder, $image, $filename);
+                $imageUrl = CustomUtils::uploadProfileImage($folder, $image, $filename);
                 self::create([
                     'business_profile_id' => $businessProfileId,
                     'image_url' => $imageUrl
