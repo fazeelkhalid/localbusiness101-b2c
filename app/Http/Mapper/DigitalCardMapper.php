@@ -59,4 +59,61 @@ class DigitalCardMapper
         ];
     }
 
+    public static function mapDigitalCardDBToResponse($digitalCard)
+    {
+        // Base digital card data
+        $mappedData = [
+            'businessName' => $digitalCard->business_name,
+            'ownerName' => $digitalCard->owner_name,
+            'designation' => $digitalCard->designation,
+            'slug' => $digitalCard->slug,
+            'images' => [
+                'header' => $digitalCard->header_image_url,
+                'profile' => $digitalCard->profile_image_url,
+            ],
+            'colors' => [
+                'primary' => $digitalCard->primary_color,
+                'secondary' => $digitalCard->secondary_color,
+            ],
+            'contact' => [
+                'website' => $digitalCard->website_link,
+                'email' => $digitalCard->email,
+                'phone' => $digitalCard->phone_number,
+                'address' => $digitalCard->office_address,
+            ],
+            'social' => [
+                'facebook' => $digitalCard->facebook,
+                'instagram' => $digitalCard->instagram,
+                'gmb' => $digitalCard->gmb_links,
+            ],
+            'about' => $digitalCard->about_business,
+        ];
+
+        $mappedData['officeHours'] = [];
+        if (isset($digitalCard->officeHours) && !empty($digitalCard->officeHours)) {
+            foreach ($digitalCard->officeHours as $hour) {
+                $mappedData['officeHours'][$hour->day_of_week] = [
+                    'isOff' => (bool) $hour->is_off,
+                    'openTime' => $hour->is_off ? null : $hour->open_time,
+                    'closeTime' => $hour->is_off ? null : $hour->close_time,
+                ];
+            }
+        }
+
+        // Map payment methods
+        $mappedData['paymentMethods'] = [];
+        if (isset($digitalCard->paymentMethods) && !empty($digitalCard->paymentMethods)) {
+            foreach ($digitalCard->paymentMethods as $method) {
+                $mappedData['paymentMethods'][] = [
+                    'name' => $method->method_name,
+                    'description' => $method->description,
+                    'identifier' => $method->payment_identifier,
+                    'qrCodeUrl' => $method->qr_code_image_url,
+                ];
+            }
+        }
+
+        return $mappedData;
+    }
+
 }

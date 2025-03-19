@@ -26,6 +26,7 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
     Route::post('/digital-cards', [DigitalCardController::class, 'createDigitalCard']);
+    Route::get('/digital-cards/{slug}', [DigitalCardController::class, 'getDigitalCardBySlug']);
 
     Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
     Route::get('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'sendAnalyticsReport']);

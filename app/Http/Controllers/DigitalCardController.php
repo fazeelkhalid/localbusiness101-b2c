@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ErrorResponseEnum;
 use App\Http\Mapper\DigitalCardMapper;
 use App\Http\Requests\DigitalCard\CreateDigitalCardRequest;
 use App\Http\Responses\DigitalCard\CreateDigitalCardResponses;
+use App\Http\Responses\DigitalCard\GetDigitalCardResponses;
 use App\Http\Services\AcquirerService;
 use App\Http\Services\DigitalCardService;
 use App\Http\Services\UserBusinessProfileService;
@@ -31,5 +33,8 @@ class DigitalCardController extends Controller
     {
 //        $this->acquirerService->hasAuthorityOrThrowException("createDigitalCard");
         return $this->digitalCardService->createDigitalCard($digitalCardCombinedRequest);
+    }
+    public function getDigitalCardBySlug(string $slug){
+        return $this->digitalCardService->getDigitalCardBySlug($slug);
     }
 }

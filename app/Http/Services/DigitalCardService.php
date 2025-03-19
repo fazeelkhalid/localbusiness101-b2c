@@ -2,9 +2,11 @@
 
 namespace App\Http\Services;
 
+use App\Enums\ErrorResponseEnum;
 use App\Http\Mapper\DigitalCardMapper;
 use App\Http\Requests\DigitalCard\CreateDigitalCardRequest;
 use App\Http\Responses\DigitalCard\CreateDigitalCardResponses;
+use App\Http\Responses\DigitalCard\GetDigitalCardResponses;
 use App\Http\Utils\CustomUtils;
 use App\Models\DigitalCard;
 use App\Models\OfficeHour;
@@ -41,5 +43,13 @@ class DigitalCardService
             DB::rollBack();
             throw $e;
         }
+    }
+    public function getDigitalCardBySlug(string $slug){
+        $digitalCard = DigitalCard::getDigitalCard($slug);
+        if (!$digitalCard) {
+            return ErrorResponseEnum::$DIGITAL_CARD_NOT_FOUND;
+        }
+        $digitalCard = DigitalCardMapper::mapDigitalCardDBToResponse($digitalCard);
+        return new GetDigitalCardResponses($digitalCard);
     }
 }

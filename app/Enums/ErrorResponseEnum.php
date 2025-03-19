@@ -32,6 +32,8 @@ class ErrorResponseEnum
 
     public static ErrorResponse $BUSINESS_PROFILE_ANALYTICS_NOT_FOUND;
 
+    public static ErrorResponse $DIGITAL_CARD_NOT_FOUND;
+
     public static function initialize(): void
     {
         self::$UENE422 = new ErrorResponse(['email' => 'The email has already been taken.'], 422);
@@ -46,6 +48,7 @@ class ErrorResponseEnum
         self::$AUTHORIZATION_HEADER_MISSING = new ErrorResponse('Authorization header missing', 401);
         self::$PAYMENT_NOT_FOUND = new ErrorResponse('Payment details not found', 404);
         self::$BUSINESS_PROFILE_ANALYTICS_NOT_FOUND = new ErrorResponse('business profile analytics not found', 404);
+        self::$DIGITAL_CARD_NOT_FOUND = new ErrorResponse('Digital card not found', 404);
 
     }
 }

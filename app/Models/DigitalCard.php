@@ -66,6 +66,13 @@ class DigitalCard extends Model
         return self::create($data);
     }
 
+    public static function getDigitalCard($slug)
+    {
+        return self::where('slug', $slug)
+            ->with(['officeHours', 'paymentMethods'])
+            ->first();
+    }
+
     public static function generateUniqueSlug($title)
     {
         $slug = Str::slug($title);
