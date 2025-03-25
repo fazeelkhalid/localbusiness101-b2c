@@ -26,14 +26,14 @@ class CreateDigitalCardRequest extends FormRequest
             'facebook' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'phone_number' => 'nullable|string|max:20',
-            'gmb_links' => 'nullable|string',
+            'contact_us_url' => 'required|url|max:500',
+            'gmb_links' => 'nullable|url|string',
             'about_business' => 'required|string',
             'office_address' => 'nullable|string',
             'primary_color' => 'required|string|max:15',
             'secondary_color' => 'required|string|max:15',
             'business_name' => 'required|string|max:255',
 
-            // Office Hours validation - nested structure
             'office_hours' => 'required|array',
             'office_hours.Monday' => 'required|array',
             'office_hours.Tuesday' => 'required|array',

@@ -22,6 +22,7 @@ class DigitalCard extends Model
         'owner_name',
         'designation',
         'website_link',
+        'contact_us_url',
         'email',
         'facebook',
         'instagram',
