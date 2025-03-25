@@ -43,12 +43,10 @@ class CreateDigitalCardRequest extends FormRequest
             'office_hours.Saturday' => 'required|array',
             'office_hours.Sunday' => 'required|array',
 
-            // For each day, validate open/close times or is_off
-            'office_hours.*.open_time' => 'nullable|date_format:H:i',
-            'office_hours.*.close_time' => 'nullable|date_format:H:i',
-            'office_hours.*.is_off' => 'boolean',
+            'office_hours.*.open_time' => 'required_if:office_hours.*.is_off,false|date_format:H:i',
+            'office_hours.*.close_time' => 'required_if:office_hours.*.is_off,false|date_format:H:i',
+            'office_hours.*.is_off' => 'required|boolean',
 
-            // Payment Methods validation
             'payment_methods' => 'nullable|array',
             'payment_methods.*.method_name' => 'required_with:payment_methods|string|max:255',
             'payment_methods.*.description' => 'required_with:payment_methods|string|max:255',
@@ -124,8 +122,9 @@ class CreateDigitalCardRequest extends FormRequest
             'primary_color.regex' => 'The primary color must be a valid HEX color code (e.g., #FF5733).',
             'secondary_color.regex' => 'The secondary color must be a valid HEX color code (e.g., #33FF57).',
             'office_hours.required' => 'Office hours information is required.',
-            'office_hours.*.open_time.date_format' => 'Opening time must be in 24-hour format (e.g., 10:00 or 22:00).',
-            'office_hours.*.close_time.date_format' => 'Closing time must be in 24-hour format (e.g., 18:00 or 22:00).',
+            'office_hours.*.open_time.required_if' => 'Opening time is required when the day is not marked as off.',
+            'office_hours.*.close_time.required_if' => 'Closing time is required when the day is not marked as off.',
+            'office_hours.*.is_off.required' => 'Please specify if the day is off or not.',
             'payment_methods.*.method_name.required_with' => 'Payment method name is required when payment methods are provided.',
             'payment_methods.*.description.required_with' => 'A description is required when a payment method is provided.',
             'payment_methods.*.payment_identifier.required_without' => 'Either Payment Identifier or QR Code Image must be provided.',
