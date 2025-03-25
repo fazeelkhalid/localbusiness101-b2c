@@ -10,8 +10,8 @@ class DigitalCardMapper
 
     public static function mapCreateDigitalCardRequestToResponse($digitalCard)
     {
-        // Mapping data for DigitalCard model
         $digitalCardData = [
+            // Digital Card Data
             'header_image_url' => $digitalCard['header_image_url'],
             'profile_image_url' => $digitalCard['profile_image_url'],
             'owner_name' => $digitalCard['owner_name'],
@@ -28,35 +28,29 @@ class DigitalCardMapper
             'secondary_color' => $digitalCard['secondary_color'],
             'slug' => $digitalCard['slug'],
             'business_name' => $digitalCard['business_name'],
+
+            // Office Hours Data
+            'office_hours' => array_map(function ($day, $hours) {
+                return [
+                    'day_of_week' => $day,
+                    'open_time' => $hours['open_time'] ?? null,
+                    'close_time' => $hours['close_time'] ?? null,
+                    'is_off' => $hours['is_off'] ?? false,
+                ];
+            }, array_keys($digitalCard['office_hours']), $digitalCard['office_hours']),
+
+            // Payment Methods Data
+            'payment_methods' => array_map(function ($payment) {
+                return [
+                    'method_name' => $payment['method_name'],
+                    'description' => $payment['description'] ?? null,
+                    'payment_identifier' => $payment['payment_identifier'] ?? null,
+                    'qr_code_image_url' => $payment['qr_code_image_url'] ?? null,
+                ];
+            }, $digitalCard['payment_methods']),
         ];
 
-        // Mapping data for Office Hours model (flattening the structure)
-        $officeHoursData = [];
-        foreach ($digitalCard['office_hours'] as $day => $hours) {
-            $officeHoursData[] = [
-                'day_of_week' => $day,
-                'open_time' => $hours['open_time'] ?? null,
-                'close_time' => $hours['close_time'] ?? null,
-                'is_off' => $hours['is_off'] ?? false,
-            ];
-        }
-
-        // Mapping data for Payment Methods model
-        $paymentMethodsData = [];
-        foreach ($digitalCard['payment_methods'] as $payment) {
-            $paymentMethodsData[] = [
-                'method_name' => $payment['method_name'],
-                'description' => $payment['description'] ?? null,
-                'payment_identifier' => $payment['payment_identifier'] ?? null,
-                'qr_code_image_url' => $payment['qr_code_image_url'] ?? null,
-            ];
-        }
-
-        return [
-            'digitalCardData' => $digitalCardData,
-            'officeHoursData' => $officeHoursData,
-            'paymentMethodsData' => $paymentMethodsData,
-        ];
+        return $digitalCardData;
     }
 
     public static function mapDigitalCardDBToResponse($digitalCard)

@@ -33,8 +33,10 @@ class DigitalCardService
             $digitalCardCombinedRequest['slug'] = $slug;
             $digitalCard = DigitalCard::saveDigitalCard($digitalCardCombinedRequest);
             OfficeHour::saveOfficeHours($digitalCard->id, $digitalCardCombinedRequest['office_hours']);
-            $digitalCardCombinedRequest['payment_methods'] = PaymentMethod::savePaymentMethods($digitalCard->id, $digitalCardCombinedRequest['payment_methods'], $slug);
 
+            if (isset($digitalCardCombinedRequest['payment_methods'])) {
+                $digitalCardCombinedRequest['payment_methods'] = PaymentMethod::savePaymentMethods($digitalCard->id, $digitalCardCombinedRequest['payment_methods'], $slug);
+            }
             $digitalCardResponse = DigitalCardMapper::mapCreateDigitalCardRequestToResponse($digitalCardCombinedRequest);
             DB::commit();
 
