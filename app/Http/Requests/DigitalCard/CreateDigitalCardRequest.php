@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\DigitalCard;
 
+use App\Models\DigitalCard;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -59,23 +60,22 @@ class CreateDigitalCardRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            // Validate that closing time is after opening time for each day
+
+            $this->checkUniqueDigitalCard($validator);
+
             $officeHours = $this->input('office_hours');
             $paymentMethods = $this->input('payment_methods');
             $paymentFiles = $this->file('payment_methods');
 
             if (is_array($officeHours)) {
                 foreach ($officeHours as $day => $hours) {
-                    // Check if the day is marked as not off
                     if (isset($hours['is_off']) && $hours['is_off'] === false) {
-                        // Validate that both open and close times are provided
                         if (empty($hours['open_time']) || empty($hours['close_time'])) {
                             $validator->errors()->add(
                                 "office_hours.$day",
                                 "Opening and closing times are required for $day when it is not marked as off."
                             );
                         } else {
-                            // If both times are provided, validate that closing is after opening
                             $openTime = \DateTime::createFromFormat('H:i', $hours['open_time']);
                             $closeTime = \DateTime::createFromFormat('H:i', $hours['close_time']);
 
@@ -116,6 +116,22 @@ class CreateDigitalCardRequest extends FormRequest
         });
     }
 
+    protected function checkUniqueDigitalCard(Validator $validator): void
+    {
+        $existingCard = DigitalCard::where('owner_name', $this->input('owner_name'))
+            ->where('designation', $this->input('designation'))
+            ->where('business_name', $this->input('business_name'))
+            ->first();
+
+        if ($existingCard) {
+            $validator->errors()->add('unique_digital_card',
+                "A digital card already exists with the same details:" .
+                " Owner Name: {$this->input('owner_name')}," .
+                " Designation: {$this->input('designation')}," .
+                " Business Name: {$this->input('business_name')}"
+            );
+        }
+    }
     public function messages(): array
     {
         return [
