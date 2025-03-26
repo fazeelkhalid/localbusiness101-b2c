@@ -11,7 +11,6 @@ class DigitalCardMapper
     public static function mapCreateDigitalCardRequestToResponse($digitalCard)
     {
         $digitalCardData = [
-            // Digital Card Data
             'header_image_url' => $digitalCard['header_image_url'],
             'profile_image_url' => $digitalCard['profile_image_url'],
             'owner_name' => $digitalCard['owner_name'],
@@ -28,8 +27,6 @@ class DigitalCardMapper
             'secondary_color' => $digitalCard['secondary_color'],
             'slug' => $digitalCard['slug'],
             'business_name' => $digitalCard['business_name'],
-
-            // Office Hours Data
             'office_hours' => array_map(function ($day, $hours) {
                 return [
                     'day_of_week' => $day,
@@ -38,16 +35,16 @@ class DigitalCardMapper
                     'is_off' => $hours['is_off'] ?? false,
                 ];
             }, array_keys($digitalCard['office_hours']), $digitalCard['office_hours']),
-
-            // Payment Methods Data
-            'payment_methods' => array_map(function ($payment) {
-                return [
-                    'method_name' => $payment['method_name'],
-                    'description' => $payment['description'] ?? null,
-                    'payment_identifier' => $payment['payment_identifier'] ?? null,
-                    'qr_code_image_url' => $payment['qr_code_image_url'] ?? null,
-                ];
-            }, $digitalCard['payment_methods']),
+            'payment_methods' => isset($digitalCard['payment_methods'])
+                ? array_map(function ($payment) {
+                    return [
+                        'method_name' => $payment['method_name'],
+                        'description' => $payment['description'] ?? null,
+                        'payment_identifier' => $payment['payment_identifier'] ?? null,
+                        'qr_code_image_url' => $payment['qr_code_image_url'] ?? null,
+                    ];
+                }, $digitalCard['payment_methods'])
+                : [],
         ];
 
         return $digitalCardData;
