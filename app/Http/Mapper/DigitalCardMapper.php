@@ -52,27 +52,27 @@ class DigitalCardMapper
 
     public static function mapDigitalCardDBToResponse($digitalCard)
     {
-        // Base digital card data
         $mappedData = [
-            'businessName' => $digitalCard->business_name,
-            'ownerName' => $digitalCard->owner_name,
+            'business_name' => $digitalCard->business_name,
+            'owner_name' => $digitalCard->owner_name,
             'designation' => $digitalCard->designation,
             'slug' => $digitalCard->slug,
             'images' => [
-                'header' => $digitalCard->header_image_url,
-                'profile' => $digitalCard->profile_image_url,
+                'header_image_url' => $digitalCard->header_image_url,
+                'profile_image_url' => $digitalCard->profile_image_url,
             ],
             'colors' => [
                 'primary' => $digitalCard->primary_color,
                 'secondary' => $digitalCard->secondary_color,
             ],
             'contact' => [
-                'website' => $digitalCard->website_link,
+                'contact_us_url' => $digitalCard->contact_us_url,
                 'email' => $digitalCard->email,
                 'phone' => $digitalCard->phone_number,
                 'address' => $digitalCard->office_address,
             ],
             'social' => [
+                'website' => $digitalCard->website_link,
                 'facebook' => $digitalCard->facebook,
                 'instagram' => $digitalCard->instagram,
                 'gmb' => $digitalCard->gmb_links,
@@ -80,26 +80,26 @@ class DigitalCardMapper
             'about' => $digitalCard->about_business,
         ];
 
-        $mappedData['officeHours'] = [];
+        $mappedData['office_hours'] = [];
         if (isset($digitalCard->officeHours) && !empty($digitalCard->officeHours)) {
             foreach ($digitalCard->officeHours as $hour) {
-                $mappedData['officeHours'][$hour->day_of_week] = [
-                    'isOff' => (bool) $hour->is_off,
-                    'openTime' => $hour->is_off ? null : CustomUtils::formatTimeToHHMM($hour->open_time),
-                    'closeTime' => $hour->is_off ? null : CustomUtils::formatTimeToHHMM($hour->close_time),
+                $mappedData['office_hours'][$hour->day_of_week] = [
+                    'is_off' => (bool) $hour->is_off,
+                    'open_time' => $hour->is_off ? null : CustomUtils::formatTimeToHHMM($hour->open_time),
+                    'close_time' => $hour->is_off ? null : CustomUtils::formatTimeToHHMM($hour->close_time),
                 ];
             }
         }
 
         // Map payment methods
-        $mappedData['paymentMethods'] = [];
+        $mappedData['payment_methods'] = [];
         if (isset($digitalCard->paymentMethods) && !empty($digitalCard->paymentMethods)) {
             foreach ($digitalCard->paymentMethods as $method) {
-                $mappedData['paymentMethods'][] = [
+                $mappedData['payment_methods'][] = [
                     'name' => $method->method_name,
                     'description' => $method->description,
                     'identifier' => $method->payment_identifier,
-                    'qrCodeUrl' => $method->qr_code_image_url,
+                    'qr_code_image_url' => $method->qr_code_image_url,
                 ];
             }
         }
