@@ -29,7 +29,7 @@ class PaymentMethod extends Model
         foreach ($paymentMethods as $key => $payment) {
             if (!empty($payment['qr_code_image'])) {
                 $qrCodeImage = $payment['qr_code_image'];
-                $qrCodeImageFilename = 'qr_code_image-' . time() . '.' . $qrCodeImage->getClientOriginalExtension();
+                $qrCodeImageFilename = 'qr_code_image-' . uniqid() . '.' . $qrCodeImage->getClientOriginalExtension();
                 $paymentMethods[$key]['qr_code_image_url'] = CustomUtils::uploadCardImage('/' . $slug, $qrCodeImage, $qrCodeImageFilename);
             }
 

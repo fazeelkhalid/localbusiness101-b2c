@@ -23,11 +23,11 @@ class DigitalCardService
             $slug = DigitalCard::generateUniqueSlug($digitalCardCombinedRequest['business_name']);
 
             $headerImage = $digitalCardCombinedRequest['header_image'];
-            $headerImageFilename = 'header_image-' . time() . '.' . $headerImage->getClientOriginalExtension();
+            $headerImageFilename = 'header_image-' . uniqid() . '.' . $headerImage->getClientOriginalExtension();
             $digitalCardCombinedRequest['header_image_url'] = CustomUtils::uploadCardImage('/' . $slug, $headerImage, $headerImageFilename);
 
             $profileImage = $digitalCardCombinedRequest['profile_image'];
-            $profileImageFilename = 'profile_image-' . time() . '.' . $profileImage->getClientOriginalExtension();
+            $profileImageFilename = 'profile_image-' . uniqid() . '.' . $profileImage->getClientOriginalExtension();
             $digitalCardCombinedRequest['profile_image_url'] = CustomUtils::uploadCardImage('/' . $slug, $profileImage, $profileImageFilename);
 
             $digitalCardCombinedRequest['slug'] = $slug;
