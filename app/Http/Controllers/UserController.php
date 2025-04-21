@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\CreateUserRequest;
+use App\Http\Requests\User\UserListRequest;
 use App\Http\Services\AcquirerService;
 use App\Http\Services\UserService;
 
@@ -21,6 +22,12 @@ class UserController extends Controller
     {
 //        $this->acquirerService->hasAuthorityOrThrowException("createUser");
         return $this->userService->createUser($createUserRequest);
+    }
+
+    public function getUserList(UserListRequest $userListRequest)
+    {
+//        $this->acquirerService->hasAuthorityOrThrowException("createUser");
+        return $this->userService->getUserList($userListRequest);
     }
 
 }

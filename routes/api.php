@@ -31,6 +31,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
 
     Route::post('/user', [UserController::class, 'createUser']);
+    Route::get('/users', [UserController::class, 'getUserList']);
 
 
     Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);

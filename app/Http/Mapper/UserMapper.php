@@ -22,6 +22,18 @@ class UserMapper
             ]
         ];
     }
+    public static function mapUserDomainListToUserVmList($users)
+    {
+        $mappedUsers = [];
+        foreach ($users as $user) {
+            $mappedUsers[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+        }
 
+        return $mappedUsers;
+    }
 
 }
