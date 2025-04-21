@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserBusinessProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
 use App\Http\Middleware\FetchAcquirerBusinessProfileMiddleware;
 use App\Http\Middleware\JsonResponseMiddleware;
@@ -27,6 +28,10 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
     Route::post('/digital-cards', [DigitalCardController::class, 'createDigitalCard']);
     Route::get('/digital-cards/{slug}', [DigitalCardController::class, 'getDigitalCardBySlug']);
+
+
+    Route::post('/user', [UserController::class, 'createUser']);
+
 
     Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
     Route::get('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'sendAnalyticsReport']);

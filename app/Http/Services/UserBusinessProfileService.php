@@ -70,11 +70,7 @@ class UserBusinessProfileService
                 Service::saveServices($userBusinessProfileRequest['business_profile']['services'], $businessProfile->id);
             }
 
-            $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userBusinessProfileRequest['user']);
-            if (!$authServiceResponse->successful()) {
-                $authServiceErrorExceptionResponse= AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
-                throw new ErrorException("Invalid email or password.", $authServiceErrorExceptionResponse, $authServiceResponse->status());
-            }
+            $authServiceResponse = AuthRequestService::registerUser($userBusinessProfileRequest['user']);
             DB::commit();
 
             $userBusinessProfileResponse = UserBusinessProfileMapper::mapCreateUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category);

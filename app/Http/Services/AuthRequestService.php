@@ -2,6 +2,8 @@
 
 namespace App\Http\Services;
 
+use App\Exceptions\ErrorException;
+use App\Http\Mapper\AuthMapper;
 use Illuminate\Support\Facades\Http;
 
 class AuthRequestService
@@ -20,5 +22,21 @@ class AuthRequestService
 
         $response = Http::withHeaders($headers)->send($method, $url, ['json' => $data]);
         return $response;
+    }
+
+    public static function registerUser(array $userData)
+    {
+        $authServiceResponse = AuthRequestService::request('/api/signup', 'POST', $userData);
+
+        if (!$authServiceResponse->successful()) {
+            $authServiceErrorExceptionResponse = AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
+            throw new ErrorException(
+                "Invalid email or password.",
+                $authServiceErrorExceptionResponse,
+                $authServiceResponse->status()
+            );
+        }
+
+        return $authServiceResponse;
     }
 }
