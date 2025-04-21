@@ -18,7 +18,7 @@ class UserService
         try {
             $createUserRequest = $createUserRequest->validated();
             $acquirer = Acquirer::createAcquirer($createUserRequest['name']);
-            User::createUser($createUserRequest, $acquirer);
+            $user = User::createUser($createUserRequest, $acquirer);
 
             $authServiceResponse = AuthRequestService::registerUser($createUserRequest);
             DB::commit();
@@ -30,7 +30,7 @@ class UserService
                 $userBusinessProfileResponseMessage = "User created successfully";
             }
 
-            $userBusinessProfileResponse = UserMapper::mapCreateUserRequestToCreateUserResponse($createUserRequest, $acquirer);
+            $userBusinessProfileResponse = UserMapper::mapCreateUserRequestToCreateUserResponse($createUserRequest, $acquirer, $user);
             return new CreateUserResponses($userBusinessProfileResponseMessage, $userBusinessProfileResponse, 201);
 
         } catch (\Exception $e) {
