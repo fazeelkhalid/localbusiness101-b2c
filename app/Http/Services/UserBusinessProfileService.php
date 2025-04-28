@@ -3,9 +3,7 @@
 namespace App\Http\Services;
 
 use App\Enums\ErrorResponseEnum;
-use App\Exceptions\ErrorException;
 use App\Http\Filters\UserBusinessProfileFilter;
-use App\Http\Mapper\AuthMapper;
 use App\Http\Mapper\UserBusinessProfileMapper;
 use App\Http\Pagination\Pagination;
 use App\Http\Requests\UserBusinessProfile\BusinessProfileFilterRequest;
@@ -37,15 +35,21 @@ class UserBusinessProfileService
             $cardImage = $userBusinessProfileRequest['business_profile']['card_image'];
             $cardImageFilename = 'card_image-' . time() . '.' . $cardImage->getClientOriginalExtension();
 
-            $acquirer = Acquirer::createAcquirer($userBusinessProfileRequest['acquirer_name']);
-            $user = User::createUser($userBusinessProfileRequest['user'], $acquirer);
+            if (isset($userBusinessProfileRequest['user_id'])) {
+                $user = User::with('acquirer')->find($userBusinessProfileRequest['user_id']);
+                $acquirer = $user->acquirer;
+            } else {
+                $acquirer = Acquirer::createAcquirer($userBusinessProfileRequest['acquirer_name']);
+                $user = User::createUser($userBusinessProfileRequest['user'], $acquirer);
+            }
+
             $category = BusinessCategory::findCategoryByName($userBusinessProfileRequest['business_profile']['category']);
 
             $userBusinessProfileRequest['business_profile']['slug'] = CustomUtils::generateUniqueSlug($userBusinessProfileRequest['business_profile']['title']);
             $slug = $userBusinessProfileRequest['business_profile']['slug'];
             $userBusinessProfileRequest['business_profile']['card_image'] = CustomUtils::uploadProfileImage('/' . $slug, $cardImage, $cardImageFilename);
 
-            if($userBusinessProfileRequest['business_profile']['theme'] === 'advance') {
+            if ($userBusinessProfileRequest['business_profile']['theme'] === 'advance') {
                 $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
                 $logoImage = $userBusinessProfileRequest['business_profile']['logo_image'];
                 $aboutImage = $userBusinessProfileRequest['business_profile']['about_image'];
@@ -61,8 +65,8 @@ class UserBusinessProfileService
             }
 
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
-            if($userBusinessProfileRequest['business_profile']['theme'] === 'advance' && isset($userBusinessProfileRequest['business_profile']['gallery_images'])) {
-                BusinessProfileGallery::saveGalleryImages($slug,$businessProfile->id, $userBusinessProfileRequest['business_profile']['gallery_images']);
+            if ($userBusinessProfileRequest['business_profile']['theme'] === 'advance' && isset($userBusinessProfileRequest['business_profile']['gallery_images'])) {
+                BusinessProfileGallery::saveGalleryImages($slug, $businessProfile->id, $userBusinessProfileRequest['business_profile']['gallery_images']);
             }
             BusinessProfileSlideImage::saveSlidesimages($slug, $businessProfile->id, $userBusinessProfileRequest['business_profile']['slide_images']);
 
@@ -70,16 +74,17 @@ class UserBusinessProfileService
                 Service::saveServices($userBusinessProfileRequest['business_profile']['services'], $businessProfile->id);
             }
 
-            $authServiceResponse = AuthRequestService::registerUser($userBusinessProfileRequest['user']);
+            $userBusinessProfileResponseMessage = "User and business profile created successfully";
+            if (!isset($userBusinessProfileRequest['user_id']) && isset($userBusinessProfileRequest['user'])) {
+                $authServiceResponse = AuthRequestService::registerUser($userBusinessProfileRequest['user']);
+                if (isset($authServiceResponse['user']) && isset($authServiceResponse['user']['email_confirmation_message'])) {
+                    $userBusinessProfileResponseMessage = $authServiceResponse['user']['email_confirmation_message'];
+                }
+            }
+
+            $userBusinessProfileResponse = UserBusinessProfileMapper::mapCreateUserBusinessProfileRequestToUserBusinessProfileResponse($user, $userBusinessProfileRequest, $acquirer, $businessProfile, $category);
             DB::commit();
 
-            $userBusinessProfileResponse = UserBusinessProfileMapper::mapCreateUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category);
-            $userBusinessProfileResponseMessage = "";
-            if (isset($authServiceResponse['user']) && isset($authServiceResponse['user']['email_confirmation_message'])) {
-                $userBusinessProfileResponseMessage = $authServiceResponse['user']['email_confirmation_message'];
-            } else {
-                $userBusinessProfileResponseMessage = "User and business profile created successfully";
-            }
             return new CreateUserBusinessProfileResponses($userBusinessProfileResponseMessage, $userBusinessProfileResponse, 201);
 
         } catch (\Exception $e) {

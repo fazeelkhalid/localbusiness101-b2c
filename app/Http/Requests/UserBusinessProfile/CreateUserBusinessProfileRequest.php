@@ -17,10 +17,7 @@ class CreateUserBusinessProfileRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'user.name' => 'required|string|max:255',
-            'user.email' => ['required', 'string', 'email', 'max:255', new UniqueUserEmail()],
-            'user.password' => 'required|string|min:8',
-            'acquirer_name' => 'required|string',
+            'user_id' => 'nullable|exists:users,id',
             'business_profile.card_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'business_profile.category' => 'required|string|max:255|exists:business_categories,category_name',
             'business_profile.title' => 'required|string|max:255',
@@ -34,18 +31,19 @@ class CreateUserBusinessProfileRequest extends FormRequest
             'business_profile.business_contact_details.*.email' => 'required|email|max:255',
             'business_profile.business_contact_details.*.phone' => 'required|string|max:15',
             'business_profile.business_contact_details.*.address' => 'required|string|max:255',
-//            'business_profile.business_contact_details.*.map_location_url' => 'required|string',
             'business_profile.slide_images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-//            'business_profile.main_page_image' => 'required|image|mimes:jpg,jpeg,png|max:2048|dimensions:min_width=1500,min_height=900',
-//            'business_profile.logo_image' => 'required|image|mimes:jpg,jpeg,png|max:1024',
             'business_profile.theme' => 'required|string|in:basic,advance',
-//            'business_profile.services.*.description' => 'required|string',
-//            'business_profile.services.*.title' => 'required|string|max:255',
-//            'business_profile.about_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ];
 
+        if (empty($this->input('user_id'))) {
+            $rules['user.name'] = 'required|string|max:255';
+            $rules['user.email'] = ['required', 'string', 'email', 'max:255', new UniqueUserEmail()];
+            $rules['user.password'] = 'required|string|min:8';
+            $rules['acquirer_name'] = 'required|string';
+        }
+
         if ($this->input('business_profile.theme') === 'advance') {
-            $rules = array_merge($rules, [
+            $advancedRules = [
                 'business_profile.website' => 'required|string|url',
                 'business_profile.business_contact_details.*.map_location_url' => 'required|string|max:400',
                 'business_profile.main_page_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
@@ -55,19 +53,24 @@ class CreateUserBusinessProfileRequest extends FormRequest
                 'business_profile.services.*.description' => 'required|string',
                 'business_profile.gallery_images' => 'required|array|min:5',
                 'business_profile.gallery_images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            ]);
+            ];
+
+            $rules = array_merge($rules, $advancedRules);
         }
+
         return $rules;
     }
 
     public function messages(): array
     {
         return [
+            'user_id.exists' => 'The specified user does not exist.',
             'user.name.required' => 'The user name is required.',
             'user.email.required' => 'The user email is required.',
             'user.email.unique' => 'The user email must be unique.',
             'user.password.required' => 'The user password is required.',
             'user.password.min' => 'The user password must be at least 8 characters.',
+            'acquirer_name.required' => 'The acquirer name is required.',
             'business_profile.card_image.required' => 'The business profile card image is required.',
             'business_profile.card_image.image' => 'The file must be an image.',
             'business_profile.card_image.mimes' => 'The image must be a file of type: jpg, jpeg, png.',
@@ -94,9 +97,9 @@ class CreateUserBusinessProfileRequest extends FormRequest
             'business_profile.about_image.required' => 'The about image is required for advanced themes.',
             'business_profile.services.*.title.required' => 'The service title is required for advanced themes.',
             'business_profile.services.*.description.required' => 'The service description is required for advanced themes.',
-            'business_profile.gallery_images.required' => 'At least 5 gallery images are required.',
+            'business_profile.gallery_images.required' => 'At least one gallery image is required.',
             'business_profile.gallery_images.array' => 'The gallery images must be provided as an array.',
-            'business_profile.gallery_images.min' => 'You must upload at least 5 gallery images.',
+            'business_profile.gallery_images.min' => 'You must upload at least five gallery image.',
             'business_profile.gallery_images.*.required' => 'Each gallery image is required.',
             'business_profile.gallery_images.*.image' => 'Each gallery image must be a valid image file.',
             'business_profile.gallery_images.*.mimes' => 'Each gallery image must be a file of type: jpg, jpeg, png.',

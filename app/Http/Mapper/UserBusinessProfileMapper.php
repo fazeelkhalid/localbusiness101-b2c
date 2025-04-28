@@ -8,13 +8,13 @@ use App\Http\Utils\CustomUtils;
 class UserBusinessProfileMapper
 {
 
-    public static function mapCreateUserBusinessProfileRequestToUserBusinessProfileResponse($userBusinessProfileRequest, $acquirer, $businessProfile, $category)
+    public static function mapCreateUserBusinessProfileRequestToUserBusinessProfileResponse($user, $userBusinessProfileRequest, $acquirer, $businessProfile, $category)
     {
         return [
             'user' => [
-                'name' => $userBusinessProfileRequest["user"]['name'],
-                'email' => $userBusinessProfileRequest["user"]['email'],
-                'password' => $userBusinessProfileRequest["user"]['password'],
+                'name' => $user->name,
+                'email' => $user->email,
+//                'password' => $user->password,
             ],
             'acquirer' => [
                 'name' => $acquirer->name,

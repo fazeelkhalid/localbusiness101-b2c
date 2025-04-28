@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Http\Responses\UserBusinessProfile;
 
-use App\Models\User;
 use Illuminate\Contracts\Support\Responsable;
 
 class CreateUserBusinessProfileResponses implements Responsable
