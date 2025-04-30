@@ -173,42 +173,42 @@ class UserBusinessProfileMapper
         $avgRating = $userBusinessProfileRequest->ratings->avg("rating") ?? 0;
         $avgRating = $avgRating != 0 ? number_format($avgRating, 1) : $avgRating;
         return [
-            'category' => $userBusinessProfileRequest->category->category_name,
+//            'category' => $userBusinessProfileRequest->category->category_name,
             'slug' => $userBusinessProfileRequest->slug,
             'business_profile_url' => env('FRONTEND_URL') . '/business-profile/' . $userBusinessProfileRequest->slug,
             'card_image_url' => $userBusinessProfileRequest->card_image_url,
-            'main_page_image_url' => $userBusinessProfileRequest->main_page_image_url ?? "",
-            'logo_image_url' => $userBusinessProfileRequest->logo_image_url ?? "",
-            'about_image_url' => $userBusinessProfileRequest->about_image_url ?? "",
-            'theme' => $userBusinessProfileRequest->theme ?? "",
-            'website' => $userBusinessProfileRequest->website ?? "",
-            'business_profiles_key' => $userBusinessProfileRequest->business_profiles_key,
+//            'main_page_image_url' => $userBusinessProfileRequest->main_page_image_url ?? "",
+//            'logo_image_url' => $userBusinessProfileRequest->logo_image_url ?? "",
+//            'about_image_url' => $userBusinessProfileRequest->about_image_url ?? "",
+//            'theme' => $userBusinessProfileRequest->theme ?? "",
+//            'website' => $userBusinessProfileRequest->website ?? "",
+//            'business_profiles_key' => $userBusinessProfileRequest->business_profiles_key,
             'title' => $userBusinessProfileRequest->title,
-            'description' => $userBusinessProfileRequest->description,
-            'short_intro' => $userBusinessProfileRequest->short_intro,
-            'keywords' => $userBusinessProfileRequest->keywords,
-            'tab_title' => $userBusinessProfileRequest->tab_title,
-            'font_style' => $userBusinessProfileRequest->font_style,
-            'heading_color' => $userBusinessProfileRequest->heading_color,
-            'heading_size' => $userBusinessProfileRequest->heading_size,
-            'business_contact_details' => array_map(function ($contact) {
-                return [
-                    'email' => $contact['business_email'],
-                    'phone' => $contact['business_phone'],
-                    'address' => $contact['business_address'],
-                    'map_location' => $contact['map_location_url'] ?? "",
-                ];
-            }, $userBusinessProfileRequest->contactDetails->toArray()),
-            'business_services' => array_map(function ($contact) {
-                return [
-                    'title' => $contact['name'],
-                    'description' => $contact['description'],
-                ];
-            }, $userBusinessProfileRequest->services->toArray()),
+//            'description' => $userBusinessProfileRequest->description,
+//            'short_intro' => $userBusinessProfileRequest->short_intro,
+//            'keywords' => $userBusinessProfileRequest->keywords,
+//            'tab_title' => $userBusinessProfileRequest->tab_title,
+//            'font_style' => $userBusinessProfileRequest->font_style,
+//            'heading_color' => $userBusinessProfileRequest->heading_color,
+//            'heading_size' => $userBusinessProfileRequest->heading_size,
+//            'business_contact_details' => array_map(function ($contact) {
+//                return [
+//                    'email' => $contact['business_email'],
+//                    'phone' => $contact['business_phone'],
+//                    'address' => $contact['business_address'],
+//                    'map_location' => $contact['map_location_url'] ?? "",
+//                ];
+//            }, $userBusinessProfileRequest->contactDetails->toArray()),
+//            'business_services' => array_map(function ($contact) {
+//                return [
+//                    'title' => $contact['name'],
+//                    'description' => $contact['description'],
+//                ];
+//            }, $userBusinessProfileRequest->services->toArray()),
 
-            'slide_images' => array_map(function ($slideImage) {
-                return $slideImage['image_url'];
-            }, $userBusinessProfileRequest->slideImages->toArray()),
+//            'slide_images' => array_map(function ($slideImage) {
+//                return $slideImage['image_url'];
+//            }, $userBusinessProfileRequest->slideImages->toArray()),
             'reviews' => array_map(function ($review) {
                 return [
                     "id" => $review["id"],
