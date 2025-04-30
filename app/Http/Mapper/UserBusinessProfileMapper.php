@@ -191,14 +191,14 @@ class UserBusinessProfileMapper
 //            'font_style' => $userBusinessProfileRequest->font_style,
 //            'heading_color' => $userBusinessProfileRequest->heading_color,
 //            'heading_size' => $userBusinessProfileRequest->heading_size,
-//            'business_contact_details' => array_map(function ($contact) {
-//                return [
+            'business_contact_details' => array_map(function ($contact) {
+                return [
 //                    'email' => $contact['business_email'],
 //                    'phone' => $contact['business_phone'],
-//                    'address' => $contact['business_address'],
-//                    'map_location' => $contact['map_location_url'] ?? "",
-//                ];
-//            }, $userBusinessProfileRequest->contactDetails->toArray()),
+                    'address' => $contact['business_address'],
+                    'map_location' => $contact['map_location_url'] ?? "",
+                ];
+            }, $userBusinessProfileRequest->contactDetails->toArray()),
 //            'business_services' => array_map(function ($contact) {
 //                return [
 //                    'title' => $contact['name'],
