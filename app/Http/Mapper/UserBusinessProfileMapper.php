@@ -85,10 +85,24 @@ class UserBusinessProfileMapper
     }
 
 
-    public static function mapUserBusinessProfileToGetUserBusinessProfileResponse($userBusinessProfileRequest)
+    public static function mapUserBusinessProfileToGetUserBusinessProfileResponse($userBusinessProfileRequest, $userAllProfilesDomain)
     {
         $avgRating = $userBusinessProfileRequest->ratings->avg("rating") ?? 0;
         $avgRating = $avgRating != 0 ? number_format($avgRating, 1) : $avgRating;
+
+        $otherProfiles = array_map(function ($usefulLink) {
+            return [
+                'link' => $usefulLink['links'],
+                'title' => $usefulLink['tags_title'],
+            ];
+        }, $userBusinessProfileRequest->usefulLinks->toArray());
+
+        foreach ($userAllProfilesDomain as $profile) {
+            $otherProfiles[] = [
+                'link' => env('FRONTEND_URL') . '/business-profile/' . $profile->slug,
+                'title' => $profile->slug,
+            ];
+        }
 
         $maxLinksPerColumn = CustomUtils::calculateMaxLinksPerColumn($userBusinessProfileRequest->usefulLinks->toArray());
 
@@ -115,8 +129,8 @@ class UserBusinessProfileMapper
             'font_style' => $userBusinessProfileRequest->font_style,
             'heading_color' => $userBusinessProfileRequest->heading_color,
             'heading_size' => $userBusinessProfileRequest->heading_size,
-            'about_cta_button_text'=>$userBusinessProfileRequest->about_cta_button_text,
-            'google_ads_tracking_code'=>$userBusinessProfileRequest->google_ads_tracking_code,
+            'about_cta_button_text' => $userBusinessProfileRequest->about_cta_button_text,
+            'google_ads_tracking_code' => $userBusinessProfileRequest->google_ads_tracking_code,
             'business_contact_details' => array_map(function ($contact) {
                 return [
                     'email' => $contact['business_email'],
@@ -132,12 +146,7 @@ class UserBusinessProfileMapper
                 return $galleryImage['image_url'];
             }, $userBusinessProfileRequest->galleryImages->toArray()),
             'usefull_link' => [
-                'other_profile' => array_map(function ($galleryImage) {
-                    return [
-                        'link' => $galleryImage['links'],
-                        'title' => $galleryImage['tags_title'],
-                    ];
-                }, $userBusinessProfileRequest->usefulLinks->toArray()),
+                'other_profile' => $otherProfiles,
                 'max_links_per_column' => $maxLinksPerColumn,
             ],
             'reviews' => array_map(function ($review) {

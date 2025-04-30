@@ -93,6 +93,11 @@ class BusinessProfile extends Model
         return self::with(['user.acquirer', 'contactDetails', 'ratings', 'category', 'slideImages', 'services', 'galleryImages', 'usefulLinks', 'analyticsReport']);
     }
 
+    public static function getBusinessProfilesByUserId($userId)
+    {
+        return self::where('user_id', $userId)->get();
+    }
+
     public static function getBusinessProfileFullDetailsRandomly($filter)
     {
         $random = $filter['random'] ?? 0;

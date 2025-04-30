@@ -26,14 +26,6 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
-    Route::post('/digital-cards', [DigitalCardController::class, 'createDigitalCard']);
-    Route::get('/digital-cards/{slug}', [DigitalCardController::class, 'getDigitalCardBySlug']);
-
-
-    Route::post('/user', [UserController::class, 'createUser']);
-    Route::get('/users', [UserController::class, 'getUserList']);
-
-
     Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
     Route::get('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'sendAnalyticsReport']);
 
@@ -75,6 +67,15 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
             Route::get('/contact_request/{contact_request_id}', [ContactRequestFormController::class, 'getContactFormRequest']);
             Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
             Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
+
+            // USERS
+            Route::post('/user', [UserController::class, 'createUser']);
+            Route::get('/users', [UserController::class, 'getUserList']);
+
+            // DIGITAL CARD
+            Route::post('/digital-cards', [DigitalCardController::class, 'createDigitalCard']);
+            Route::get('/digital-cards/{slug}', [DigitalCardController::class, 'getDigitalCardBySlug']);
+
         });
     });
 });

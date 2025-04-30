@@ -53,7 +53,6 @@ class UserBusinessProfileService
                 $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
                 $logoImage = $userBusinessProfileRequest['business_profile']['logo_image'];
                 $aboutImage = $userBusinessProfileRequest['business_profile']['about_image'];
-                $galleryImages = $userBusinessProfileRequest['business_profile']['about_image'];
 
                 $mainPageImageFileName = 'main_page_image-' . time() . '.' . $mainPageImage->getClientOriginalExtension();
                 $logoImageFileName = 'logo_image-' . time() . '.' . $logoImage->getClientOriginalExtension();
@@ -135,7 +134,8 @@ class UserBusinessProfileService
         if (!$businessProfile) {
             return ErrorResponseEnum::$BPNF404;
         }
-        $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
+        $userAllProfilesDomain = BusinessProfile::getBusinessProfilesByUserId($businessProfile->user->id);
+        $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile, $userAllProfilesDomain);
 
         return new GetUserBusinessProfileResponses($businessProfile, 200);
     }
@@ -147,7 +147,9 @@ class UserBusinessProfileService
         if (!$businessProfile) {
             return ErrorResponseEnum::$BPNF404;
         }
-        $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile);
+
+        $userAllProfilesDomain = BusinessProfile::getBusinessProfilesByUserId($businessProfile->user->id);
+        $businessProfile = UserBusinessProfileMapper::mapUserBusinessProfileToGetUserBusinessProfileResponse($businessProfile, $userAllProfilesDomain);
 
         return new GetUserBusinessProfileResponses($businessProfile, 200);
     }
