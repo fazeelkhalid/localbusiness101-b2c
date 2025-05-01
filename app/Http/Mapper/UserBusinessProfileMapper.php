@@ -146,6 +146,7 @@ class UserBusinessProfileMapper
         $maxLinksPerColumn = CustomUtils::calculateMaxLinksPerColumn($userBusinessProfileRequest->usefulLinks->toArray());
 
         return [
+            'user_id' =>$userBusinessProfileRequest->user->id,
             'acquirer' => [
                 'name' => $userBusinessProfileRequest->user->acquirer->name,
                 'key' => $userBusinessProfileRequest->user->acquirer->key
