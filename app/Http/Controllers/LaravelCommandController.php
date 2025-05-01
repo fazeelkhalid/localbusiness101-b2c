@@ -36,21 +36,4 @@ class LaravelCommandController extends Controller
         return $this->commandService->createStorageLink();
     }
 
-    public function imageHost(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-        $image = $request->file('image');
-        if ($image) {
-            $filename = 'img.' . $image->getClientOriginalExtension();
-            $fullImagePath = CustomUtils::uploadProfileImage('/orlando', $image, $filename);
-            return response()->json([
-                'message' => 'Image uploaded successfully!',
-                'image_url' => $fullImagePath,
-            ], 200);
-        }
-
-        return response()->json(['message' => 'No image uploaded'], 400);
-    }
 }

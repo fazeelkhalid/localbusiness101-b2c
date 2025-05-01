@@ -53,6 +53,42 @@ class BusinessProfile extends Model
         return $businessProfile;
     }
 
+    static function updateBusinessProfile($businessProfile, $userId,  $userBusinessProfileRequest, $category): void
+    {
+        $businessProfile->update(
+            [
+                'user_id' => $userId,
+                'title' => $userBusinessProfileRequest['title'],
+                'description' => $userBusinessProfileRequest['description'],
+                'short_intro' => $userBusinessProfileRequest['short_intro'],
+                'keywords' => $userBusinessProfileRequest['keywords'],
+                'tab_title' => $userBusinessProfileRequest['tab_title'],
+                'font_style' => $userBusinessProfileRequest['font_style'],
+                'heading_color' => $userBusinessProfileRequest['heading_color'],
+                'heading_size' => $userBusinessProfileRequest['heading_size'],
+                'business_category_id' => $category->id,
+                'card_image_url' => $userBusinessProfileRequest['card_image'],
+                'theme' => $userBusinessProfileRequest['theme'],
+            ]
+        );
+
+        if ($userBusinessProfileRequest['theme'] === 'advance') {
+            $businessProfile->update([
+                'website' => $userBusinessProfileRequest['website'],
+                'main_page_image_url' => $userBusinessProfileRequest['main_page_image'],
+                'logo_image_url' => $userBusinessProfileRequest['logo_image'],
+                'about_image_url' => $userBusinessProfileRequest['about_image'],
+            ]);
+        } else {
+            $businessProfile->update([
+                'website' => "",
+                'main_page_image_url' => "",
+                'logo_image_url' => "",
+                'about_image_url' => "",
+            ]);
+        }
+    }
+
     public function services()
     {
         return $this->hasMany(Service::class, 'business_profile_id');

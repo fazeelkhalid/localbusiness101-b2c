@@ -56,6 +56,45 @@ class UserBusinessProfileMapper
         ];
     }
 
+    public static function mapUpdateUserBusinessProfileToUserBusinessProfileVm($userBusinessProfileRequest, $category)
+    {
+        return [
+            'category' => $category->category_name,
+            'slug' => $userBusinessProfileRequest["business_profile"]['slug'],
+            'business_profile_url' => env('FRONTEND_URL') . '/business-profile/' . $userBusinessProfileRequest["business_profile"]['slug'],
+            'card_image_url' => $userBusinessProfileRequest["business_profile"]['card_image'],
+            'main_page_image_url' => $userBusinessProfileRequest["business_profile"]['main_page_image'] ?? "",
+            'logo_image_url' => $userBusinessProfileRequest["business_profile"]['logo_image'] ?? "",
+            'about_image_url' => $userBusinessProfileRequest["business_profile"]['about_image'] ?? "",
+            'website' => $userBusinessProfileRequest["business_profile"]['website'] ?? "",
+            'title' => $userBusinessProfileRequest["business_profile"]['title'],
+            'description' => $userBusinessProfileRequest["business_profile"]['description'],
+            'short_intro' => $userBusinessProfileRequest["business_profile"]['short_intro'],
+            'keywords' => $userBusinessProfileRequest["business_profile"]['keywords'],
+            'tab_title' => $userBusinessProfileRequest["business_profile"]['tab_title'],
+            'font_style' => $userBusinessProfileRequest["business_profile"]['font_style'],
+            'heading_color' => $userBusinessProfileRequest["business_profile"]['heading_color'],
+            'heading_size' => $userBusinessProfileRequest["business_profile"]['heading_size'],
+            'business_contact_details' => array_map(function ($contact) {
+                return [
+                    'email' => $contact['email'],
+                    'phone' => $contact['phone'],
+                    'address' => $contact['address'],
+                    'map_location' => $contact['map_location_url'] ?? "",
+                ];
+            }, $userBusinessProfileRequest["business_profile"]['business_contact_details']),
+            'business_services' => isset($userBusinessProfileRequest["business_profile"]["services"])
+                ? array_map(function ($service) {
+                    return [
+                        'title' => $service['title'],
+                        'description' => $service['description'],
+                    ];
+                }, $userBusinessProfileRequest["business_profile"]["services"])
+                : [],
+        ];
+    }
+
+
     public static function mapUserBusinessProfileToUpdateUserBusinessProfileResponse($userBusinessProfileRequest)
     {
         return [

@@ -20,13 +20,13 @@ class UserController extends Controller
 
     public function createUser(CreateUserRequest $createUserRequest)
     {
-//        $this->acquirerService->hasAuthorityOrThrowException("createUser");
+        $this->acquirerService->hasAuthorityOrThrowException("createUser");
         return $this->userService->createUser($createUserRequest);
     }
 
     public function getUserList(UserListRequest $userListRequest)
     {
-//        $this->acquirerService->hasAuthorityOrThrowException("createUser");
+        $this->acquirerService->hasAuthorityOrThrowException("createUser");
         return $this->userService->getUserList($userListRequest);
     }
 

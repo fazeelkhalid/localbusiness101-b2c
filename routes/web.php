@@ -29,7 +29,6 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
     Route::get('/init', [InitController::class, 'init']);
 
     Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
-    Route::put('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
     Route::get('/business_profile/{business_profiles_key}', [UserBusinessProfileController::class, 'getUserBusinessProfile']);
     Route::get('/business_profiles', [UserBusinessProfileController::class, 'getUserBusinessProfileList']);
 

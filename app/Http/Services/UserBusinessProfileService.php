@@ -16,6 +16,7 @@ use App\Http\Responses\UserBusinessProfile\UpdateUserBusinessProfileResponses;
 use App\Http\Utils\CustomUtils;
 use App\Models\Acquirer;
 use App\Models\BusinessCategory;
+use App\Models\BusinessContactDetail;
 use App\Models\BusinessProfile;
 use App\Models\BusinessProfileGallery;
 use App\Models\BusinessProfileSlideImage;
@@ -50,17 +51,7 @@ class UserBusinessProfileService
             $userBusinessProfileRequest['business_profile']['card_image'] = CustomUtils::uploadProfileImage('/' . $slug, $cardImage, $cardImageFilename);
 
             if ($userBusinessProfileRequest['business_profile']['theme'] === 'advance') {
-                $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
-                $logoImage = $userBusinessProfileRequest['business_profile']['logo_image'];
-                $aboutImage = $userBusinessProfileRequest['business_profile']['about_image'];
-
-                $mainPageImageFileName = 'main_page_image-' . time() . '.' . $mainPageImage->getClientOriginalExtension();
-                $logoImageFileName = 'logo_image-' . time() . '.' . $logoImage->getClientOriginalExtension();
-                $aboutImageFileName = 'about_image-' . time() . '.' . $aboutImage->getClientOriginalExtension();
-
-                $userBusinessProfileRequest['business_profile']['main_page_image'] = CustomUtils::uploadProfileImage('/' . $slug, $mainPageImage, $mainPageImageFileName);
-                $userBusinessProfileRequest['business_profile']['logo_image'] = CustomUtils::uploadProfileImage('/' . $slug, $logoImage, $logoImageFileName);
-                $userBusinessProfileRequest['business_profile']['about_image'] = CustomUtils::uploadProfileImage('/' . $slug, $aboutImage, $aboutImageFileName);
+                $userBusinessProfileRequest = $this->UploadMainPageAndLogoAndAboutImage($userBusinessProfileRequest, $slug);
             }
 
             $businessProfile = BusinessProfile::createBusinessProfile($userBusinessProfileRequest['business_profile'], $user, $category);
@@ -92,39 +83,68 @@ class UserBusinessProfileService
         }
     }
 
-    public function updateUserBusinessProfile(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_key)
+    public function updateUserBusinessProfile(UpdateUserBusinessProfileRequest $updateUserBusinessProfileRequest, $slug)
     {
-        $validatedData = $userBusinessProfileRequest->validated();
+        DB::beginTransaction();
 
-        $businessProfile = BusinessProfile::with([
-            'user.acquirer',
-            'contactDetails'
-        ])->where('business_profiles_key', $business_profiles_key)->first();
+        try {
+            $updateUserBusinessProfileRequest = $updateUserBusinessProfileRequest->validated();
+            $businessProfile = BusinessProfile::getBusinessProfileFullDetails()->where('slug', $slug)->first();
 
+            if (!$businessProfile) {
+                return ErrorResponseEnum::$BPNF404;
+            }
 
-        if (!$businessProfile) {
-            return ErrorResponseEnum::$BPNF404;
+            $updateUserBusinessProfileRequest["business_profile"]['slug'] = $businessProfile->slug;
+            $category = BusinessCategory::findCategoryByName($updateUserBusinessProfileRequest['business_profile']['category']);
+            $userId = $updateUserBusinessProfileRequest['user_id'];
+
+            $cardImage = $updateUserBusinessProfileRequest['business_profile']['card_image'];
+            $cardImageFilename = 'card_image-' . time() . '.' . $cardImage->getClientOriginalExtension();
+            $updateUserBusinessProfileRequest['business_profile']['card_image'] = CustomUtils::uploadProfileImage('/' . $slug, $cardImage, $cardImageFilename);
+
+            if ($updateUserBusinessProfileRequest['business_profile']['theme'] === 'advance') {
+                $updateUserBusinessProfileRequest = $this->UploadMainPageAndLogoAndAboutImage($updateUserBusinessProfileRequest, $slug);
+            }
+            else{
+                $updateUserBusinessProfileRequest['business_profile']['main_page_image'] = "";
+                $updateUserBusinessProfileRequest['business_profile']['logo_image'] = "";
+                $updateUserBusinessProfileRequest['business_profile']['about_image'] = "";
+            }
+
+            BusinessProfile::updateBusinessProfile($businessProfile, $userId, $updateUserBusinessProfileRequest['business_profile'], $category);
+
+            $contactDetails = $updateUserBusinessProfileRequest['business_profile']['business_contact_details'];
+            if (isset($contactDetails) && is_array($contactDetails)) {
+                BusinessContactDetail::where('business_profile_id', $businessProfile->id)->delete();
+                BusinessContactDetail::createBusinessContactDetails($contactDetails, $businessProfile);
+            }
+
+            if ($updateUserBusinessProfileRequest['business_profile']['theme'] === 'advance' && isset($updateUserBusinessProfileRequest['business_profile']['gallery_images'])) {
+                BusinessProfileGallery::where('business_profile_id', $businessProfile->id)->delete();
+                BusinessProfileGallery::saveGalleryImages($slug, $businessProfile->id, $updateUserBusinessProfileRequest['business_profile']['gallery_images']);
+            }
+
+            BusinessProfileSlideImage::where('business_profile_id', $businessProfile->id)->delete();
+            BusinessProfileSlideImage::saveSlidesimages($slug, $businessProfile->id, $updateUserBusinessProfileRequest['business_profile']['slide_images']);
+
+            if ($businessProfile['theme'] === 'advance') {
+                Service::where('business_profile_id', $businessProfile->id)->delete();
+                Service::saveServices($updateUserBusinessProfileRequest['business_profile']['services'], $businessProfile->id);
+            }
+            else{
+                Service::where('business_profile_id', $businessProfile->id)->delete();
+            }
+
+            $userBusinessProfileVm = UserBusinessProfileMapper::mapUpdateUserBusinessProfileToUserBusinessProfileVm( $updateUserBusinessProfileRequest, $category);
+            DB::commit();
+
+            return new UpdateUserBusinessProfileResponses("Business Profile Updated", $userBusinessProfileVm, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
-
-        $businessProfile->update([
-            'title' => $validatedData['business_profile']['title'] ?? $businessProfile->description,
-            'description' => $validatedData['business_profile']['description'] ?? $businessProfile->description,
-            'short_intro' => $validatedData['business_profile']['short_intro'] ?? $businessProfile->short_intro,
-            'keywords' => $validatedData['business_profile']['keywords'] ?? $businessProfile->keywords,
-            'tab_title' => $validatedData['business_profile']['tab_title'] ?? $businessProfile->tab_title,
-            'font_style' => $validatedData['business_profile']['font_style'] ?? $businessProfile->font_style,
-            'heading_color' => $validatedData['business_profile']['heading_color'] ?? $businessProfile->heading_color,
-            'heading_size' => $validatedData['business_profile']['heading_size'] ?? $businessProfile->heading_size,
-        ]);
-
-
-        $businessProfile->user->acquirer->update([
-            "key" => $validatedData['business_profile']['acquirer']['key'] ?? $businessProfile->user->acquirer->key,
-            "name" => $validatedData['business_profile']['acquirer']['name'] ?? $businessProfile->user->acquirer->name,
-        ]);
-        $updateBusinessProfileResponse = UserBusinessProfileMapper::mapUserBusinessProfileToUpdateUserBusinessProfileResponse($businessProfile);
-
-        return new UpdateUserBusinessProfileResponses("Business Profile updated successfully", $updateBusinessProfileResponse, 200);
     }
 
     public function getUserBusinessProfile($business_profiles_key)
@@ -175,5 +195,20 @@ class UserBusinessProfileService
         return array($businessProfiles, $mappedBusinessProfiles);
     }
 
+    public function UploadMainPageAndLogoAndAboutImage($userBusinessProfileRequest, $slug)
+    {
+        $mainPageImage = $userBusinessProfileRequest['business_profile']['main_page_image'];
+        $logoImage = $userBusinessProfileRequest['business_profile']['logo_image'];
+        $aboutImage = $userBusinessProfileRequest['business_profile']['about_image'];
+
+        $mainPageImageFileName = 'main_page_image-' . time() . '.' . $mainPageImage->getClientOriginalExtension();
+        $logoImageFileName = 'logo_image-' . time() . '.' . $logoImage->getClientOriginalExtension();
+        $aboutImageFileName = 'about_image-' . time() . '.' . $aboutImage->getClientOriginalExtension();
+
+        $userBusinessProfileRequest['business_profile']['main_page_image'] = CustomUtils::uploadProfileImage('/' . $slug, $mainPageImage, $mainPageImageFileName);
+        $userBusinessProfileRequest['business_profile']['logo_image'] = CustomUtils::uploadProfileImage('/' . $slug, $logoImage, $logoImageFileName);
+        $userBusinessProfileRequest['business_profile']['about_image'] = CustomUtils::uploadProfileImage('/' . $slug, $aboutImage, $aboutImageFileName);
+        return $userBusinessProfileRequest;
+    }
 
 }

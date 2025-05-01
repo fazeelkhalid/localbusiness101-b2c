@@ -31,7 +31,7 @@ class DigitalCardController extends Controller
 
     public function createDigitalCard(CreateDigitalCardRequest $digitalCardCombinedRequest)
     {
-//        $this->acquirerService->hasAuthorityOrThrowException("createDigitalCard");
+        $this->acquirerService->hasAuthorityOrThrowException("createDigitalCard");
         return $this->digitalCardService->createDigitalCard($digitalCardCombinedRequest);
     }
     public function getDigitalCardBySlug(string $slug){

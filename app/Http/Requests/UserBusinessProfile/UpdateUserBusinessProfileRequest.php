@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\UserBusinessProfile;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateUserBusinessProfileRequest extends FormRequest
@@ -15,36 +15,82 @@ class UpdateUserBusinessProfileRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'business_profile.title' => 'nullable|string|max:255',
-            'business_profile.description' => 'nullable|string',
-            'business_profile.short_intro' => 'nullable|string|max:255',
-            'business_profile.keywords' => 'nullable|string|max:255',
-            'business_profile.tab_title' => 'nullable|string|max:255',
-            'business_profile.font_style' => 'nullable|string|max:255',
-            'business_profile.heading_color' => 'nullable|string|max:7',
-            'business_profile.heading_size' => 'nullable|string|max:10',
-            'business_profile.acquirer.name' => 'nullable|string|max:255',
-            'business_profile.acquirer.key' => 'nullable|string|max:255',
-            'business_profile.business_contact_details.*.email' => 'nullable|email|max:255',
-            'business_profile.business_contact_details.*.phone' => 'nullable|string|max:20',
-            'business_profile.business_contact_details.*.address' => 'nullable|string|max:255',
+        $rules = [
+            'user_id' => 'required|exists:users,id',
+            'business_profile.card_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'business_profile.category' => 'required|string|max:255|exists:business_categories,category_name',
+            'business_profile.title' => 'required|string|max:255',
+            'business_profile.description' => 'required|string',
+            'business_profile.short_intro' => 'required|string',
+            'business_profile.keywords' => 'required|string',
+            'business_profile.tab_title' => 'required|string|max:255',
+            'business_profile.font_style' => 'required|string|max:255',
+            'business_profile.heading_color' => 'required|string|max:255',
+            'business_profile.heading_size' => 'required|string|max:255',
+            'business_profile.business_contact_details' => 'required|array',
+            'business_profile.business_contact_details.*.email' => 'required|email|max:255',
+            'business_profile.business_contact_details.*.phone' => 'required|string|max:15',
+            'business_profile.business_contact_details.*.address' => 'required|string|max:255',
+            'business_profile.slide_images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'business_profile.theme' => 'required|string|in:basic,advance',
         ];
+
+        if ($this->input('business_profile.theme') === 'advance') {
+            $advancedRules = [
+                'business_profile.website' => 'required|string|url',
+                'business_profile.business_contact_details.*.map_location_url' => 'required|string|max:400',
+                'business_profile.main_page_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'business_profile.logo_image' => 'required|image|mimes:jpg,jpeg,png|max:1024',
+                'business_profile.about_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'business_profile.services.*.title' => 'required|string|max:255',
+                'business_profile.services.*.description' => 'required|string',
+                'business_profile.gallery_images' => 'required|array|min:1',
+                'business_profile.gallery_images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            ];
+
+            $rules = array_merge($rules, $advancedRules);
+        }
+
+        return $rules;
     }
 
     public function messages(): array
     {
         return [
-            'business_profile.description.nullable' => 'The business profile description is nullable.',
-            'business_profile.short_intro.nullable' => 'The business profile short intro is nullable.',
-            'business_profile.keywords.nullable' => 'The business profile keywords are nullable.',
-            'business_profile.tab_title.nullable' => 'The business profile tab title is nullable.',
-            'business_profile.font_style.nullable' => 'The business profile font style is nullable.',
-            'business_profile.heading_color.nullable' => 'The business profile heading color is nullable.',
-            'business_profile.heading_size.nullable' => 'The business profile heading size is nullable.',
-            'business_profile.business_contact_details.*.email.nullable' => 'The business contact email is nullable.',
-            'business_profile.business_contact_details.*.phone.nullable' => 'The business contact phone is nullable.',
-            'business_profile.business_contact_details.*.address.nullable' => 'The business contact address is nullable.',
+            'user_id.exists' => 'The specified user does not exist.',
+            'business_profile.card_image.required' => 'The business profile card image is required.',
+            'business_profile.card_image.image' => 'The file must be an image.',
+            'business_profile.card_image.mimes' => 'The image must be a file of type: jpg, jpeg, png.',
+            'business_profile.card_image.max' => 'The image may not be greater than 2MB.',
+            'business_profile.category.required' => 'The category is required.',
+            'business_profile.category.exists' => 'Invalid category selected.',
+            'business_profile.theme.required' => 'The business profile theme is required.',
+            'business_profile.theme.in' => 'The theme must be either basic or advance.',
+            'business_profile.title.required' => 'The business profile title is required.',
+            'business_profile.description.required' => 'The business profile description is required.',
+            'business_profile.short_intro.required' => 'The business profile short intro is required.',
+            'business_profile.keywords.required' => 'The business profile keywords are required.',
+            'business_profile.tab_title.required' => 'The business profile tab title is required.',
+            'business_profile.font_style.required' => 'The business profile font style is required.',
+            'business_profile.heading_color.required' => 'The business profile heading color is required.',
+            'business_profile.heading_size.required' => 'The business profile heading size is required.',
+            'business_profile.website.required' => 'The website URL is required for advanced themes.',
+            'business_profile.business_contact_details.*.map_location_url.required' => 'The map location URL is required for advanced themes.',
+            'business_profile.main_page_image.required' => 'The home page image is required for advanced themes.',
+            'business_profile.main_page_image.image' => 'The home page image must be an image file.',
+            'business_profile.main_page_image.mimes' => 'The home page image must be a file of type: jpg, jpeg, png.',
+            'business_profile.main_page_image.dimensions' => 'The home page image must be at least 1500x900 pixels.',
+            'business_profile.logo_image.required' => 'The logo image is required for advanced themes.',
+            'business_profile.about_image.required' => 'The about image is required for advanced themes.',
+            'business_profile.services.*.title.required' => 'The service title is required for advanced themes.',
+            'business_profile.services.*.description.required' => 'The service description is required for advanced themes.',
+            'business_profile.gallery_images.required' => 'At least one gallery image is required.',
+            'business_profile.gallery_images.array' => 'The gallery images must be provided as an array.',
+            'business_profile.gallery_images.min' => 'You must upload at least five gallery image.',
+            'business_profile.gallery_images.*.required' => 'Each gallery image is required.',
+            'business_profile.gallery_images.*.image' => 'Each gallery image must be a valid image file.',
+            'business_profile.gallery_images.*.mimes' => 'Each gallery image must be a file of type: jpg, jpeg, png.',
+            'business_profile.gallery_images.*.max' => 'Each gallery image may not be greater than 2MB.',
         ];
     }
 

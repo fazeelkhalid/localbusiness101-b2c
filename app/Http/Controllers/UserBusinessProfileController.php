@@ -26,9 +26,10 @@ class UserBusinessProfileController extends Controller
     }
 
 
-    public function updateUserBusinessProfile(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_key)
+    public function updateUserBusinessProfile(UpdateUserBusinessProfileRequest $userBusinessProfileRequest, $business_profiles_slug)
     {
-        return $this->businessProfileService->updateUserBusinessProfile($userBusinessProfileRequest, $business_profiles_key);
+        $this->acquirerService->hasAuthorityOrThrowException("updateUserBusinessProfile");
+        return $this->businessProfileService->updateUserBusinessProfile($userBusinessProfileRequest, $business_profiles_slug);
     }
 
     public function getUserBusinessProfile($business_profiles_key)
