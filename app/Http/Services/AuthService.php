@@ -56,7 +56,7 @@ class AuthService
         }
         $acquirer = User::with('acquirer')->where('email', $cred['email'])->first()->acquirer;
         $userAcquirerKey = $acquirer->key;
-        $allowedAPIs = $acquirer->allowedAPIs()->wherePivot('is_active', true)->pluck('name')->toArray();
+        $allowedAPIs = $acquirer->allowedAPIs()->wherePivot('is_active', true)->pluck('api_code')->toArray();
 
         $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse, $userAcquirerKey, $allowedAPIs);
         return new LoginResponse('Login Successfully', $loginResponse, 200);
