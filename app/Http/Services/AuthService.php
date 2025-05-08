@@ -2,14 +2,13 @@
 
 namespace App\Http\Services;
 
-use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
 use App\Http\Mapper\AuthMapper;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SignUpRequest;
 use App\Http\Responses\Auth\LoginResponse;
-use App\Http\Responses\Error\ErrorResponse;
 use App\Http\Responses\Auth\SignUpResponse;
+use App\Http\Responses\Error\ErrorResponse;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use function Webmozart\Assert\Tests\StaticAnalysis\null;
@@ -24,7 +23,7 @@ class AuthService
     }
 
 
-    public function signUp(SignupRequest $request): SignUpResponse | ErrorResponse
+    public function signUp(SignupRequest $request): SignUpResponse|ErrorResponse
     {
 
         $acquirer = $this->acquirerService->get('acquirer');
@@ -52,14 +51,19 @@ class AuthService
         $cred = $loginRequest->validated();
         $authServiceResponse = AuthRequestService::request('/api/login', 'POST', $cred);
         if (!$authServiceResponse->successful()) {
-            $authServiceErrorExceptionResponse= AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
+            $authServiceErrorExceptionResponse = AuthMapper::mapAuthServiceErrorResponse($authServiceResponse);
             throw new ErrorException("Invalid email or password.", $authServiceErrorExceptionResponse, $authServiceResponse->status());
         }
-        $userAcquirerKey = User::with('acquirer')->where('email', $cred['email'])->first()->acquirer->key;
-        $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse, $userAcquirerKey);
+        $acquirer = User::with('acquirer')->where('email', $cred['email'])->first()->acquirer;
+        $userAcquirerKey = $acquirer->key;
+        $allowedAPIs = $acquirer->allowedAPIs()->wherePivot('is_active', true)->pluck('name')->toArray();
+
+        $loginResponse = AuthMapper::mapLoginResponse($authServiceResponse, $userAcquirerKey, $allowedAPIs);
         return new LoginResponse('Login Successfully', $loginResponse, 200);
     }
-    public function verifyJwt() {
+
+    public function verifyJwt()
+    {
         return new LoginResponse('User has been verified', NULL, 200);
     }
 
