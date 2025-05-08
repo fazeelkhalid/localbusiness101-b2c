@@ -49,4 +49,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(BusinessProfile::class, 'user_id');
     }
+
+    public function allowedPhoneNumbers()
+    {
+        return $this->belongsToMany(PhoneNumber::class, 'user_allowed_phone_numbers');
+    }
+
 }

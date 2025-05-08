@@ -28,19 +28,18 @@ class ErrorResponseEnum
     public static ErrorResponse $AUTHORIZATION_HEADER_MISSING;
 
     public static ErrorResponse $PAYMENT_NOT_FOUND;
-
-
+    public static ErrorResponse $PHONE_NUMBERS_NOT_ASSIGN_200;
     public static ErrorResponse $BUSINESS_PROFILE_ANALYTICS_NOT_FOUND;
 
     public static ErrorResponse $DIGITAL_CARD_NOT_FOUND;
 
     public static function initialize(): void
     {
-        self::$UENE422 = new ErrorResponse(['email' => 'The email has already been taken.'], 422);
-        self::$RNE404 = new ErrorResponse(['error' => 'Route not found or incorrect method.'], 404);
+        self::$UENE422 = new ErrorResponse('The email has already been taken.', 422);
+        self::$RNE404 = new ErrorResponse('Route not found or incorrect method.', 404);
         self::$UAA401 = new ErrorResponse("Unauthorized access.", 401);
-        self::$AKM401 = new ErrorResponse(['error' => 'API key missing'], 401);
-        self::$IAK401 = new ErrorResponse(['error' => 'Invalid API key'], 401);
+        self::$AKM401 = new ErrorResponse( 'API key missing', 401);
+        self::$IAK401 = new ErrorResponse('Invalid API key', 401);
         self::$BPNF404 = new ErrorResponse('Business Profile not found', 404);
         self::$CFRF404 = new ErrorResponse('Contact request not found', 404);
         self::$ANF404 = new ErrorResponse('Acquirer not found, Or not assign to any user', 404);
@@ -49,6 +48,7 @@ class ErrorResponseEnum
         self::$PAYMENT_NOT_FOUND = new ErrorResponse('Payment details not found', 404);
         self::$BUSINESS_PROFILE_ANALYTICS_NOT_FOUND = new ErrorResponse('business profile analytics not found', 404);
         self::$DIGITAL_CARD_NOT_FOUND = new ErrorResponse('Digital card not found', 404);
+        self::$PHONE_NUMBERS_NOT_ASSIGN_200 = new ErrorResponse('No phone numbers assigned', 200);
 
     }
 }

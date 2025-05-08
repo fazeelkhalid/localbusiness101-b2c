@@ -42,7 +42,7 @@ class AcquirerService
         });
 
         if (!$isAllowed) {
-            throw new ErrorException("Acquirer not defined or associated with operation ID " . $apiCode, 403);
+            throw new ErrorException("Acquirer not defined or associated with operation ID " . $apiCode);
         }
     }
 }

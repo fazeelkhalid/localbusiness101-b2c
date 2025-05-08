@@ -10,6 +10,7 @@ use App\Http\Controllers\DigitalCardController;
 use App\Http\Controllers\InitController;
 use App\Http\Controllers\LaravelCommandController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PhoneNumberController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserBusinessProfileController;
@@ -57,7 +58,6 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
         Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
 
-
         Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
             Route::get('/verify', [AuthController::class, 'verifyJwt']);
             Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
@@ -77,6 +77,9 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
             // DIGITAL CARD
             Route::post('/digital-cards', [DigitalCardController::class, 'createDigitalCard']);
+
+            //PHONE NUMBERS
+            Route::get('/phone', [PhoneNumberController::class, 'getPhoneNumbers']);
 
         });
     });
