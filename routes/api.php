@@ -80,6 +80,8 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
             //PHONE NUMBERS
             Route::get('/phone', [PhoneNumberController::class, 'getPhoneNumbers']);
+            Route::post('/verify/number', [PhoneNumberController::class, 'verifyPhoneNumbers']);
+
 
         });
     });

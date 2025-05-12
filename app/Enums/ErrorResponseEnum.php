@@ -32,6 +32,7 @@ class ErrorResponseEnum
     public static ErrorResponse $BUSINESS_PROFILE_ANALYTICS_NOT_FOUND;
 
     public static ErrorResponse $DIGITAL_CARD_NOT_FOUND;
+    public static ErrorResponse $INVALID_OR_NOT_ASSIGN_NUMBER_404;
 
     public static function initialize(): void
     {
@@ -49,6 +50,7 @@ class ErrorResponseEnum
         self::$BUSINESS_PROFILE_ANALYTICS_NOT_FOUND = new ErrorResponse('business profile analytics not found', 404);
         self::$DIGITAL_CARD_NOT_FOUND = new ErrorResponse('Digital card not found', 404);
         self::$PHONE_NUMBERS_NOT_ASSIGN_200 = new ErrorResponse('No phone numbers assigned', 200);
+        self::$INVALID_OR_NOT_ASSIGN_NUMBER_404 = new ErrorResponse('Number is invalid or not assigned to your account. Please select another number.', 404);
 
     }
 }
