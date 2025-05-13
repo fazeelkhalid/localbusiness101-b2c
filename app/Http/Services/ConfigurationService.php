@@ -25,7 +25,7 @@ class ConfigurationService
     public function getConfigurationValueByKey($configurationCode)
     {
         $acquirer = $this->acquirerService->get("acquirer");
-        $configuration = $acquirer->configurations->where('config_code', $configurationCode)->first();
+        $configuration = $acquirer->configurations->where('config_code', $configurationCode->key)->first();
         if($configuration){
             return $configuration->value;
         }

@@ -55,4 +55,9 @@ class User extends Authenticatable
         return $this->belongsToMany(PhoneNumber::class, 'user_allowed_phone_numbers');
     }
 
+    public function callLogs()
+    {
+        return $this->hasMany(CallLog::class);
+    }
+
 }

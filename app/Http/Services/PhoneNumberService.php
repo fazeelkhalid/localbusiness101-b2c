@@ -2,6 +2,8 @@
 
 namespace App\Http\Services;
 
+use App\Enums\Configuration;
+use App\Enums\ConfigurationEnum;
 use App\Enums\ErrorResponseEnum;
 use App\Http\Mapper\DigitalCardMapper;
 use App\Http\Mapper\PhoneNumberMapper;
@@ -10,7 +12,9 @@ use App\Http\Requests\PhoneNumber\VerifyPhoneNumberRequest;
 use App\Http\Responses\DigitalCard\CreateDigitalCardResponses;
 use App\Http\Responses\DigitalCard\GetDigitalCardResponses;
 use App\Http\Responses\PhoneNumber\GetUserPhoneNumberResponses;
+use App\Http\Responses\PhoneNumber\verifyPhoneNumberResponses;
 use App\Http\Utils\CustomUtils;
+use App\Models\CallLog;
 use App\Models\DigitalCard;
 use App\Models\OfficeHour;
 use App\Models\PaymentMethod;
@@ -19,10 +23,12 @@ use Illuminate\Support\Facades\DB;
 class PhoneNumberService
 {
     protected AcquirerService $acquirerService;
+    protected ConfigurationService $configurationService;
 
-    public function __construct(AcquirerService $acquirerService)
+    public function __construct(AcquirerService $acquirerService, ConfigurationService $configurationService)
     {
         $this->acquirerService = $acquirerService;
+        $this->configurationService = $configurationService;
     }
 
 
@@ -51,7 +57,7 @@ class PhoneNumberService
         $allowedPhoneNumbers = $acquirer->user->allowedPhoneNumbers;
 
         if($allowedPhoneNumbers->isEmpty()){
-            return new GetUserPhoneNumberResponses([], "No phone numbers assigned to this user.");
+            return new verifyPhoneNumberResponses([], "No phone numbers assigned to this user.");
         }
 
         $matchedPhone = $allowedPhoneNumbers->first(function ($phone) use ($fromNumber) {
@@ -62,7 +68,11 @@ class PhoneNumberService
             return ErrorResponseEnum::$INVALID_OR_NOT_ASSIGN_NUMBER_404;
         }
 
-        $allowedPhoneNumbersVM = PhoneNumberMapper::mapUserPhoneNumberDomainToUserPhoneNumberVM($allowedPhoneNumbers);
-        return new GetUserPhoneNumberResponses($allowedPhoneNumbersVM, "Assigned Phone Numbers");
+        $callLog = CallLog::saveCallLogs($acquirer->user->id, $matchedPhone->id, $toNumber);
+
+        $allowCallRecording = $this->configurationService->getConfigurationValueByKey(ConfigurationEnum::$ALLOW_CALL_RECORDING);
+
+        $allowedPhoneNumbersVM = PhoneNumberMapper::mapVerifyPhoneNumberDomainToVM($callLog->id, $allowCallRecording);
+        return new verifyPhoneNumberResponses($allowedPhoneNumbersVM, "Phone Number verified");
     }
 }
