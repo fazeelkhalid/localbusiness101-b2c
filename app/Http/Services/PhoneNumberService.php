@@ -2,24 +2,14 @@
 
 namespace App\Http\Services;
 
-use App\Enums\Configuration;
 use App\Enums\ConfigurationEnum;
 use App\Enums\ErrorResponseEnum;
-use App\Http\Mapper\DigitalCardMapper;
+use App\Exceptions\ErrorException;
 use App\Http\Mapper\PhoneNumberMapper;
-use App\Http\Requests\DigitalCard\CreateDigitalCardRequest;
 use App\Http\Requests\PhoneNumber\VerifyPhoneNumberRequest;
-use App\Http\Responses\DigitalCard\CreateDigitalCardResponses;
-use App\Http\Responses\DigitalCard\GetDigitalCardResponses;
 use App\Http\Responses\PhoneNumber\GetUserPhoneNumberResponses;
 use App\Http\Responses\PhoneNumber\verifyPhoneNumberResponses;
-use App\Http\Utils\CustomUtils;
-use App\Models\CallLog;
-use App\Models\DigitalCard;
-use App\Models\OfficeHour;
-use App\Models\PaymentMethod;
-use Exception;
-use Illuminate\Support\Facades\DB;
+
 class PhoneNumberService
 {
     protected AcquirerService $acquirerService;
@@ -38,7 +28,7 @@ class PhoneNumberService
 
         $allowedPhoneNumbers = $acquirer->user->allowedPhoneNumbers;
 
-        if($allowedPhoneNumbers->isEmpty()){
+        if ($allowedPhoneNumbers->isEmpty()) {
             return new GetUserPhoneNumberResponses([], "No phone numbers assigned to this user.");
         }
 
@@ -46,18 +36,29 @@ class PhoneNumberService
         return new GetUserPhoneNumberResponses($allowedPhoneNumbersVM, "Assigned Phone Numbers");
     }
 
+    /**
+     * @throws ErrorException
+     */
     public function verifyPhoneNumbers(VerifyPhoneNumberRequest $verifyPhoneNumberRequest)
     {
         $verifyPhoneNumberRequest = $verifyPhoneNumberRequest->validated();
         $fromNumber = $verifyPhoneNumberRequest["from"];
-        $toNumber = $verifyPhoneNumberRequest["to"];
 
+        $this->validateAndGetUserPhoneNumber($fromNumber);
+        $allowCallRecording = $this->configurationService->getConfigurationValueByKey(ConfigurationEnum::$ALLOW_CALL_RECORDING);
+        $allowedPhoneNumbersVM = PhoneNumberMapper::mapVerifyPhoneNumberDomainToVM($allowCallRecording);
+
+        return new verifyPhoneNumberResponses($allowedPhoneNumbersVM, "Phone Number verified");
+    }
+
+
+    public function validateAndGetUserPhoneNumber($fromNumber)
+    {
         $acquirer = $this->acquirerService->get("acquirer");
-
         $allowedPhoneNumbers = $acquirer->user->allowedPhoneNumbers;
 
-        if($allowedPhoneNumbers->isEmpty()){
-            return new verifyPhoneNumberResponses([], "No phone numbers assigned to this user.");
+        if ($allowedPhoneNumbers->isEmpty()) {
+            throw new ErrorException("No Number Assign. Please contact support", null,404);
         }
 
         $matchedPhone = $allowedPhoneNumbers->first(function ($phone) use ($fromNumber) {
@@ -65,14 +66,10 @@ class PhoneNumberService
         });
 
         if (!$matchedPhone) {
-            return ErrorResponseEnum::$INVALID_OR_NOT_ASSIGN_NUMBER_404;
+            throw new ErrorException("Number is invalid or not assigned to your account. Please select another number", null, 404);
         }
 
-        $callLog = CallLog::saveCallLogs($acquirer->user->id, $matchedPhone->id, $toNumber);
-
-        $allowCallRecording = $this->configurationService->getConfigurationValueByKey(ConfigurationEnum::$ALLOW_CALL_RECORDING);
-
-        $allowedPhoneNumbersVM = PhoneNumberMapper::mapVerifyPhoneNumberDomainToVM($callLog->id, $allowCallRecording);
-        return new verifyPhoneNumberResponses($allowedPhoneNumbersVM, "Phone Number verified");
+        return $matchedPhone;
     }
+
 }

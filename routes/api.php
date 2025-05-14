@@ -4,6 +4,7 @@ use App\Enums\ErrorResponseEnum;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\BusinessProfileAnalyticsController;
+use App\Http\Controllers\CallLogController;
 use App\Http\Controllers\ClientLogsController;
 use App\Http\Controllers\ContactRequestFormController;
 use App\Http\Controllers\DigitalCardController;
@@ -82,6 +83,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
             Route::get('/phone', [PhoneNumberController::class, 'getPhoneNumbers']);
             Route::post('/verify/number', [PhoneNumberController::class, 'verifyPhoneNumbers']);
 
+            Route::post('/call-log', [CallLogController::class, 'createCallLog']);
 
         });
     });

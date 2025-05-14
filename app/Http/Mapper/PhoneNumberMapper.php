@@ -16,11 +16,10 @@ class PhoneNumberMapper
         })->toArray();
     }
 
-    public static function mapVerifyPhoneNumberDomainToVM($phoneNumberId, $allowCallRecording)
+    public static function mapVerifyPhoneNumberDomainToVM($allowCallRecording)
     {
 
         return[
-            'id' => $phoneNumberId,
             'is_recording' => (bool)$allowCallRecording,
         ];
     }

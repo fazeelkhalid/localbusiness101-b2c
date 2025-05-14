@@ -16,6 +16,8 @@ class CallLog extends Model
         'caller_number_id',
         'receiver_number',
         'talk_time',
+        'twilio_sid',
+        'twilio_recording_sid',
         'recording_url',
     ];
 
@@ -29,13 +31,14 @@ class CallLog extends Model
         return $this->belongsTo(PhoneNumber::class, 'caller_number_id');
     }
 
-    public static function saveCallLogs($userId, $numberId, $receiverNumber)
+    public static function saveCallLogs($userId, $numberId, $receiverNumber, $twilio_sid)
     {
 
         return self::create([
             'user_id' => $userId,
             'caller_number_id' => $numberId,
             'receiver_number' => $receiverNumber,
+            'twilio_sid' => $twilio_sid
         ]);
     }
 }
