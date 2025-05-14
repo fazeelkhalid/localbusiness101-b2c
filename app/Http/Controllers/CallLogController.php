@@ -8,8 +8,9 @@ use App\Exceptions\ErrorException;
 use App\Http\Mapper\CallLogMapper;
 use App\Http\Mapper\PhoneNumberMapper;
 use App\Http\Requests\CallLog\CreateCallLogRequest;
+use App\Http\Requests\CallLog\UpdateCallLogRequest;
 use App\Http\Requests\PhoneNumber\VerifyPhoneNumberRequest;
-use App\Http\Responses\CallLog\CreateCallLogResponses;
+use App\Http\Responses\CallLog\CallLogResponses;
 use App\Http\Responses\PhoneNumber\GetUserPhoneNumberResponses;
 use App\Http\Responses\PhoneNumber\verifyPhoneNumberResponses;
 use App\Http\Services\AcquirerService;
@@ -36,6 +37,13 @@ class CallLogController extends Controller
     {
         $this->acquirerService->hasAuthorityOrThrowException("createCallLog");
         return $this->callLogService->createCallLog($createCallLogRequest);
+    }
+
+    public function updateCallLog(UpdateCallLogRequest $updateCallLogRequest, $twilio_sid)
+    {
+        $this->acquirerService->hasAuthorityOrThrowException("updateCallLog");
+        return $this->callLogService->updateCallLog($updateCallLogRequest, $twilio_sid);
+
     }
 
 }

@@ -18,8 +18,7 @@ class CreateCallLogRequest extends FormRequest
         return [
             'from' => 'required|regex:/^\+1\d{10}$/',
             'to' => 'required|regex:/^\+1\d{10}$/',
-            'twilio_sid' => 'required|string|max:64',
-
+            'twilio_sid' => 'required|string|max:64|unique:call_logs,twilio_sid',
         ];
     }
 
@@ -33,6 +32,7 @@ class CreateCallLogRequest extends FormRequest
             'twilio_sid.required' => 'Twilio SID is required.',
             'twilio_sid.string' => 'Twilio SID must be a string.',
             'twilio_sid.max' => 'Twilio SID must not exceed 64 characters.',
+            'twilio_sid.unique' => 'This Twilio SID already exists in the system.',
         ];
     }
 

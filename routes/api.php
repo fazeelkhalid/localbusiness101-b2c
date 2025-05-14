@@ -84,6 +84,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
             Route::post('/verify/number', [PhoneNumberController::class, 'verifyPhoneNumbers']);
 
             Route::post('/call-log', [CallLogController::class, 'createCallLog']);
+            Route::put('/call-log/twilio-sid/{twilio_sid}', [CallLogController::class, 'updateCallLog']);
 
         });
     });
