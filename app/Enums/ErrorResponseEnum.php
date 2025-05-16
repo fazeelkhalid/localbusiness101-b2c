@@ -34,6 +34,7 @@ class ErrorResponseEnum
     public static ErrorResponse $DIGITAL_CARD_NOT_FOUND;
     public static ErrorResponse $INVALID_OR_NOT_ASSIGN_NUMBER_404;
     public static ErrorResponse $TWILIO_RECORDING_SID_MISSING_422;
+    public static ErrorResponse $ERROR_DUMPING_WEBHOOK_500;
 
     public static function initialize(): void
     {
@@ -53,6 +54,7 @@ class ErrorResponseEnum
         self::$PHONE_NUMBERS_NOT_ASSIGN_200 = new ErrorResponse('No phone numbers assigned', 200);
         self::$INVALID_OR_NOT_ASSIGN_NUMBER_404 = new ErrorResponse('Number is invalid or not assigned to your account. Please select another number.', 404);
         self::$TWILIO_RECORDING_SID_MISSING_422 = new ErrorResponse('Twilio Recording Id missing.');
+        self::$ERROR_DUMPING_WEBHOOK_500 = new ErrorResponse('Error while dumping webhook in the system', 500);
 
     }
 }
