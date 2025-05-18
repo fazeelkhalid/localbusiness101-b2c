@@ -10,7 +10,6 @@ use App\Http\Controllers\LaravelCommandController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserBusinessProfileController;
-use App\Http\Controllers\WebhookController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
 use App\Http\Middleware\FetchAcquirerBusinessProfileMiddleware;
 use App\Http\Middleware\JsonResponseMiddleware;

@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('webhook_logs', function (Blueprint $table) {
             $table->id();
+            $table->string('service_name');
             $table->json('request_headers');
-            $table->json('payload');
+            $table->json('request_payload');
             $table->timestamp('received_at')->nullable();
             $table->string('ip_address')->nullable();
             $table->timestamp('processed_at')->nullable();
