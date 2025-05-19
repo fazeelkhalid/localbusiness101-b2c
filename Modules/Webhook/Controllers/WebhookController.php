@@ -2,7 +2,7 @@
 
 namespace Modules\Webhook\Controllers;
 
-use App\Http\Services\Client\TwilioRequestService;
+use App\Http\Services\Client\TwilioHTTPHandler;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Webhook\Resolvers\WebhookServiceResolver;
@@ -17,7 +17,7 @@ class WebhookController extends Controller
 
     public function dumptest(){
         try {
-            $twilioService = new TwilioRequestService();
+            $twilioService = new TwilioHTTPHandler();
 
             $response = $twilioService->sendRequest("/Accounts/{$twilioService->accountSid}/Calls.json");
 

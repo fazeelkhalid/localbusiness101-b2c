@@ -22,4 +22,13 @@ class WebhookServiceResolver
         }
 
     }
+
+    public static function resolveFromServiceName(string $serviceName): WebhookServiceInterface
+    {
+        return match (strtolower($serviceName)) {
+            'twilio' => new TwilioWebhookService(),
+            default => throw new ErrorException("Unsupported service name: {$serviceName}", null, 400),
+        };
+    }
+
 }

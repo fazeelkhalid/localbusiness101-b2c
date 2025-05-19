@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\WebhookStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -49,5 +50,19 @@ class WebhookLog extends Model
             'url'              => $data['url'] ?? request()->fullUrl(),
             'status'           => $data['status'] ?? 'Pending',
         ]);
+    }
+
+    public function updateStatus(WebhookStatusEnum $webhookStatusEnum): void
+    {
+        $this->status = $webhookStatusEnum;
+        if ($webhookStatusEnum === WebhookStatusEnum::PROCESSED || $webhookStatusEnum === WebhookStatusEnum::FAILED) {
+            $this->processed_at = now();
+        }
+        $this->save();
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === WebhookStatusEnum::PENDING;
     }
 }

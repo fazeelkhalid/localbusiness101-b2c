@@ -9,7 +9,7 @@ use Illuminate\Http\Client\RequestException;
 use PHPUnit\Exception;
 use Throwable;
 
-class TwilioRequestService
+class TwilioHTTPHandler
 {
     protected string $baseUrl;
     public string $accountSid;
@@ -52,5 +52,11 @@ class TwilioRequestService
         } catch (Throwable $e) {
             throw new ErrorException("Twilio request failed: " . $e->getMessage(), null,200);
         }
+    }
+
+    public function getCallDataBySid(string $sid)
+    {
+        $url = "/Accounts/{$this->accountSid}/Calls/{$sid}.json";
+        return $this->sendRequest($url);
     }
 }

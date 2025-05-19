@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class WebhookLogMapper
 {
-    public static function MapWebhookRequestToWebhookLogDomain(Request $request, string $serviceName = 'Unknown'): array
+    public static function MapWebhookRequestToWebhookLogDomain(Request $request,  $serviceName = 'Unknown'): array
     {
         return [
             'service_name'     => $serviceName,

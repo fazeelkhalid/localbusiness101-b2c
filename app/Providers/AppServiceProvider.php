@@ -6,6 +6,7 @@ use App\Http\Middleware\GuzzleRequestLoggerMiddleware;
 use App\Http\Middleware\HttpLogger\ProcessorRequestResponseLogMiddleware;
 use App\Http\Services\AcquirerService;
 use App\Http\Services\UserCredService;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +32,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            $schedule->command('webhook:process-twilio')
+                ->everyMinute()
+                ->appendOutputTo(storage_path('logs/scheduler.log'));
+        });
     }
 }
