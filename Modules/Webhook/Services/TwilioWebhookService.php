@@ -6,7 +6,9 @@ use App\Enums\WebhookSenderTypeEnum;
 use App\Enums\WebhookStatusEnum;
 use App\Exceptions\ErrorException;
 use App\Http\Services\Client\TwilioHTTPHandler;
+use App\Models\CallLog;
 use App\Models\WebhookLog;
+use Grpc\Call;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -70,9 +72,19 @@ class TwilioWebhookService implements WebhookServiceInterface
 
         $twilioService = new TwilioHTTPHandler();
         $twilioCallData = $twilioService->getCallDataBySid($payload['CallSid']);
-
         Log::info("Twilio SID Data, {$twilioCallData} ");
 
-        //Sync local DB data
+        CallLog::updateCallLogFromTwilioData($twilioCallData);
+
+        $twilioCallRecordingData = $twilioService->getCallRecording($payload['CallSid']);
+
+        Log::info("Twilio call recording Data, {$twilioCallRecordingData} ");
+
+        if( isset($twilioCallRecordingData['recordings']) && !empty($twilioCallRecordingData['recordings'])){
+            CallLog::updateCallLogForRecording($twilioCallRecordingData, $payload['CallSid']);
+        }
+
+        Log::info("CallLog updated successfully for CallSid: {$payload['CallSid']}");
+
     }
 }

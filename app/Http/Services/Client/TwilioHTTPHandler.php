@@ -59,4 +59,11 @@ class TwilioHTTPHandler
         $url = "/Accounts/{$this->accountSid}/Calls/{$sid}.json";
         return $this->sendRequest($url);
     }
+
+    public function getCallRecording(string $sid)
+    {
+        $url = "/Accounts/{$this->accountSid}/Calls/{$sid}/Recordings.json";
+        return $this->sendRequest($url);
+    }
+
 }

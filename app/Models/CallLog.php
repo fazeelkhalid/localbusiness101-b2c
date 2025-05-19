@@ -20,6 +20,10 @@ class CallLog extends Model
         'twilio_sid',
         'twilio_recording_sid',
         'recording_url',
+        'call_status',
+        'call_start_time',
+        'call_end_time',
+        'call_direction'
     ];
 
     public function caller()
@@ -61,6 +65,49 @@ class CallLog extends Model
             'talk_time' => $talkTime,
             'twilio_recording_sid' => $twilioRecordingSid,
         ]);
+    }
+
+    public static function updateCallLogFromTwilioData($twilioData): bool
+    {
+        if(!$twilioData){
+            throw new ErrorException("Twilio return Object Is Empty", null, 422);
+        }
+
+        if(!isset($twilioData['sid'])){
+            throw new ErrorException("Sid is null or not set", null, 422);
+        }
+
+        return self::where('twilio_sid', $twilioData['sid'])->update([
+            'talk_time' =>  $twilioData['duration'] ?? 0,
+            'call_status' => $twilioData['status'] ?? null,
+            'call_start_time' => isset($twilioData['start_time']) ? date('Y-m-d H:i:s', strtotime($twilioData['start_time'])) : null,
+            'call_end_time' => isset($twilioData['end_time']) ? date('Y-m-d H:i:s', strtotime($twilioData['end_time'])) : null,
+        ]);
+
+    }
+    public static function updateCallLogForRecording($twilioCallRecordingData, $callSid): void
+    {
+        if(!$twilioCallRecordingData){
+            return;
+        }
+
+        if(!$callSid){
+            throw new ErrorException("Invalid Sid", null, 422);
+        }
+
+        if(!isset($twilioCallRecordingData[0]['sid'])){
+            throw new ErrorException("Twilio Call Recording Sid is null or not set", null, 422);
+        }
+
+        $updated = self::where('twilio_sid', $callSid)->update([
+            'twilio_recording_sid' => $twilioCallRecordingData['sid'],
+        ]);
+
+        if ($updated === 0) {
+            throw new ErrorException("Invalid Twilio call SID", null, 404);
+        }
+
+
     }
 
 }
