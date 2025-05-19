@@ -96,7 +96,7 @@ class CallLog extends Model
         }
 
         if(!isset($twilioCallRecordingData[0]['sid'])){
-            throw new ErrorException("Twilio Call Recording Sid is null or not set", null, 422);
+            throw new ErrorException("Twilio Call Recording Sid is null or not set", $twilioCallRecordingData, 422);
         }
 
         $updated = self::where('twilio_sid', $callSid)->update([
