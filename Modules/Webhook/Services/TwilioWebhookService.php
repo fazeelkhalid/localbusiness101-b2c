@@ -78,10 +78,10 @@ class TwilioWebhookService implements WebhookServiceInterface
 
         $twilioCallRecordingData = $twilioService->getCallRecording($payload['CallSid']);
 
-        Log::info("Twilio call recording Data, {$twilioCallRecordingData} ");
+        Log::info("Twilio call recording Data: " . json_encode($twilioCallRecordingData));
 
         if( isset($twilioCallRecordingData['recordings']) && !empty($twilioCallRecordingData['recordings'])){
-            CallLog::updateCallLogForRecording($twilioCallRecordingData, $payload['CallSid']);
+            CallLog::updateCallLogForRecording($twilioCallRecordingData['recordings'][0], $payload['CallSid']);
         }
 
         Log::info("CallLog updated successfully for CallSid: {$payload['CallSid']}");

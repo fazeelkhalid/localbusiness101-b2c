@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Exceptions\ErrorException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class CallLog extends Model
 {
@@ -95,7 +96,9 @@ class CallLog extends Model
             throw new ErrorException("Invalid Sid", null, 422);
         }
 
-        if(!isset($twilioCallRecordingData[0]['sid'])){
+        if(!isset($twilioCallRecordingData['sid'])){
+            Log::info("Twilio call recording Data: " . json_encode($twilioCallRecordingData));
+
             throw new ErrorException("Twilio Call Recording Sid is null or not set", $twilioCallRecordingData, 422);
         }
 
