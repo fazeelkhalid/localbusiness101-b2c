@@ -28,6 +28,9 @@ use Modules\Webhook\Controllers\WebhookController;
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
+
+    Route::get('/test', [WebhookController::class, 'dumptest']);
+
     Route::post('/webhook', [WebhookController::class, 'dumpWebHook']);
 
     Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);

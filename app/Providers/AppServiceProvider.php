@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\GuzzleRequestLoggerMiddleware;
+use App\Http\Middleware\HttpLogger\ProcessorRequestResponseLogMiddleware;
 use App\Http\Services\AcquirerService;
 use App\Http\Services\UserCredService;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
