@@ -50,7 +50,7 @@ class TwilioWebhookService implements WebhookServiceInterface
      * @throws ErrorException
      * @throws ConnectionException
      */
-    public function processPendingCallCompletionWebhook(WebhookLog $webhookLog): void
+    public function execute(WebhookLog $webhookLog): void
     {
         if (!$webhookLog) {
             throw new ErrorException("Webhook log is null", 400);

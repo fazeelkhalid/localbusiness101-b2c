@@ -8,7 +8,7 @@ use App\Models\WebhookLog;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Webhook\Services\TwilioWebhookService;
+use Modules\Webhook\Resolvers\WebhookServiceResolver;
 
 class ProcessPendingTwilioWebhooks extends Command
 {
@@ -32,8 +32,8 @@ class ProcessPendingTwilioWebhooks extends Command
             DB::beginTransaction();
             try {
                 $webhookLog->updateStatus(WebhookStatusEnum::IN_PROGRESS);
-                $twilioService = new TwilioWebhookService();
-                $twilioService->processPendingCallCompletionWebhook($webhookLog);
+                $webhookService = WebhookServiceResolver::resolveFromServiceName($webhookLog->service_name);
+                $webhookService->execute($webhookLog);
                 $webhookLog->updateStatus(WebhookStatusEnum::PROCESSED);
                 DB::commit();
             } catch (\Throwable $e) {
