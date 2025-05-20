@@ -12,7 +12,7 @@ class AddTwilioFieldsToCallLogsTable extends Migration
             $table->string('call_status')->nullable()->after('recording_url');
             $table->timestamp('call_start_time')->nullable()->after('call_status');
             $table->timestamp('call_end_time')->nullable()->after('call_start_time');
-            $table->timestamp('call_direction')->nullable()->after('call_end_time');
+            $table->string('call_direction')->nullable()->after('call_end_time');
         });
     }
 
@@ -23,6 +23,7 @@ class AddTwilioFieldsToCallLogsTable extends Migration
                 'call_status',
                 'call_start_time',
                 'call_end_time',
+                'call_direction'
             ]);
         });
     }
