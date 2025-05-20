@@ -59,6 +59,13 @@ class CustomUtils
         return url('/') . Storage::url($imagePath);
     }
 
+    public static function storeMediaFile(string $folder, string $filename, string $content): string
+    {
+        $path = $folder . '/' . $filename;
+        Storage::disk('local')->put($path, $content);
+        return Storage::url($path);
+    }
+
     public static function uploadProfileImage($folder = '', $image, $filename)
     {
         return CustomUtils::uploadImage('images/business_profiles' . $folder, $image, $filename);

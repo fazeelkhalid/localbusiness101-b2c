@@ -80,7 +80,7 @@ class TwilioWebhookService implements WebhookServiceInterface
 
         Log::info("Twilio call recording Data:, {$twilioCallRecordingData}");
 
-        if( isset($twilioCallRecordingData['recordings']) && !empty($twilioCallRecordingData['recordings'])){
+        if( $twilioCallRecordingData && isset($twilioCallRecordingData['recordings']) && !empty($twilioCallRecordingData['recordings'])){
             CallLog::updateCallLogForRecording($twilioCallRecordingData['recordings'][0], $payload['CallSid']);
         }
 

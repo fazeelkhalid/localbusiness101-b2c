@@ -37,7 +37,11 @@ class AppServiceProvider extends ServiceProvider
 
             $schedule->command('webhook:process-twilio')
                 ->everyMinute()
-                ->appendOutputTo(storage_path('logs/scheduler.log'));
+                ->appendOutputTo(storage_path('logs/webhook-scheduler.log'));
+
+            $schedule->command('twilio:fetch-recordings')
+                ->everyMinute()
+                ->appendOutputTo(storage_path('logs/twilio_recording_scheduler.log'));
         });
     }
 }

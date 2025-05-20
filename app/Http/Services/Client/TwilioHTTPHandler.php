@@ -66,4 +66,11 @@ class TwilioHTTPHandler
         return $this->sendRequest($url);
     }
 
+    public function getTwilioMediaRecordingUrlBySid(string $ReccordingSid)
+    {
+        $url = "/Accounts/{$this->accountSid}/Recordings/{$ReccordingSid}.mp3";
+        return $this->sendRequest($url);
+
+    }
+
 }

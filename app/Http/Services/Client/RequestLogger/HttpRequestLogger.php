@@ -24,7 +24,19 @@ class HttpRequestLogger
             $response = Http::withOptions($options)->send($method, $url, $options);
 
             $log->http_status_code = $response->status();
-            $log->response_body = $response->json() ?? ['raw' => $response->body()];
+
+            $responseBody = $response->body();
+            $decodedJson = json_decode($responseBody, true);
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $log->response_body = $decodedJson;
+            } else {
+                $log->response_body = [
+                    'raw_base64' => base64_encode($responseBody),
+                    'note' => 'Binary content (e.g., MP3) base64 encoded',
+                ];
+            }
+
             $log->responded_at = Carbon::now();
             $log->save();
 
