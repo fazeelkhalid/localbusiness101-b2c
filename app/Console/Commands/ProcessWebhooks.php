@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Webhook\Resolvers\WebhookServiceResolver;
 
-class ProcessPendingTwilioWebhooks extends Command
+class ProcessWebhooks extends Command
 {
     // Command signature used in the scheduler
     protected $signature = 'webhook:process-twilio';
@@ -19,14 +19,14 @@ class ProcessPendingTwilioWebhooks extends Command
 
     public function handle(): int
     {
-        Log::info('ProcessPendingTwilioWebhooks command started.');
+        Log::info('ProcessWebhooks command started.');
 
         $pendingWebhooks = WebhookLog::where('service_name', WebhookSenderTypeEnum::TWILIO)
             ->where('status', WebhookStatusEnum::PENDING)
             ->orderBy('received_at')
             ->get();
 
-        Log::info('[ProcessPendingTwilioWebhooks] Pending webhooks count: ' . $pendingWebhooks->count());
+        Log::info('[ProcessWebhooks] Pending webhooks count: ' . $pendingWebhooks->count());
 
         foreach ($pendingWebhooks as $webhookLog) {
             DB::beginTransaction();
@@ -43,7 +43,7 @@ class ProcessPendingTwilioWebhooks extends Command
             }
         }
 
-        Log::info('ProcessPendingTwilioWebhooks command finished.');
+        Log::info('ProcessWebhooks command finished.');
 
         return Command::SUCCESS;
     }
