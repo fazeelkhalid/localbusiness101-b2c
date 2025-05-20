@@ -81,6 +81,7 @@ class CallLog extends Model
         return self::where('twilio_sid', $twilioData['sid'])->update([
             'talk_time' =>  $twilioData['duration'] ?? 0,
             'call_status' => $twilioData['status'] ?? null,
+            'call_direction' => $twilioData['direction'] ?? null,
             'call_start_time' => isset($twilioData['start_time']) ? date('Y-m-d H:i:s', strtotime($twilioData['start_time'])) : null,
             'call_end_time' => isset($twilioData['end_time']) ? date('Y-m-d H:i:s', strtotime($twilioData['end_time'])) : null,
         ]);
