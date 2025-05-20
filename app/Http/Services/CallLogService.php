@@ -5,10 +5,14 @@ namespace App\Http\Services;
 use App\Enums\ConfigurationEnum;
 use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
+use App\Http\Filters\CallLogFilter;
 use App\Http\Mapper\CallLogMapper;
+use App\Http\Pagination\Pagination;
+use App\Http\Requests\CallLog\CallLogFilterRequest;
 use App\Http\Requests\CallLog\CreateCallLogRequest;
 use App\Http\Requests\CallLog\UpdateCallLogRequest;
 use App\Http\Responses\CallLog\CallLogResponses;
+use App\Http\Responses\CallLog\GetCallLogsResponses;
 use App\Models\CallLog;
 
 class CallLogService
@@ -72,6 +76,24 @@ class CallLogService
         CallLog::updateCallLog($twilio_sid, $talkTime, $twilioRecordingSid);
 
         return new CallLogResponses(null, "Call Log Updated", 200);
+    }
+
+
+    public function getCallLogList(CallLogFilterRequest $callLogFilterRequest)
+    {
+        $acquirer = $this->acquirerService->get("acquirer");
+
+        $callLogsQuery = CallLog::getCallLogs($acquirer->user->id);
+
+        $callLogsFilteredQuery = CallLogFilter::applyFilters($callLogsQuery, $callLogFilterRequest->all());
+
+        $paginatedCallLogs = Pagination::set($callLogFilterRequest, $callLogsFilteredQuery);
+
+
+        $mapPaginatedCallLogsVM = CallLogMapper::mapCallLogsCollectionToVM($paginatedCallLogs);
+
+        return new GetCallLogsResponses($mapPaginatedCallLogsVM, $paginatedCallLogs, 200);
+
     }
 
 }

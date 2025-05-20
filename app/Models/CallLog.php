@@ -110,8 +110,12 @@ class CallLog extends Model
         if ($updated === 0) {
             throw new ErrorException("Invalid Twilio call SID", null, 404);
         }
+    }
 
 
+    public static function getCallLogs($userID)
+    {
+        return self::query()->where('user_id', $userID)->with('phoneNumber');
     }
 
 }

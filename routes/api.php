@@ -29,7 +29,6 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
 
-    Route::get('/test', [WebhookController::class, 'dumptest']);
 
     Route::post('/webhook', [WebhookController::class, 'dumpWebHook']);
 
@@ -63,6 +62,8 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
 
         Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
+
+        Route::get('/call-logs', [CallLogController::class, 'getCallLogList']);
 
         Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
             Route::get('/verify', [AuthController::class, 'verifyJwt']);

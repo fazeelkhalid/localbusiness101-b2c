@@ -7,6 +7,7 @@ use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
 use App\Http\Mapper\CallLogMapper;
 use App\Http\Mapper\PhoneNumberMapper;
+use App\Http\Requests\CallLog\CallLogFilterRequest;
 use App\Http\Requests\CallLog\CreateCallLogRequest;
 use App\Http\Requests\CallLog\UpdateCallLogRequest;
 use App\Http\Requests\PhoneNumber\VerifyPhoneNumberRequest;
@@ -45,5 +46,12 @@ class CallLogController extends Controller
         return $this->callLogService->updateCallLog($updateCallLogRequest, $twilio_sid);
 
     }
+
+    public function getCallLogList(CallLogFilterRequest $callLogFilterRequest)
+    {
+        return $this->callLogService->getCallLogList($callLogFilterRequest);
+
+    }
+
 
 }
