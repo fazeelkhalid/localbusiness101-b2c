@@ -60,6 +60,18 @@ class CallLog extends Model
         return $callLog;
     }
 
+    public static function getCallLogByCallId($callId, $userId)
+    {
+        $callLog = self::where('id', $callId)->where('user_id', $userId)->whereNotNull('recording_url')->first();
+
+        if (!$callLog) {
+            throw new ErrorException("Invalid Call id", null, 422);
+        }
+
+        return $callLog;
+    }
+
+
     public static function updateCallLog($twilioSid, $talkTime, $twilioRecordingSid)
     {
         return self::where('twilio_sid', $twilioSid)->update([

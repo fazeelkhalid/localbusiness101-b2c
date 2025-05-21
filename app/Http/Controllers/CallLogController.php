@@ -54,5 +54,13 @@ class CallLogController extends Controller
 
     }
 
+    public function getCallLogRecording($call_sid)
+    {
+        $this->acquirerService->hasAuthorityOrThrowException("getCallLogRecording");
+        return $this->callLogService->getCallLogRecording($call_sid);
+
+
+    }
+
 
 }

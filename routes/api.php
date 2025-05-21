@@ -64,6 +64,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
         Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
 
 
+
         Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
             Route::get('/verify', [AuthController::class, 'verifyJwt']);
             Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
@@ -91,6 +92,7 @@ Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::clas
             Route::post('/call-log', [CallLogController::class, 'createCallLog']);
             Route::put('/call-log/twilio-sid/{twilio_sid}', [CallLogController::class, 'updateCallLog']);
             Route::get('/call-logs', [CallLogController::class, 'getCallLogList']);
+            Route::get('/call-log/{call_sid}/recording', [CallLogController::class, 'getCallLogRecording']);
 
         });
     });

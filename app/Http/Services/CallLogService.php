@@ -14,6 +14,8 @@ use App\Http\Requests\CallLog\UpdateCallLogRequest;
 use App\Http\Responses\CallLog\CallLogResponses;
 use App\Http\Responses\CallLog\GetCallLogsResponses;
 use App\Models\CallLog;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CallLogService
 {
@@ -94,6 +96,25 @@ class CallLogService
 
         return new GetCallLogsResponses($mapPaginatedCallLogsVM, $paginatedCallLogs, 200);
 
+    }
+
+    public function getCallLogRecording($call_sid)
+    {
+        $acquirer = $this->acquirerService->get("acquirer");
+        $callLog = CallLog::getCallLogByCallId($call_sid, $acquirer->user->id);
+        $relativePath = $callLog->recording_url;
+
+        if (!Storage::disk('local')->exists($relativePath)) {
+            throw new ErrorException('Recording not found', null, 404);
+        }
+        $stream = Storage::disk('local')->readStream($relativePath);
+
+        return new StreamedResponse(function () use ($stream) {
+            fpassthru($stream);
+        }, 200, [
+            'Content-Type' => 'audio/mpeg',
+            'Content-Disposition' => 'inline; filename="' . basename($relativePath) . '"',
+        ]);
     }
 
 }

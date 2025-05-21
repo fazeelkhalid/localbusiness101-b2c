@@ -63,7 +63,7 @@ class CustomUtils
     {
         $path = $folder . '/' . $filename;
         Storage::disk('local')->put($path, $content);
-        return Storage::url($path);
+        return $path;
     }
 
     public static function uploadProfileImage($folder = '', $image, $filename)
@@ -93,7 +93,7 @@ class CustomUtils
     {
         $contentType = $response->headers->get('Content-Type');
         if (str_contains($contentType, 'application/json')) {
-            $responseData = json_decode($response->getContent(), true);e
+            $responseData = json_decode($response->getContent(), true);
             if (is_array($responseData)) {
                 $responseData['message_trace_uuid'] = $message_trace_uuid;
                 $response->setContent(json_encode($responseData));
