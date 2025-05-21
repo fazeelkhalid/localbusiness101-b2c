@@ -127,7 +127,7 @@ class CallLog extends Model
 
     public static function getCallLogs($userID)
     {
-        return self::query()->where('user_id', $userID)->with('phoneNumber');
+        return self::query()->where('user_id', $userID)->with('phoneNumber')->orderBy('created_at', 'desc');;
     }
 
 }

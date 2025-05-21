@@ -84,19 +84,14 @@ class CallLogService
     public function getCallLogList(CallLogFilterRequest $callLogFilterRequest)
     {
         $acquirer = $this->acquirerService->get("acquirer");
-
         $callLogsQuery = CallLog::getCallLogs($acquirer->user->id);
 
         $callLogsFilteredQuery = CallLogFilter::applyFilters($callLogsQuery, $callLogFilterRequest->all());
-
         $paginatedCallLogs = Pagination::set($callLogFilterRequest, $callLogsFilteredQuery);
 
-
         $mapPaginatedCallLogsVM = CallLogMapper::mapCallLogsCollectionToVM($paginatedCallLogs);
-
         return new GetCallLogsResponses($mapPaginatedCallLogsVM, $paginatedCallLogs, 200);
-
-    }
+    } 
 
     public function getCallLogRecording($call_sid)
     {
