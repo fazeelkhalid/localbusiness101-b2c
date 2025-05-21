@@ -32,7 +32,6 @@ class HttpRequestLogger
                 $log->response_body = $decodedJson;
             } else {
                 $log->response_body = [
-                    'raw_base64' => base64_encode($responseBody),
                     'note' => 'Binary content (e.g., MP3) base64 encoded',
                 ];
             }
