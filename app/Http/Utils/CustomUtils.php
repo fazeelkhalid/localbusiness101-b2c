@@ -88,12 +88,19 @@ class CustomUtils
         return $slug;
     }
 
+
     public static function setMessageTraceUUID($response, $message_trace_uuid): void
     {
-        $responseData = json_decode($response->getContent(), true);
-        $responseData['message_trace_uuid'] = $message_trace_uuid;
-        $response->setContent(json_encode($responseData));
+        $contentType = $response->headers->get('Content-Type');
+        if (str_contains($contentType, 'application/json')) {
+            $responseData = json_decode($response->getContent(), true);e
+            if (is_array($responseData)) {
+                $responseData['message_trace_uuid'] = $message_trace_uuid;
+                $response->setContent(json_encode($responseData));
+            }
+        }
     }
+
 
     public static function setMessageIfServerErrorOccur($response): void
     {
