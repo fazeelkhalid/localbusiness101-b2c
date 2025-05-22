@@ -8,8 +8,8 @@ class CallLogFilter
 {
     public static function applyFilters(Builder $query, array $filters): Builder
     {
-        $from = $filters['caller_number'] ?? null;
-        $to = $filters['receiver_number'] ?? null;
+        $from = $filters['from'] ?? null;
+        $to = $filters['to'] ?? null;
         $callStatus = $filters['call_status'] ?? null;
         $callDirection = $filters['call_direction'] ?? null;
         $startDate = $filters['start_date'] ?? null;
