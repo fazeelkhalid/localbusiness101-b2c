@@ -35,4 +35,40 @@ class SitemapController extends Controller
         return response($xmlContent, 200)
             ->header('Content-Type', 'application/xml');
     }
+
+
+    public function sliceProfiles($start, $end)
+    {
+        $urls = BusinessProfile::getAllBusinessProfilesURLs();
+
+        $urls[] = env('FRONTEND_URL');
+        $urls[] = env('FRONTEND_URL') . '/about';
+        $urls[] = env('FRONTEND_URL') . '/contact';
+        $urls[] = env('FRONTEND_URL') . '/Testimonials';
+        $urls[] = env('FRONTEND_URL') . '/business-profiles';
+
+        $start = (int)$start;
+        $end = (int)$end;
+
+        $end = min($end, count($urls));
+        $slicedUrls = array_slice($urls, $start, $end - $start);
+
+        $xmlContent = '<?xml version="1.0" encoding="UTF-8"?>';
+        $xmlContent .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+        foreach ($slicedUrls as $url) {
+            $xmlContent .= '<url>';
+            $xmlContent .= '<loc>' . $url . '</loc>';
+            $xmlContent .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
+            $xmlContent .= '<changefreq>daily</changefreq>';
+            $xmlContent .= '<priority>1</priority>';
+            $xmlContent .= '</url>';
+        }
+
+        $xmlContent .= '</urlset>';
+
+        return response($xmlContent, 200)
+            ->header('Content-Type', 'application/xml');
+    }
+
 }
