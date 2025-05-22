@@ -16,6 +16,10 @@ class CallLogFilter
         $endDate = $filters['end_date'] ?? null;
         $sortByTalkTime = $filters['sort_by_talk_time'] ?? null;
 
+        if (!in_array(strtolower($sortByTalkTime), ['asc', 'desc'])) {
+            $query->orderBy('created_at', 'desc');
+        }
+
         if ($from) {
             $query->whereHas('phoneNumber', function ($q) use ($from) {
                 $q->where('phone_number', 'LIKE', '%' . $from . '%');
