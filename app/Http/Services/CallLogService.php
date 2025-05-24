@@ -91,7 +91,7 @@ class CallLogService
 
         $mapPaginatedCallLogsVM = CallLogMapper::mapCallLogsCollectionToVM($paginatedCallLogs);
         return new GetCallLogsResponses($mapPaginatedCallLogsVM, $paginatedCallLogs, 200);
-    } 
+    }
 
     public function getCallLogRecording($call_sid)
     {
@@ -102,13 +102,24 @@ class CallLogService
         if (!Storage::disk('local')->exists($relativePath)) {
             throw new ErrorException('Recording not found', null, 404);
         }
-        $stream = Storage::disk('local')->readStream($relativePath);
 
-        return new StreamedResponse(function () use ($stream) {
+        $fullPath = storage_path('app/' . $relativePath);
+        if (!file_exists($fullPath)) {
+            throw new ErrorException('Recording not found', null, 404);
+        }
+
+        $fileSize = filesize($fullPath);
+        $fileName = basename($fullPath);
+
+        return response()->stream(function () use ($fullPath) {
+            $stream = fopen($fullPath, 'rb');
             fpassthru($stream);
+            fclose($stream);
         }, 200, [
-            'Content-Type' => 'audio/mpeg',
-            'Content-Disposition' => 'inline; filename="' . basename($relativePath) . '"',
+            'Content-Type'        => 'audio/mpeg',
+            'Content-Length'      => $fileSize,
+            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            'Accept-Ranges'       => 'bytes',
         ]);
     }
 
