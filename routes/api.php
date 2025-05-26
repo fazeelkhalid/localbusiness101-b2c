@@ -25,11 +25,11 @@ use Illuminate\Support\Facades\Route;
 use Modules\Webhook\Controllers\WebhookController;
 
 
-Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 
 Route::middleware([LogApiRequestsMiddleware::class, JsonResponseMiddleware::class])->group(function () {
     Route::get('start/{start}/end/{end}/sitemap.xml', [SitemapController::class, 'sliceProfiles']);
+    Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 
     Route::post('/webhook', [WebhookController::class, 'dumpWebHook']);
