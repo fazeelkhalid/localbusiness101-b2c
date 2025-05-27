@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Exceptions\ErrorException;
+use App\Http\Mapper\CallLogMapper;
+use App\Http\Requests\CallLog\CallLogFilterRequest;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -129,5 +132,54 @@ class CallLog extends Model
     {
         return self::query()->where('user_id', $userID)->with('phoneNumber');
     }
+
+    public static function getCallLogsStats(Builder $filteredQuery, CallLogFilterRequest $callLogFilterRequest, $acquirer)
+    {
+        $statsQuery = (clone $filteredQuery);
+
+        $groupBy = $callLogFilterRequest->get('group_by') ?? 'daily';
+        if ($groupBy === 'daily') {
+            $dateFormat = '%Y-%m-%d';
+        } elseif ($groupBy === 'monthly') {
+            $dateFormat = '%Y-%m';
+        } elseif ($groupBy === 'yearly') {
+            $dateFormat = '%Y';
+        } else {
+            $dateFormat = null;
+        }
+
+        $callLogsStats = [
+            'total_talk_time' => (string)$statsQuery->sum('talk_time'),
+            'total_dialed' => (string)$statsQuery->count(),
+            'total_inbound' => (string)(clone $statsQuery)->where('call_direction', 'inbound')->count(),
+            'total_outbound' => (string)(clone $statsQuery)->where('call_direction', 'outbound')->count(),
+            'completed' => (string)(clone $statsQuery)->where('call_status', 'completed')->count(),
+            'failed' => (string)(clone $statsQuery)->where('call_status', 'failed')->count(),
+            'ringing' => (string)(clone $statsQuery)->where('call_status', 'ringing')->count(),
+            'busy' => (string)(clone $statsQuery)->where('call_status', 'busy')->count(),
+            'no_answer' => (string)(clone $statsQuery)->where('call_status', 'no-answer')->count(),
+
+            'user_name' => $acquirer->user->name ?? null,
+        ];
+
+        if ($dateFormat) {
+            $groupedStats = $statsQuery
+                ->selectRaw("DATE_FORMAT(call_start_time, '{$dateFormat}') as period")
+                ->selectRaw("COUNT(*) as total_calls")
+                ->selectRaw("SUM(talk_time) as total_talk_time")
+                ->selectRaw("SUM(CASE WHEN call_status = 'completed' THEN 1 ELSE 0 END) as completed")
+                ->selectRaw("SUM(CASE WHEN call_status = 'failed' THEN 1 ELSE 0 END) as failed")
+                ->selectRaw("SUM(CASE WHEN call_status = 'ringing' THEN 1 ELSE 0 END) as ringing")
+                ->selectRaw("SUM(CASE WHEN call_status = 'busy' THEN 1 ELSE 0 END) as busy")
+                ->selectRaw("SUM(CASE WHEN call_status = 'no-answer' THEN 1 ELSE 0 END) as no_answer")
+                ->groupBy('period')
+                ->orderBy('period', 'asc')
+                ->get();
+
+            $callLogsStats['grouped_stats'] = CallLogMapper::mapGroupedStats($groupedStats);
+        }
+        return $callLogsStats;
+    }
+
 
 }

@@ -3,10 +3,11 @@
 namespace App\Http\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 
 class CallLogFilter
 {
-    public static function applyFilters(Builder $query, array $filters): Builder
+    public static function applyFilters(Builder $query, array $filters, ?Carbon $userCreatedAt = null): Builder
     {
         $from = $filters['from'] ?? null;
         $to = $filters['to'] ?? null;
@@ -15,6 +16,8 @@ class CallLogFilter
         $startDate = $filters['start_date'] ?? null;
         $endDate = $filters['end_date'] ?? null;
         $sortByTalkTime = $filters['sort_by_talk_time'] ?? null;
+        $talkTimeLessThan = $filters['talk_time_less_than'] ?? null;
+        $days = $filters['days'] ?? 30;
 
         if (!in_array(strtolower($sortByTalkTime), ['asc', 'desc'])) {
             $query->orderBy('created_at', 'desc');
@@ -38,8 +41,25 @@ class CallLogFilter
             $query->where('call_direction', $callDirection);
         }
 
+        if ($days) {
+            $start = Carbon::now()->subDays((int) $days)->startOfDay();
+            $end = Carbon::now()->endOfDay();
+            $query->whereBetween('created_at', [$start, $end]);
+
+        }
+
         if ($startDate && $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
+
+        } elseif ($startDate) {
+            $query->whereBetween('created_at', [Carbon::parse($startDate), Carbon::now()->endOfDay()]);
+
+        } elseif ($endDate && $userCreatedAt) {
+            $query->whereBetween('created_at', [$userCreatedAt->startOfDay(), Carbon::parse($endDate)]);
+        }
+
+        if ($talkTimeLessThan) {
+            $query->where('talk_time', '<', (int) $talkTimeLessThan);
         }
 
         if (in_array(strtolower($sortByTalkTime), ['asc', 'desc'])) {
@@ -49,4 +69,3 @@ class CallLogFilter
         return $query;
     }
 }
-

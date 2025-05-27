@@ -60,6 +60,8 @@ Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfile
     Route::get('/dump-logs', [ClientLogsController::class, 'clientLogs']);
     Route::post('/contact_request', [ContactRequestFormController::class, 'createContactFormRequest']);
 
+    Route::get('/call-log/stats', [CallLogController::class, 'getCallLogStats']);
+
 
     Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
         Route::get('/verify', [AuthController::class, 'verifyJwt']);

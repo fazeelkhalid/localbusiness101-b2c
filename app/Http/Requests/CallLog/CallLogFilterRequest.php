@@ -24,6 +24,10 @@ class CallLogFilterRequest extends FormRequest
             'sort_by_talk_time' => 'nullable|string|in:asc,desc',
             'start_date' => 'nullable|date|before_or_equal:end_date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
+
+            'days' => 'nullable|integer|min:1|max:90',
+            'talk_time_less_than' => 'nullable|integer|min:0',
+            'group_by' => 'nullable|in:daily,monthly,yearly',
         ];
     }
 
@@ -35,9 +39,9 @@ class CallLogFilterRequest extends FormRequest
             'sort_by_talk_time.in' => 'Sort order must be either asc or desc.',
             'start_date.before_or_equal' => 'The start date must be before or equal to the end date.',
             'end_date.after_or_equal' => 'The end date must be after or equal to the start date.',
+            'group_by.in' => 'Group by must be one of: daily, monthly, yearly.',
         ];
     }
-
 
     protected function failedValidation(Validator $validator)
     {
