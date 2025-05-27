@@ -69,7 +69,7 @@ Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfile
         Route::get('/contact_requests', [ContactRequestFormController::class, 'getContactFormRequestList']);
         Route::delete('/contact_requests/{contactId}', [ContactRequestFormController::class, 'deleteContactFormRequest']);
 
-        //BUSINESS PROFILE OPERATION
+        //BUSINESS PROFILE
         Route::post('/business_profile/slug/{business_profiles_slug}', [UserBusinessProfileController::class, 'updateUserBusinessProfile']);
         Route::post('/business_profile', [UserBusinessProfileController::class, 'createUserBusinessProfile']);
 
@@ -85,6 +85,7 @@ Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfile
         Route::get('/phone', [PhoneNumberController::class, 'getPhoneNumbers']);
         Route::post('/verify/number', [PhoneNumberController::class, 'verifyPhoneNumbers']);
 
+        //CALL LOGS
         Route::post('/call-log', [CallLogController::class, 'createCallLog']);
         Route::put('/call-log/twilio-sid/{twilio_sid}', [CallLogController::class, 'updateCallLog']);
         Route::get('/call-logs', [CallLogController::class, 'getCallLogList']);
