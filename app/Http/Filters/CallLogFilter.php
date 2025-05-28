@@ -18,6 +18,13 @@ class CallLogFilter
         $sortByTalkTime = $filters['sort_by_talk_time'] ?? null;
         $talkTimeLessThan = $filters['talk_time_less_than'] ?? null;
         $days = $filters['days'] ?? 30;
+        $userName = $filters['user_name'] ?? null;
+
+        if ($userName) {
+            $query->whereHas('caller', function ($q) use ($userName) {
+                $q->where('name', 'LIKE', '%' . $userName . '%');
+            });
+        }
 
         if (!in_array(strtolower($sortByTalkTime), ['asc', 'desc'])) {
             $query->orderBy('created_at', 'desc');

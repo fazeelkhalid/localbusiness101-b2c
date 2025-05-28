@@ -133,7 +133,12 @@ class CallLog extends Model
         return self::query()->where('user_id', $userID)->with('phoneNumber');
     }
 
-    public static function getCallLogsStats(Builder $filteredQuery, CallLogFilterRequest $callLogFilterRequest, $acquirer)
+    public static function getCallLogsForUsers(array $userIDs)
+    {
+        return self::query()->whereIn('user_id', $userIDs)->with('phoneNumber');
+    }
+
+    public static function getCallLogsStats(Builder $filteredQuery, CallLogFilterRequest $callLogFilterRequest, $userName)
     {
         $statsQuery = (clone $filteredQuery);
 
@@ -149,6 +154,7 @@ class CallLog extends Model
         }
 
         $callLogsStats = [
+            'user_name' => $userName,
             'total_talk_time' => (string)$statsQuery->sum('talk_time'),
             'total_dialed' => (string)$statsQuery->count(),
             'total_inbound' => (string)(clone $statsQuery)->where('call_direction', 'inbound')->count(),
@@ -158,8 +164,6 @@ class CallLog extends Model
             'ringing' => (string)(clone $statsQuery)->where('call_status', 'ringing')->count(),
             'busy' => (string)(clone $statsQuery)->where('call_status', 'busy')->count(),
             'no_answer' => (string)(clone $statsQuery)->where('call_status', 'no-answer')->count(),
-
-            'user_name' => $acquirer->user->name ?? null,
         ];
 
         if ($dateFormat) {

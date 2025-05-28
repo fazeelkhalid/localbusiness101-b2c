@@ -15,10 +15,7 @@ use App\Http\Responses\CallLog\CallLogResponses;
 use App\Http\Responses\CallLog\GetCallLogsResponses;
 use App\Http\Responses\CallLog\GetCallLogsStatsResponses;
 use App\Models\CallLog;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CallLogService
 {
@@ -119,10 +116,10 @@ class CallLogService
             fpassthru($stream);
             fclose($stream);
         }, 200, [
-            'Content-Type'        => 'audio/mpeg',
-            'Content-Length'      => $fileSize,
+            'Content-Type' => 'audio/mpeg',
+            'Content-Length' => $fileSize,
             'Content-Disposition' => 'inline; filename="' . $fileName . '"',
-            'Accept-Ranges'       => 'bytes',
+            'Accept-Ranges' => 'bytes',
         ]);
     }
 
@@ -140,47 +137,37 @@ class CallLogService
 //        return new GetCallLogsResponses($mapPaginatedCallLogsVM, $paginatedCallLogs, 200);
 //    }
 
-    public function getCallLogStats(CallLogFilterRequest $callLogFilterRequest)
+    public function getCallLogStatsByUserId(CallLogFilterRequest $callLogFilterRequest, $user)
     {
-        $acquirer = $this->acquirerService->get("acquirer");
-
-        $baseQuery = CallLog::getCallLogs($acquirer->user->id);
+        $baseQuery = CallLog::getCallLogs($user->id);
         $filteredQuery = CallLogFilter::applyFilters($baseQuery, $callLogFilterRequest->all());
-        $callLogsStats = CallLog::getCallLogsStats($filteredQuery, $callLogFilterRequest, $acquirer);
-
-        return new GetCallLogsStatsResponses($callLogsStats, 200);
+        $callLogsStats = CallLog::getCallLogsStats($filteredQuery, $callLogFilterRequest, $user->name);
+        return $callLogsStats;
     }
 
     public function getCallLogsStatsForAllUsers(CallLogFilterRequest $callLogFilterRequest)
     {
-        $isAdminStatsEnabled = $this->configurationService->getConfigurationValueByKey("IS_ADMIN_STATS_UNABLED");
+        $filters = $callLogFilterRequest->all();
+        $filterUserName = $filters['user_name'] ?? null;
+
+        $isAdminStatsEnabled = $this->configurationService->getConfigurationValueByKey(ConfigurationEnum::$IS_ADMIN_STATS_UNABLE);
 
         $acquirer = $this->acquirerService->get("acquirer");
-        $acquirerUserId = $acquirer->user->id ?? null;
 
-        $userIdsQuery = CallLog::query()->distinct()->pluck('user_id');
-
-        $response = [];
-
-        foreach ($userIdsQuery as $userId) {
-            $user = User::find($userId);
-            if (!$user) continue;
-
-            if ($isAdminStatsEnabled && $user->admin !== $acquirerUserId) {
+        $users = collect();
+        if ($isAdminStatsEnabled) {
+            $users = $acquirer->user->adminOf()->get();
+        }
+        $users->push($acquirer->user);
+        $callLogsStats = [];
+        foreach ($users as $user) {
+            if ($filterUserName !== null && $user->name !== $filterUserName) {
                 continue;
             }
-
-            $baseQuery = CallLog::getCallLogs($userId);
-            $filteredQuery = CallLogFilter::applyFilters($baseQuery, $callLogFilterRequest->all());
-            $stats = CallLog::getCallLogsStats($filteredQuery, $callLogFilterRequest, $acquirer);
-
-            $response[$user->name] = $stats;
+            $callLogsStats[] = $this->getCallLogStatsByUserId($callLogFilterRequest, $user);
         }
-
-        return $response;
+        return new GetCallLogsStatsResponses($callLogsStats, 200);
     }
-
-
 
 
 }

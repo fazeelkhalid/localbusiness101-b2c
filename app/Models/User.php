@@ -20,7 +20,8 @@ class User extends Authenticatable
         'email',
         'password',
         'email_verified_at',
-        'acquirer_id'
+        'acquirer_id',
+        'admin'
     ];
 
     protected $hidden = [
@@ -59,5 +60,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(CallLog::class);
     }
+
+    public function adminUser()
+    {
+        return $this->belongsTo(User::class, 'admin');
+    }
+
+    public function adminOf()
+    {
+        return $this->hasMany(User::class, 'admin');
+    }
+
 
 }

@@ -27,6 +27,7 @@ class CallLogFilterRequest extends FormRequest
 
             'days' => 'nullable|integer|min:1|max:90',
             'talk_time_less_than' => 'nullable|integer|min:0',
+            'user_name' => 'nullable|string',
             'group_by' => 'nullable|in:daily,monthly,yearly',
         ];
     }

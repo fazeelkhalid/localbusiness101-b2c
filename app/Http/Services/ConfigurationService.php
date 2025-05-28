@@ -2,6 +2,8 @@
 
 namespace App\Http\Services;
 
+use App\Enums\Configuration;
+use App\Enums\ConfigurationEnum;
 use App\Enums\ErrorResponseEnum;
 use App\Http\Requests\Auth\SignUpRequest;
 use App\Http\Responses\Error\ErrorResponse;
@@ -22,7 +24,7 @@ class ConfigurationService
     /**
      * @return AcquirerService
      */
-    public function getConfigurationValueByKey($configurationCode)
+    public function getConfigurationValueByKey(Configuration $configurationCode)
     {
         $acquirer = $this->acquirerService->get("acquirer");
         $configuration = $acquirer->configurations->where('config_code', $configurationCode->key)->first();
@@ -30,7 +32,7 @@ class ConfigurationService
             return $configuration->value;
         }
         else{
-            return null;
+            return $configurationCode->value;
         }
     }
 

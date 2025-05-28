@@ -65,7 +65,7 @@ class CallLogController extends Controller
     public function getCallLogStats(CallLogFilterRequest $callLogFilterRequest)
     {
 //        $this->acquirerService->hasAuthorityOrThrowException("getCallLogStats");
-        return $this->callLogService->getCallLogStats($callLogFilterRequest);
+        return $this->callLogService->getCallLogsStatsForAllUsers($callLogFilterRequest);
 
     }
 
