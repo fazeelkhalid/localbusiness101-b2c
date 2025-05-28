@@ -35,11 +35,9 @@ class FetchAcquirerBusinessProfileMiddleware
 
         $businessProfile = BusinessProfile::where('user_id', $userId)->first();
 
-        if (!$businessProfile) {
-            return ErrorResponseEnum::$BPNF404;
+        if ($businessProfile) {
+            $this->acquirerService->set("businessProfile", $businessProfile);
         }
-
-        $this->acquirerService->set("businessProfile", $businessProfile);
 
         return $next($request);
     }
