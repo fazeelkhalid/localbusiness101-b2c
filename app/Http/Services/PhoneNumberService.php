@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Enums\Configuration;
 use App\Enums\ConfigurationEnum;
 use App\Enums\ErrorResponseEnum;
 use App\Exceptions\ErrorException;
@@ -9,6 +10,8 @@ use App\Http\Mapper\PhoneNumberMapper;
 use App\Http\Requests\PhoneNumber\VerifyPhoneNumberRequest;
 use App\Http\Responses\PhoneNumber\GetUserPhoneNumberResponses;
 use App\Http\Responses\PhoneNumber\verifyPhoneNumberResponses;
+use Carbon\Carbon;
+use Ramsey\Uuid\Type\Integer;
 
 class PhoneNumberService
 {
@@ -46,8 +49,9 @@ class PhoneNumberService
 
         $this->validateAndGetUserPhoneNumber($fromNumber);
         $allowCallRecording = $this->configurationService->getConfigurationValueByKey(ConfigurationEnum::$ALLOW_CALL_RECORDING);
-        $allowedPhoneNumbersVM = PhoneNumberMapper::mapVerifyPhoneNumberDomainToVM($allowCallRecording);
+        $callDelayLatency = $this->getCallDelayLatency();
 
+        $allowedPhoneNumbersVM = PhoneNumberMapper::mapVerifyPhoneNumberDomainToVM($allowCallRecording, $callDelayLatency);
         return new verifyPhoneNumberResponses($allowedPhoneNumbersVM, "Phone Number verified");
     }
 
@@ -72,4 +76,27 @@ class PhoneNumberService
         return $matchedPhone;
     }
 
+
+    private function getCallDelayLatency()
+    {
+        $acquirer = $this->acquirerService->get("acquirer");
+        $twelveHoursAgo = Carbon::now()->subHours(12);
+        $callLogsCount = $acquirer->user->callLogs()
+            ->where('created_at', '>=', $twelveHoursAgo)
+            ->count();
+
+        $callResponseDelay = (Integer)$this->configurationService->getConfigurationValueByKey(ConfigurationEnum:: $CALL_DELAY_LATENCY);
+
+        if ($callLogsCount > 200) {
+            $delayMin = $callResponseDelay + 5;
+            $delayMax = $callResponseDelay + 10;
+        }
+        else{
+            $delayMin = 0;
+            $delayMax = $callResponseDelay;
+        }
+
+        return rand($delayMin, $delayMax);
+
+    }
 }

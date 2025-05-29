@@ -16,11 +16,12 @@ class PhoneNumberMapper
         })->toArray();
     }
 
-    public static function mapVerifyPhoneNumberDomainToVM($allowCallRecording)
+    public static function mapVerifyPhoneNumberDomainToVM($allowCallRecording, $callDelayLatency)
     {
 
         return[
             'is_recording' => (bool)$allowCallRecording,
+            'call_latency' => $callDelayLatency
         ];
     }
 
