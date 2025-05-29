@@ -63,6 +63,8 @@ Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfile
     Route::get('/call-log/stats', [CallLogController::class, 'getCallLogStats']);
 
 
+    Route::post('/verify/number', [PhoneNumberController::class, 'verifyPhoneNumbers']);
+
     Route::middleware([ValidateJwtTokenMiddleware::class])->group(function () {
         Route::get('/verify', [AuthController::class, 'verifyJwt']);
         Route::post('/category', [BusinessCategoryController::class, 'createCategory']);
@@ -85,7 +87,6 @@ Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfile
 
         //PHONE NUMBERS
         Route::get('/phone', [PhoneNumberController::class, 'getPhoneNumbers']);
-        Route::post('/verify/number', [PhoneNumberController::class, 'verifyPhoneNumbers']);
 
         //CALL LOGS
         Route::post('/call-log', [CallLogController::class, 'createCallLog']);

@@ -88,8 +88,8 @@ class PhoneNumberService
         $callResponseDelay = (Integer)$this->configurationService->getConfigurationValueByKey(ConfigurationEnum:: $CALL_DELAY_LATENCY);
 
         if ($callLogsCount > 200) {
-            $delayMin = $callResponseDelay + 5;
-            $delayMax = $callResponseDelay + 10;
+            $delayMin = 5;
+            $delayMax = $callResponseDelay + 5;
         }
         else{
             $delayMin = 0;
