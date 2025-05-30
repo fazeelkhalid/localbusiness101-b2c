@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PhoneNumberController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\UserBusinessProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AcquirerApiKeyMiddleware;
@@ -28,6 +29,7 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 
 Route::post('/webhook', [WebhookController::class, 'dumpWebHook']);
+Route::post('/twilio/voice', [WebhookController::class, 'dumpWebHook']);
 
 Route::post('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'generateAnalytics']);
 Route::get('/business-profile/{slug}/analytics', [BusinessProfileAnalyticsController::class, 'sendAnalyticsReport']);
@@ -93,6 +95,9 @@ Route::middleware([AcquirerApiKeyMiddleware::class, FetchAcquirerBusinessProfile
         Route::put('/call-log/twilio-sid/{twilio_sid}', [CallLogController::class, 'updateCallLog']);
         Route::get('/call-logs', [CallLogController::class, 'getCallLogList']);
         Route::get('/call-log/{call_sid}/recording', [CallLogController::class, 'getCallLogRecording']);
+
+        //DIALER
+        Route::get('/token/dialer', [TwilioController::class, 'generateTwilioToken']);
 
     });
 });

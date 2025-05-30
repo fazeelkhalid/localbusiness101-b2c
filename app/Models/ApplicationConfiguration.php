@@ -17,7 +17,7 @@ class ApplicationConfiguration extends Model
         'value',
     ];
 
-    public static function getApplicationConfiguration(string $name, int $cacheTimeout = 3600)
+    public static function getApplicationConfiguration($name, int $cacheTimeout = 3600)
     {
         $config = self::where('name', $name)->first();
         return $config ? $config->value : "";
