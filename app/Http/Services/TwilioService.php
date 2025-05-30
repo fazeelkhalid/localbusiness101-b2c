@@ -24,7 +24,7 @@ class TwilioService
         $twilioTokenExpireTime = (integer)(ApplicationConfiguration::getApplicationConfiguration(ApplicationConfigurationEnum::TWILIO_TOKEN_EXPIRY_TIME) ?? 3600);
 
         $token = new AccessToken(
-            env('TWILIO_ACCOUNT_SID'),
+            env('TWILIO_ACCOUNT_SID_2'),
             env('TWILIO_API_KEY'),
             env('TWILIO_API_SECRET'),
             $twilioTokenExpireTime,

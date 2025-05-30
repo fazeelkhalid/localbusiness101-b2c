@@ -18,8 +18,8 @@ class TwilioHTTPHandler
     public function __construct()
     {
         $this->baseUrl = env('TWILIO_BASE_URL');
-        $this->accountSid = env('TWILIO_ACCOUNT_SID');
-        $this->authToken = env('TWILIO_AUTH_TOKEN');
+        $this->accountSid = env('TWILIO_ACCOUNT_SID_2');
+        $this->authToken = env('TWILIO_AUTH_TOKEN_2');
     }
 
     /**

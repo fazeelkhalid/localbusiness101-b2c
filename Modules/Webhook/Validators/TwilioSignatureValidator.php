@@ -12,7 +12,7 @@ class TwilioSignatureValidator implements WebhookValidatorInterface
 
     public function __construct()
     {
-        $this->authToken = env("TWILIO_AUTH_TOKEN");
+        $this->authToken = env("TWILIO_AUTH_TOKEN_2");
     }
 
     public function isValid(Request $request): bool
